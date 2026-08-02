@@ -1,5 +1,6 @@
 import Banner from "@/components/home-page-components/Banner";
 import ClientShowcase from "@/components/home-page-components/ClientShowcase";
+import JoinUs from "@/components/home-page-components/JoinUs";
 import Newsroom from "@/components/home-page-components/Newsroom";
 import WhatWeOffer from "@/components/home-page-components/WhatWeOffer";
 import WhoRWe from "@/components/home-page-components/WhoRWe";
@@ -60,6 +61,7 @@ export default function Home() {
       <WhoRWe />
       <WhatWeOffer />
       <Newsroom />
+      <JoinUs />
       <ClientShowcase />
 
       {/* 🔹 Schema Markup for Home Page */}
