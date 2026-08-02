@@ -163,7 +163,7 @@ const DashboardNav = ({ collapsed, onToggleCollapse }) => {
             </span>
             {!collapsed && (
               <span className="truncate text-lg font-bold text-slate-900">
-                A2IT Dashboard
+                Rakibhasan
               </span>
             )}
           </Link>
