@@ -21,6 +21,7 @@ import {
   ChevronsLeft,
   ChevronsRight,
   Palette,
+  Quote,
 } from "lucide-react";
 import Link from "next/link";
 
@@ -40,6 +41,7 @@ const NAV_SECTIONS = [
     items: [
       { id: "site-branding", label: "Site Branding", icon: Palette, href: "/dashboard/site-branding" },
       { id: "banner", label: "Manage Banner", icon: ImageIcon, href: "/dashboard/banner" },
+      { id: "spotlight", label: "Leadership Spotlight", icon: Quote, href: "/dashboard/spotlight" },
       { id: "services", label: "Manage Services", icon: ShoppingCart, href: "/dashboard/services" },
       { id: "portfolio", label: "Manage Portfolio", icon: Briefcase, href: "/dashboard/portfolio" },
       { id: "blog", label: "Manage Blog", icon: FileText, href: "/dashboard/blog" },
