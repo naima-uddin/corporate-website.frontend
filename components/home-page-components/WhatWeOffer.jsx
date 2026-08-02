@@ -205,8 +205,8 @@ const WhatWeOffer = () => {
         )}
 
         {categoryTiles.length > 0 && (
-          <div className="flex flex-col lg:flex-row items-stretch gap-4 lg:gap-6">
-            <div className="grid grid-cols-2 gap-4 lg:w-[40%]">
+          <div className="flex flex-col lg:flex-row items-stretch gap-3 lg:gap-4">
+            <div className="grid grid-cols-2 gap-3 lg:w-[34%]">
               {categoryTiles.map((tile) => {
                 const isActive = tile.id === activeTile?.id;
                 return (
@@ -250,7 +250,7 @@ const WhatWeOffer = () => {
               })}
             </div>
 
-            <div className="relative min-h-[320px] flex-1 overflow-hidden rounded-md">
+            <div className="relative min-h-[280px] flex-1 overflow-hidden rounded-md">
               <AnimatePresence mode="wait">
                 <motion.div
                   key={activeTile?.id}
