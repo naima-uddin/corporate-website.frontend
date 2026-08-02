@@ -69,14 +69,8 @@ const WhoRWe = () => {
           >
             <span className="eyebrow mb-4">Who We Are</span>
 
-            <div className="relative mt-8 pb-5">
-              {/* tail, sits behind the bubble so its top half is hidden */}
-              <span
-                aria-hidden="true"
-                className="absolute left-12 bottom-2 z-0 h-8 w-8 rotate-45 rounded-md bg-[var(--color-surface)] ring-1 ring-[var(--color-border)]"
-              />
-
-              <div className="relative z-10 rounded-[2rem] bg-[var(--color-surface)] p-8 shadow-md ring-1 ring-[var(--color-border)] md:p-10">
+            <div className="relative mt-8 mb-5">
+              <div className="relative rounded-[2rem] bg-[var(--color-surface)] p-8 shadow-md ring-1 ring-[var(--color-border)] md:p-10">
                 <MessageSquareQuote
                   className="mb-3 h-8 w-8 text-[var(--color-primary)]/40"
                   strokeWidth={1.5}
@@ -85,6 +79,34 @@ const WhoRWe = () => {
                 <p className="relative text-xl md:text-2xl leading-relaxed text-[var(--color-heading)]">
                   {renderQuote(spotlight.quote)}
                 </p>
+
+                {/* bordered speech-bubble tail: outline triangle + slightly smaller fill triangle on top */}
+                <span
+                  aria-hidden="true"
+                  className="absolute"
+                  style={{
+                    top: "100%",
+                    left: 48,
+                    width: 0,
+                    height: 0,
+                    borderLeft: "14px solid transparent",
+                    borderRight: "14px solid transparent",
+                    borderTop: "20px solid var(--color-border)",
+                  }}
+                />
+                <span
+                  aria-hidden="true"
+                  className="absolute"
+                  style={{
+                    top: "calc(100% + 1px)",
+                    left: 49,
+                    width: 0,
+                    height: 0,
+                    borderLeft: "13px solid transparent",
+                    borderRight: "13px solid transparent",
+                    borderTop: "19px solid var(--color-surface)",
+                  }}
+                />
               </div>
             </div>
 

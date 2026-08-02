@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import TopBar from "@/components/shared/TopBar";
 import Navbar from "@/components/shared/Navbar";
 import Footer from "@/components/shared/Footer";
+import ScrollToTop from "@/components/shared/ScrollToTop";
 
 export default function RouteAwareChrome({ children }) {
   const pathname = usePathname();
@@ -21,6 +22,7 @@ export default function RouteAwareChrome({ children }) {
       <Navbar />
       {children}
       <Footer />
+      <ScrollToTop />
     </>
   );
 }
