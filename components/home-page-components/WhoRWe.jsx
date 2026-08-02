@@ -42,13 +42,13 @@ const WhoRWe = () => {
   return (
     <section className="relative py-16 md:py-20 bg-white overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid lg:grid-cols-2 gap-6 lg:gap-12 items-center">
+        <div className="grid lg:grid-cols-5 gap-6 lg:gap-12 items-center">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
-            className="relative rounded-2xl overflow-hidden bg-[var(--color-ink)] aspect-[4/5] max-w-md mx-auto lg:mx-0 shadow-xl"
+            className="relative rounded-2xl overflow-hidden bg-[var(--color-ink)] aspect-[4/5] max-w-md mx-auto lg:mx-0 shadow-xl lg:col-span-2"
           >
             {spotlight.image ? (
               <img
@@ -66,20 +66,23 @@ const WhoRWe = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.15 }}
+            className="lg:col-span-3"
           >
-            <span className="eyebrow mb-4">Who We Are</span>
+            <span className="eyebrow mb-4 text-sm font-semibold text-[var(--color-primary)]">
+              Warm Welcome From Our Founder
+            </span>
 
             <div className="relative mt-8 mb-10">
               <div
-                className="relative bg-[var(--color-surface)] p-10 shadow-md ring-1 ring-[var(--color-border)] md:p-14"
+                className="relative bg-[var(--color-surface)] p-6 shadow-md ring-1 ring-[var(--color-border)] md:p-10"
                 style={{ borderRadius: "48px / 32px" }}
               >
                 <MessageSquareQuote
-                  className="mb-3 h-8 w-8 text-[var(--color-primary)]/40"
+                  className="mb-0 h-8 w-8 text-[var(--color-primary)]/40"
                   strokeWidth={1.5}
                   aria-hidden="true"
                 />
-                <p className="relative text-xl md:text-2xl leading-relaxed text-[var(--color-heading)]">
+                <p className="relative text-xl md:text-2xl-[2px] leading-relaxed text-[var(--color-heading)]">
                   {renderQuote(spotlight.quote)}
                 </p>
 
@@ -92,8 +95,8 @@ const WhoRWe = () => {
                 >
                   <path
                     d="M12 32C5 24 2 16 2 10.5C2 4.5 6.5 0 12 0C17.5 0 22 4.5 22 10.5C22 16 19 24 12 32Z"
-                    fill="var(--color-surface)"
-                    stroke="var(--color-border)"
+                    fill="var(--color-primary-tint)"
+                    stroke="var(--input)"
                     strokeWidth="1.5"
                   />
                 </svg>
