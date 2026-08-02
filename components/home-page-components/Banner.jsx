@@ -90,7 +90,7 @@ const Banner = () => {
             key={slide._id}
             initial={{ scale: 0.15 }}
             animate={{ scale: 1 }}
-            transition={{ duration: 1.1, ease: [0.16, 1, 0.3, 1] }}
+            transition={{ duration: 1.8, ease: [0.16, 1, 0.3, 1] }}
             onAnimationComplete={() => setBaseSlide(currentSlide)}
             style={{ transformOrigin: "100% 100%" }}
             className="absolute inset-0"
@@ -106,7 +106,7 @@ const Banner = () => {
       </div>
 
       <div
-        className={`${poppins.className} relative z-20 h-full flex flex-col justify-end pb-14 sm:pb-16 lg:pb-24 px-4 sm:px-6 lg:px-12`}
+        className={`${poppins.className} relative z-20 h-full flex flex-col justify-end pb-4 md:pb-6 lg:pb-10 `}
       >
         <div className="max-w-7xl mx-auto w-full">
           <AnimatePresence mode="wait">
@@ -116,7 +116,7 @@ const Banner = () => {
               animate={{ y: 0, opacity: 1 }}
               exit={{ y: -12, opacity: 0 }}
               transition={{ duration: 0.6, ease: "easeOut" }}
-              className="max-w-2xl lg:pr-[28rem]"
+              className="max-w-2xl lg:pr-[36rem]"
             >
               {slide.eyebrow && (
                 <span className="eyebrow text-white/90 mb-4 block">
@@ -143,14 +143,14 @@ const Banner = () => {
       </div>
 
       {slides.length > 1 && (
-        <div className="absolute bottom-6 right-4 sm:right-6 lg:right-12 z-30 w-[30rem]">
+        <div className="absolute bottom-6 right-4 sm:right-6 lg:right-12 z-30 w-[39rem]">
           <div className="no-scrollbar hidden lg:flex gap-3 justify-end mb-4 overflow-x-auto">
             {slides.map((s, index) => (
               <button
                 key={s._id}
                 onClick={() => goToSlide(index)}
                 aria-label={`Show slide: ${s.title}`}
-                className={`relative shrink-0 w-30 h-46 rounded-lg overflow-hidden border-2 transition-all duration-300 ${
+                className={`relative shrink-0 w-36 h-52 rounded-sm overflow-hidden border-2 transition-all duration-300 ${
                   currentSlide === index
                     ? "border-white opacity-100 scale-105"
                     : "border-white/30 opacity-55 hover:opacity-85"
