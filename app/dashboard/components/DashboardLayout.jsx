@@ -15,7 +15,7 @@ import {
   Images,
   Briefcase,
   Building2,
-  UserPlus,
+  PanelBottom,
   Newspaper,
   LayoutDashboard,
   ChevronsLeft,
@@ -44,7 +44,7 @@ const NAV_SECTIONS = [
       { id: "news", label: "Manage News", icon: Newspaper, href: "/dashboard/news" },
       { id: "media", label: "All Media", icon: Images, href: "/dashboard/media" },
       { id: "client-showcase", label: "Client Showcase", icon: Building2, href: "/dashboard/client-showcase" },
-      { id: "join-us", label: "Manage Join Us", icon: UserPlus, href: "/dashboard/join-us" },
+      { id: "footer", label: "Manage Footer", icon: PanelBottom, href: "/dashboard/footer" },
     ],
   },
 ];
