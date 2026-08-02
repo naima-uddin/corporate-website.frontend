@@ -7,7 +7,7 @@ export default function CategorySelector({
   selectedCategories = [],
   onChange,
 }) {
-  const API = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+  const API = process.env.NEXT_PUBLIC_API_URL;
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showCreateModal, setShowCreateModal] = useState(false);

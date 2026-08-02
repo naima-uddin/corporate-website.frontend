@@ -1,10 +1,10 @@
-import StatsSection from "@/components/about-page-compoent/StatsSection";
 import Banner from "@/components/home-page-components/Banner";
 import ClientShowcase from "@/components/home-page-components/ClientShowcase";
+import CtaBand from "@/components/home-page-components/CtaBand";
 import EmployeeSection from "@/components/home-page-components/EmployeeSection";
+import Newsroom from "@/components/home-page-components/Newsroom";
 import WhatWeOffer from "@/components/home-page-components/WhatWeOffer";
 import WhoRWe from "@/components/home-page-components/WhoRWe";
-import Image from "next/image";
 import React from "react";
 
 // 🔹 SEO metadata for Home Page
@@ -62,8 +62,9 @@ export default function Home() {
       <WhoRWe />
       <WhatWeOffer />
       <ClientShowcase />
-      <StatsSection />
+      <Newsroom />
       <EmployeeSection />
+      <CtaBand />
 
       {/* 🔹 Schema Markup for Home Page */}
       <script

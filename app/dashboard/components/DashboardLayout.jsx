@@ -47,6 +47,12 @@ const DashboardNav = () => {
 
   const menuItems = [
     {
+      id: "banner",
+      label: "Manage Banner",
+      icon: Image,
+      href: "/dashboard/banner",
+    },
+    {
       id: "services",
       label: "Manage Services",
       icon: ShoppingCart,

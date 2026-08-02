@@ -2,7 +2,7 @@ import { readFile } from "fs/promises";
 import path from "path";
 import BlogDetailClient from "@/components/blog/BlogDetailClient";
 
-const API = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+const API = process.env.NEXT_PUBLIC_API_URL;
 
 const slugify = (value) =>
   String(value || "")

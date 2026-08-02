@@ -96,8 +96,7 @@ const Banner = () => {
     const fetchPackageOptions = async () => {
       try {
         const backendUrl =
-          process.env.NEXT_PUBLIC_BACKEND_URL ||
-          "https://a2it-dashboard-backend.vercel.app";
+          process.env.NEXT_PUBLIC_BACKEND_URL;
         const response = await fetch(`${backendUrl}/api/promotional-packages`);
         const json = await response.json();
 
@@ -172,7 +171,7 @@ const Banner = () => {
 
     try {
       const response = await fetch(
-        "https://a2it-dashboard-backend.vercel.app/api/send-email",
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/send-email`,
         {
           method: "POST",
           headers: {

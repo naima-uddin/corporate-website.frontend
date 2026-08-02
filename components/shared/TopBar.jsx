@@ -12,71 +12,58 @@ import {
 } from "react-icons/fa";
 
 const TopBar = () => {
-     const pathname = usePathname();
-    
-    // Check if current path is the one where navbar should be hidden
-    const hideNavbarPaths = ['/promotions/website/']; // Add your paths here
-    const shouldHideNavbar = hideNavbarPaths.includes(pathname);
-    
-    // If navbar should be hidden, return null (render nothing)
-    if (shouldHideNavbar) {
-      return null;
-    } 
+  const pathname = usePathname();
+
+  const hideNavbarPaths = ["/promotions/website/"];
+  const shouldHideNavbar = hideNavbarPaths.includes(pathname);
+
+  if (shouldHideNavbar) {
+    return null;
+  }
+
   return (
-    <div className="bg-white text-[#e0e0ff] px-3 sm:px-4 py-2 flex flex-col sm:flex-row justify-between items-center text-xs sm:text-sm border-b border-[#0066ff]/30">
-      {/* Contact Info - Mobile: side by side, Desktop: same row */}
-      <div className="flex items-center space-x-4 sm:space-x-4 mb-2 sm:mb-0">
-        <div className="flex items-center space-x-1">
-          <FaPhoneAlt className="text-[#0066ff] text-xs sm:text-sm" />
-          <span className="font-medium sm:font-semibold whitespace-nowrap text-black">
-            +88 01846 937397
-          </span>
-        </div>
-        <div className="hidden sm:flex items-center space-x-1">
-          <span className="text-[#b0b0ff]/60">|</span>
-        </div>
-        <div className="flex items-center space-x-1">
-          <FaEnvelope className="text-[#0066ff] text-xs sm:text-sm" />
-          <span className="font-medium sm:font-semibold whitespace-nowrap text-black">info@a2itltd.com</span>
-        </div>
+    <div className="bg-[var(--color-ink)] text-white/70 px-4 sm:px-6 lg:px-8 py-2 flex flex-col sm:flex-row justify-between items-center text-xs">
+      <div className="flex items-center gap-4 mb-1 sm:mb-0">
+        <a
+          href="tel:+8801846937397"
+          className="flex items-center gap-1.5 hover:text-white transition-colors"
+        >
+          <FaPhoneAlt className="text-[10px]" />
+          <span className="font-medium">+88 01846 937397</span>
+        </a>
+        <span className="hidden sm:inline text-white/20">|</span>
+        <a
+          href="mailto:info@a2itltd.com"
+          className="hidden sm:flex items-center gap-1.5 hover:text-white transition-colors"
+        >
+          <FaEnvelope className="text-[10px]" />
+          <span className="font-medium">info@a2itltd.com</span>
+        </a>
       </div>
 
-      {/* Social Icons - Mobile: below, Desktop: same row */}
-      <div className="flex space-x-1 sm:space-x-2">
+      <div className="flex items-center gap-3">
         <a
           href="https://www.facebook.com/A2ITLtd"
-          className="bg-[#0066ff] hover:bg-[#00f0ff] p-1.5 sm:p-2 rounded text-white border border-[#0066ff]/50 hover:border-[#00f0ff] hover:text-black transition-colors duration-300"
+          className="hover:text-white transition-colors"
           aria-label="Facebook"
         >
-          <FaFacebookF className="text-xs sm:text-sm" />
+          <FaFacebookF className="text-xs" />
         </a>
-        <a
-          href="#"
-          className="bg-[#0066ff] hover:bg-[#00f0ff] p-1.5 sm:p-2 rounded text-white border border-[#0066ff]/50 hover:border-[#00f0ff] hover:text-black  transition-colors duration-300"
-          aria-label="Twitter"
-        >
-          <FaTwitter className="text-xs sm:text-sm" />
+        <a href="#" className="hover:text-white transition-colors" aria-label="Twitter">
+          <FaTwitter className="text-xs" />
         </a>
-        <a
-          href="#"
-          className="bg-[#0066ff] hover:bg-[#00f0ff] p-1.5 sm:p-2 rounded text-white border border-[#0066ff]/50 hover:border-[#00f0ff] hover:text-black  transition-colors duration-300"
-          aria-label="YouTube"
-        >
-          <FaYoutube className="text-xs sm:text-sm" />
+        <a href="#" className="hover:text-white transition-colors" aria-label="YouTube">
+          <FaYoutube className="text-xs" />
         </a>
-        <a
-          href="#"
-          className="bg-[#0066ff] hover:bg-[#00f0ff] p-1.5 sm:p-2 rounded text-white border border-[#0066ff]/50 hover:border-[#00f0ff] hover:text-black  transition-colors duration-300"
-          aria-label="Instagram"
-        >
-          <FaInstagram className="text-xs sm:text-sm" />
+        <a href="#" className="hover:text-white transition-colors" aria-label="Instagram">
+          <FaInstagram className="text-xs" />
         </a>
         <a
           href="https://www.linkedin.com/in/a2itlimited/"
-          className="bg-[#0066ff] hover:bg-[#00f0ff] p-1.5 sm:p-2 rounded text-white border border-[#0066ff]/50 hover:border-[#00f0ff] hover:text-black  transition-colors duration-300"
+          className="hover:text-white transition-colors"
           aria-label="LinkedIn"
         >
-          <FaLinkedinIn className="text-xs sm:text-sm" />
+          <FaLinkedinIn className="text-xs" />
         </a>
       </div>
     </div>

@@ -8,15 +8,13 @@ import { usePathname } from "next/navigation";
 const Footer = () => {
   const pathname = usePathname();
 
-  // Check if current path is the one where navbar should be hidden
-  const hideNavbarPaths = ["/promotions/website/"]; // Add your paths here
+  const hideNavbarPaths = ["/promotions/website/"];
   const shouldHideNavbar = hideNavbarPaths.includes(pathname);
 
-  // If navbar should be hidden, return null (render nothing)
   if (shouldHideNavbar) {
     return null;
   }
-  // Route configuration
+
   const routes = {
     HOME: "/",
     PORTFOLIO: "/portfolio",
@@ -28,26 +26,12 @@ const Footer = () => {
     CONTACT: "/contact",
   };
 
-  // Social media links
   const socialLinks = [
-    {
-      icon: <FaFacebookF />,
-      color: "hover:text-[#1877F2]",
-      url: "https://www.facebook.com/A2ITLtd",
-    },
-    {
-      icon: <FaTwitter />,
-      color: "hover:text-[#1DA1F2]",
-      url: "https://twitter.com",
-    },
-    {
-      icon: <FaLinkedinIn />,
-      color: "hover:text-[#0A66C2]",
-      url: "https://www.linkedin.com/in/a2itlimited/",
-    },
+    { icon: <FaFacebookF />, url: "https://www.facebook.com/A2ITLtd" },
+    { icon: <FaTwitter />, url: "https://twitter.com" },
+    { icon: <FaLinkedinIn />, url: "https://www.linkedin.com/in/a2itlimited/" },
   ];
 
-  // Quick links
   const quickLinks = [
     { name: "Home", path: routes.HOME },
     { name: "Portfolio", path: routes.PORTFOLIO },
@@ -56,7 +40,15 @@ const Footer = () => {
     { name: "Contact", path: routes.CONTACT },
   ];
 
-  // Policy links
+  const serviceLinks = [
+    { name: "Design & Development", path: "/services/design-development" },
+    { name: "E-Commerce", path: "/services/e-commerce" },
+    { name: "Amazon", path: "/services/amazon" },
+    { name: "Shopify", path: "/services/shopify" },
+    { name: "ERP System Development", path: "/services/erp" },
+    { name: "SEO / SEM / PPC", path: "/services/seo" },
+  ];
+
   const policyLinks = [
     { name: "Privacy Policy", path: routes.PRIVACY },
     { name: "Terms of Service", path: routes.TERMS },
@@ -64,42 +56,29 @@ const Footer = () => {
   ];
 
   return (
-    <footer className="bg-white text-[#e0e0ff] pb-3 md:pb-4  pt-3 md:pt-6 px-4 md:px-16 relative overflow-hidden mx-auto border-t-2">
-      {/* Glowing orb effects */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none"></div>
-
-      <div className="mx-auto relative z-10 max-w-7xl">
-        {/* Main Footer Content - Mobile: 2 columns, Desktop: 4 columns */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-12 mb-2 md:mb-6 ">
-          {/* Brand Info - Mobile: Row 1 Col 1 */}
-          <div className="col-span-1 md:col-span-1 mx-auto ml-4">
-            <div className="flex items-center gap-2 mb-3">
-              <div className="w-10 h-10 md:w-12 md:h-12 rounded-lg flex items-center justify-center text-xl md:text-2xl font-bold text-[#0a0a12]">
-                <Logo />
-              </div>
-              <h2 className="text-xl md:text-3xl font-extrabold bg-gradient-to-r from-[#598cd8] to-[#1363f8] bg-clip-text text-transparent drop-shadow-md">
-                A2IT Ltd
-              </h2>
+    <footer className="bg-[var(--color-ink)] text-white/60">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14 md:py-16">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-10 md:gap-8 mb-12">
+          <div className="col-span-2 md:col-span-1">
+            <div className="flex items-center gap-2 mb-4">
+              <Logo variant="light" />
             </div>
-            <p className="text-[#006dff] font-semibold mb-2 text-sm md:text-xl">
-              Build Your Dreams
-            </p>
-            <p className="text-black text-xs md:text-base leading-relaxed">
+            <p className="text-white font-semibold mb-2">Build Your Dreams</p>
+            <p className="text-sm leading-relaxed">
               Transforming ideas into digital reality.
             </p>
           </div>
 
-          {/* Quick Links - Mobile: Row 1 Col 2 */}
-          <div className="col-span-1 md:col-span-1 mx-auto">
-            <h3 className="text-sm md:text-xl font-semibold mb-3 md:mb-6 text-[#006dff] border-b-2 border-[#00f0ff]/40 inline-block">
+          <div>
+            <h3 className="text-sm font-bold uppercase tracking-wide text-white mb-5">
               Quick Links
             </h3>
-            <ul className="space-y-0 md:space-y-1">
+            <ul className="space-y-2.5">
               {quickLinks.map((item) => (
                 <li key={item.name}>
                   <a
                     href={item.path}
-                    className="text-black hover:text-[#006dff] transition-colors text-xs md:text-base"
+                    className="text-sm hover:text-white transition-colors"
                   >
                     {item.name}
                   </a>
@@ -108,14 +87,31 @@ const Footer = () => {
             </ul>
           </div>
 
-          {/* Contact Info - Mobile: Row 2 Col 1 */}
-          <div className="col-span-1 md:col-span-1  md:mt-0 mx-auto">
-            <h3 className="text-sm md:text-xl font-semibold mb-3 md:mb-6 text-[#006dff] border-b-2 border-[#00f0ff]/40 inline-block">
+          <div>
+            <h3 className="text-sm font-bold uppercase tracking-wide text-white mb-5">
+              Services
+            </h3>
+            <ul className="space-y-2.5">
+              {serviceLinks.map((item) => (
+                <li key={item.name}>
+                  <a
+                    href={item.path}
+                    className="text-sm hover:text-white transition-colors"
+                  >
+                    {item.name}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div>
+            <h3 className="text-sm font-bold uppercase tracking-wide text-white mb-5">
               Contact Us
             </h3>
-            <address className="not-italic text-black space-y-3 md:space-y-2 text-xs md:text-base">
-              <div className="flex items-start gap-2">
-                <FaMapMarkerAlt className="text-[#006dff] mt-0.4 flex-shrink-0 mt-1.5" />
+            <address className="not-italic space-y-3 text-sm">
+              <div className="flex items-start gap-2.5">
+                <FaMapMarkerAlt className="text-[var(--color-primary)] mt-1 flex-shrink-0" />
                 <p>
                   Plot No 470
                   <br />
@@ -124,52 +120,28 @@ const Footer = () => {
                   DOHS Mirpur, Dhaka
                 </p>
               </div>
-              <div className="flex items-center gap-2">
-                <FaPhone className="text-[#006dff] flex-shrink-0" />
-                <a
-                  href="tel:+8801846937397"
-                  className="hover:text-[#0066ff] transition-colors"
-                >
+              <div className="flex items-center gap-2.5">
+                <FaPhone className="text-[var(--color-primary)] flex-shrink-0" />
+                <a href="tel:+8801846937397" className="hover:text-white transition-colors">
                   +880 1846-937397
                 </a>
               </div>
-              <div className="flex items-center gap-2">
-                <FaEnvelope className="text-[#006dff] flex-shrink-0" />
-                <a
-                  href="mailto:info@a2itltd.com"
-                  className="hover:text-[#0066ff] transition-colors"
-                >
+              <div className="flex items-center gap-2.5">
+                <FaEnvelope className="text-[var(--color-primary)] flex-shrink-0" />
+                <a href="mailto:info@a2itltd.com" className="hover:text-white transition-colors">
                   info@a2itltd.com
                 </a>
               </div>
             </address>
-          </div>
 
-          {/* Policy Links - Mobile: Row 2 Col 2 */}
-          <div className="col-span-1 md:col-span-1  md:mt-0 mx-auto">
-            <h3 className="text-sm md:text-xl font-semibold mb-3 md:mb-6 text-[#006dff] border-b-2 border-[#00f0ff]/40 inline-block">
-              Policies
-            </h3>
-            <ul className="space-y-0 md:space-y-3 mb-2">
-              {policyLinks.map((policy) => (
-                <li key={policy.name}>
-                  <a
-                    href={policy.path}
-                    className="text-black hover:text-[#006dff] transition-colors text-xs md:text-base"
-                  >
-                    {policy.name}
-                  </a>
-                </li>
-              ))}
-            </ul>
-            <div className="flex gap-2 md:gap-4 mt-3">
+            <div className="flex gap-3 mt-5">
               {socialLinks.map((social, index) => (
                 <a
                   key={index}
                   href={social.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className={`w-7 h-7 md:w-10 md:h-10 rounded-full bg-[#006dff] flex items-center justify-center text-xs md:text-lg text-[#ffff] ${social.color} hover:text-white hover:scale-110 hover:shadow-[0_0_10px_#00f0ff] transition-all duration-300`}
+                  className="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center text-sm hover:bg-[var(--color-primary)] hover:text-white transition-colors"
                 >
                   {social.icon}
                 </a>
@@ -178,11 +150,21 @@ const Footer = () => {
           </div>
         </div>
 
-        {/* Copyright */}
-        <div className="border-t border-[#00f0ff]/20 pt-3 md:pt-4 text-center">
-          <p className="text-black text-xs md:text-base">
-            ©A2It Ltd. All Rights Reserved
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-3 border-t border-white/10 pt-6">
+          <p className="text-xs text-white/40">
+            © {new Date().getFullYear()} A2IT Ltd. All Rights Reserved
           </p>
+          <div className="flex gap-5">
+            {policyLinks.map((policy) => (
+              <a
+                key={policy.name}
+                href={policy.path}
+                className="text-xs text-white/40 hover:text-white transition-colors"
+              >
+                {policy.name}
+              </a>
+            ))}
+          </div>
         </div>
       </div>
     </footer>

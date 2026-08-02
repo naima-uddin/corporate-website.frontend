@@ -18,7 +18,6 @@ export default function RouteAwareChrome({ children }) {
 
   return (
     <>
-      <TopBar />
       <Navbar />
       {children}
       <Footer />

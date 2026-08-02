@@ -7,10 +7,10 @@ import {
   Filter,
   Search,
   ChevronDown,
-  Sparkles,
   Star,
   Target,
 } from "lucide-react";
+import SectionHeading from "@/components/ui/SectionHeading";
 
 export default function EmployeeSection() {
   const [filteredMembers, setFilteredMembers] = useState([]);
@@ -82,53 +82,37 @@ export default function EmployeeSection() {
 
   if (loading) {
     return (
-      <section className="py-6 md:py-6 bg-white relative overflow-hidden">
-        <div className="container mx-auto px-4 md:px-6 relative z-10">
-          <div className="text-center mb-16">Loading team...</div>
+      <section className="py-16 md:py-20 bg-[var(--color-surface)]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-[var(--color-body)]">
+          Loading team...
         </div>
       </section>
     );
   }
 
+  if (teamMembers.length === 0) return null;
+
   return (
-    <section className="py-6 md:py-6 bg-white relative overflow-hidden">
-      <div className="container mx-auto px-4 md:px-6 relative z-10">
-        {/* Header */}
-        <div className="text-center mb-16">
-          <div className="inline-flex items-center gap-2 mb-4 px-4 py-2 bg-gradient-to-r from-[#00f0ff]/10 to-[#0066ff]/10 rounded-full border border-[#00f0ff]/20 backdrop-blur-sm">
-            <Sparkles className="w-4 h-4 text-[#0c6b72]" />
-            <span className="text-[#0066ff] text-sm font-medium">
-              MEET OUR TEAM
-            </span>
-            <Sparkles className="w-4 h-4 text-[#00f0ff]" />
-          </div>
+    <section className="py-16 md:py-20 bg-[var(--color-surface)]">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <SectionHeading
+          eyebrow="Meet Our Team"
+          title="Our Expert Team"
+          subtitle="Meet our talented team of developers, designers, and tech experts who bring innovation to every project."
+        />
 
-          <h2 className="text-4xl md:text-5xl font-bold mb-6">
-            <span className="text-black">Our Expert </span>
-            <span className="bg-gradient-to-r from-[#155257] via-[#0066ff] to-[#0066ff] bg-clip-text text-transparent">
-              Team
-            </span>
-          </h2>
-
-          <p className="text-lg text-black/80 max-w-2xl mx-auto">
-            Meet our talented team of developers, designers, and tech experts
-            who bring innovation.
-          </p>
-        </div>
-
-        {/* Filter & Search */}
-        <div className="flex flex-col md:flex-row justify-between items-center gap-6 mb-14 p-6 bg-gradient-to-r from-[#12121a]/10 to-[#0a0a12]/10 rounded-2xl border border-[#00f0ff]/15">
+        <div className="flex flex-col md:flex-row justify-between items-center gap-6 mb-12 p-5 bg-white rounded-lg border border-[var(--color-border)]">
           <div className="flex items-center gap-4">
-            <Filter className="w-5 h-5 text-[#00f0ff]" />
+            <Filter className="w-5 h-5 text-[var(--color-primary)]" />
             <div className="flex flex-wrap gap-2">
               {["all", "developer", "marketing"].map((f) => (
                 <button
                   key={f}
                   onClick={() => setActiveFilter(f)}
-                  className={`px-5 py-2.5 rounded-xl text-sm font-medium transition-all duration-300 flex items-center gap-2 ${
+                  className={`px-4 py-2 rounded-md text-sm font-semibold transition-colors duration-200 flex items-center gap-2 ${
                     activeFilter === f
-                      ? "bg-gradient-to-r from-[#00f0ff] to-[#0066ff] text-white shadow-lg shadow-[#00f0ff]/25"
-                      : "bg-white text-black border border-[#00f0ff]/20 hover:bg-gradient-to-r hover:from-[#00f0ff]/10 hover:to-[#0066ff]/10 hover:text-[#0066ff] hover:border-[#00f0ff]/40"
+                      ? "bg-[var(--color-primary)] text-white"
+                      : "bg-[var(--color-surface)] text-[var(--color-heading)] border border-[var(--color-border)] hover:border-[var(--color-primary)] hover:text-[var(--color-primary)]"
                   }`}
                 >
                   {f === "developer" && <Code className="w-4 h-4" />}
@@ -145,160 +129,126 @@ export default function EmployeeSection() {
           </div>
 
           <div className="relative w-full md:w-80">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[#0066ff]" />
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--color-body)]" />
             <input
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search by name, position or skills..."
-              className="w-full pl-12 pr-4 py-3 bg-white/80 border border-[#00f0ff]/25 rounded-xl text-black placeholder-black/50 focus:outline-none focus:border-[#00f0ff] focus:ring-2 focus:ring-[#00f0ff]/20 transition-all duration-300"
+              className="w-full pl-11 pr-4 py-2.5 bg-[var(--color-surface)] border border-[var(--color-border)] rounded-md text-sm text-[var(--color-heading)] placeholder-[var(--color-body)] focus:outline-none focus:border-[var(--color-primary)] transition-all duration-200"
             />
           </div>
         </div>
 
-        {/* Cards Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 md:gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {filteredMembers.map((m) => (
             <div key={m.id} className="group relative">
               <div
-                className={`relative overflow-hidden rounded-2xl border border-gray-200 transition-all duration-500 flex flex-col ${
+                className={`relative overflow-hidden rounded-lg border border-[var(--color-border)] bg-white transition-all duration-500 flex flex-col ${
                   expandedCard === m.id
-                    ? "h-auto shadow-2xl shadow-[#00f0ff]/10 border-[#00f0ff]"
-                    : "h-[500px] shadow-lg hover:shadow-xl hover:shadow-[#00f0ff]/5"
+                    ? "h-auto shadow-xl border-[var(--color-primary)]"
+                    : "h-[460px] shadow-sm hover:shadow-lg"
                 }`}
               >
-                {/* Member Number */}
-                <div className="absolute top-1 left-1 z-20 w-10 h-10 rounded-full bg-white border border-[#00f0ff]/30 flex items-center justify-center shadow-lg">
-                  <span className="text-lg font-bold text-[#0066ff]">
-                    {m.number}
-                  </span>
-                </div>
-
-                {/* Image Container */}
-                <div
-                  className={`relative overflow-hidden transition-all duration-500 ${
-                    expandedCard === m.id ? "h-0 opacity-0" : "h-56 opacity-100"
-                  }`}
-                >
+                <div className="relative h-52 overflow-hidden bg-[var(--color-surface)]">
                   <img
                     src={m.image}
                     alt={m.name}
-                    className="w-full h-full object-contain object-center transition-transform duration-700 group-hover:scale-105"
+                    className="w-full h-full object-contain object-center transition-transform duration-500 group-hover:scale-105"
                     style={{ objectPosition: "center 25%" }}
                   />
                 </div>
 
-                {/* Content */}
-                <div className=" relative p-6 flex-1 flex flex-col">
+                <div className="relative p-6 flex-1 flex flex-col">
                   <div className="text-center mb-4">
-                    <div
-                      className={`absolute top-2 left-7 px-3 py-1.5 rounded-full text-xs font-semibold flex items-center gap-1.5 ${
+                    <span
+                      className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold ${
                         m.role === "developer"
-                          ? "bg-gradient-to-r from-[#00f0ff]/10 to-[#0066ff]/10 text-[#245b5f] border border-[#00f0ff]/30"
-                          : "bg-gradient-to-r from-[#ff0080]/10 to-[#ff6600]/10 text-[#ff66cc] border border-[#ff66cc]/30"
+                          ? "bg-[var(--color-primary-tint)] text-[var(--color-primary)]"
+                          : "bg-amber-50 text-amber-600"
                       }`}
                     >
                       {getRoleIcon(m.role)}
                       {m.role === "developer" ? "Developer" : "Marketing"}
-                    </div>
-                    <h3 className="text-xl font-bold text-black mb-1 group-hover:text-[#0066ff] transition-colors mt-4">
+                    </span>
+                    <h3 className="text-lg font-bold text-[var(--color-heading)] mt-3">
                       {m.name}
                     </h3>
-                    <p className="text-[#0066ff]  font-bold">{m.position}</p>
-                  </div>
-
-                  {/* Description */}
-                  <div
-                    className={`mb-6 ${expandedCard === m.id ? "hidden" : "block"}`}
-                  >
-                    <p className="text-sm text-gray-600 text-center line-clamp-2 leading-relaxed min-h-[40px]">
-                      {m.description}
-                    </p>
-                  </div>
-                  <div
-                    className={`mb-6 ${expandedCard === m.id ? "block" : "hidden"}`}
-                  >
-                    <p className="text-sm text-gray-600 text-center leading-relaxed">
-                      {m.description}
+                    <p className="text-[var(--color-primary)] text-sm font-semibold">
+                      {m.position}
                     </p>
                   </div>
 
-                  {/* Expand Button */}
+                  <p
+                    className={`text-sm text-[var(--color-body)] text-center leading-relaxed ${
+                      expandedCard === m.id ? "" : "line-clamp-2 min-h-[40px]"
+                    } mb-5`}
+                  >
+                    {m.description}
+                  </p>
+
                   <button
                     onClick={() => toggleExpand(m.id)}
-                    className={`flex items-center justify-center gap-2 w-full py-3 rounded-xl transition-all duration-300 mt-auto ${
+                    className={`flex items-center justify-center gap-2 w-full py-2.5 rounded-md text-sm font-semibold transition-colors duration-200 mt-auto ${
                       expandedCard === m.id
-                        ? "bg-gradient-to-r from-[#00f0ff] to-[#0066ff] text-white"
-                        : "bg-gradient-to-r from-[#0066ff] to-[#0066ff] text-white border border-gray-200 hover:border-[#00f0ff] hover:text-[#ffffff]"
+                        ? "bg-[var(--color-primary)] text-white"
+                        : "bg-[var(--color-surface)] text-[var(--color-heading)] border border-[var(--color-border)] hover:border-[var(--color-primary)] hover:text-[var(--color-primary)]"
                     }`}
                   >
-                    <span className="text-sm font-medium hover:text-white">
-                      {expandedCard === m.id ? "Show Less" : "View Details"}
-                    </span>
+                    {expandedCard === m.id ? "Show Less" : "View Details"}
                     <ChevronDown
-                      className={`w-4 h-4 transition-transform duration-300 hover:text-white${
+                      className={`w-4 h-4 transition-transform duration-300 ${
                         expandedCard === m.id ? "rotate-180" : ""
                       }`}
                     />
                   </button>
 
-                  {/* Expanded Skills & Achievements */}
                   <div
                     className={`overflow-hidden transition-all duration-500 ${
                       expandedCard === m.id
-                        ? "max-h-[1000px] opacity-100 mt-6"
+                        ? "max-h-[1000px] opacity-100 mt-5"
                         : "max-h-0 opacity-0"
                     }`}
                   >
-                    <div
-                      className={`pr-2 ${expandedCard === m.id ? "max-h-[280px] overflow-y-auto" : ""}`}
-                    >
-                      {/* Skills */}
-                      <div className="mb-6">
+                    <div className="mb-5">
+                      <div className="flex items-center justify-center gap-2 mb-3">
+                        <Code className="w-4 h-4 text-[var(--color-primary)]" />
+                        <span className="text-[var(--color-heading)] font-semibold text-sm">
+                          Skills
+                        </span>
+                      </div>
+                      <div className="flex flex-wrap gap-2 justify-center">
+                        {(m.skills || []).map((s, i) => (
+                          <span
+                            key={i}
+                            className="px-2.5 py-1 text-xs rounded-md bg-[var(--color-surface)] border border-[var(--color-border)] text-[var(--color-body)]"
+                          >
+                            {s}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+
+                    {m.achievements?.length > 0 && (
+                      <div>
                         <div className="flex items-center justify-center gap-2 mb-3">
-                          <div className="p-1.5 rounded-lg bg-gradient-to-r from-[#00f0ff]/10 to-[#0066ff]/10">
-                            <Code className="w-4 h-4 text-[#00f0ff]" />
-                          </div>
-                          <span className="text-black font-medium">Skills</span>
+                          <Award className="w-4 h-4 text-[var(--color-primary)]" />
+                          <span className="text-[var(--color-heading)] font-semibold text-sm">
+                            Achievements
+                          </span>
                         </div>
-                        <div className="flex flex-wrap gap-2 justify-center">
-                          {m.skills.map((s, i) => (
-                            <span
+                        <div className="space-y-2">
+                          {m.achievements.map((a, i) => (
+                            <div
                               key={i}
-                              className="px-3 py-1.5 text-xs rounded-lg bg-gradient-to-r from-[#00f0ff]/5 to-[#0066ff]/5 border border-[#00f0ff]/20 text-gray-700 hover:border-[#00f0ff] hover:text-[#0066ff] transition-colors cursor-default"
+                              className="flex items-start gap-2 px-3 py-2 bg-[var(--color-surface)] rounded-md border border-[var(--color-border)]"
                             >
-                              {s}
-                            </span>
+                              <Star className="w-3 h-3 text-amber-500 mt-0.5 flex-shrink-0" />
+                              <span className="text-xs text-[var(--color-body)]">{a}</span>
+                            </div>
                           ))}
                         </div>
                       </div>
-
-                      {/* Achievements */}
-                      {m.achievements.length > 0 && (
-                        <div>
-                          <div className="flex items-center justify-center gap-2 mb-3">
-                            <div className="p-1.5 rounded-lg bg-gradient-to-r from-[#00f0ff]/10 to-[#0066ff]/10">
-                              <Award className="w-4 h-4 text-[#00f0ff]" />
-                            </div>
-                            <span className="text-black font-medium">
-                              Achievements
-                            </span>
-                          </div>
-                          <div className="space-y-2">
-                            {m.achievements.map((a, i) => (
-                              <div
-                                key={i}
-                                className="flex items-start gap-2 px-3 py-2 bg-gradient-to-r from-gray-50 to-gray-100 rounded-lg border border-gray-200"
-                              >
-                                <Star className="w-3 h-3 text-yellow-500 mt-0.5 flex-shrink-0" />
-                                <span className="text-xs text-gray-600">
-                                  {a}
-                                </span>
-                              </div>
-                            ))}
-                          </div>
-                        </div>
-                      )}
-                    </div>
+                    )}
                   </div>
                 </div>
               </div>

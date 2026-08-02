@@ -11,6 +11,10 @@ import {
   FaLaptopCode,
   FaBars,
   FaTimes,
+  FaFacebookF,
+  FaInstagram,
+  FaTwitter,
+  FaLinkedinIn,
 } from "react-icons/fa";
 import { FaCartShopping } from "react-icons/fa6";
 import { IoIosArrowDown } from "react-icons/io";
@@ -19,44 +23,42 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 
+const socialLinks = [
+  { Icon: FaFacebookF, href: "https://www.facebook.com/A2ITLtd", label: "Facebook" },
+  { Icon: FaInstagram, href: "#", label: "Instagram" },
+  { Icon: FaTwitter, href: "#", label: "Twitter" },
+  { Icon: FaLinkedinIn, href: "https://www.linkedin.com/in/a2itlimited/", label: "LinkedIn" },
+];
+
 const Navbar = () => {
   const pathname = usePathname();
 
-  // Check if current path is the one where navbar should be hidden
-  const hideNavbarPaths = ["/promotions/website/"]; // Add your paths here
+  const hideNavbarPaths = ["/promotions/website/"];
   const shouldHideNavbar = hideNavbarPaths.includes(pathname);
 
-  // If navbar should be hidden, return null (render nothing)
-  if (shouldHideNavbar) {
-    return null;
-  }
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [servicesOpen, setServicesOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
   const timeoutRef = useRef(null);
   const mobileMenuRef = useRef(null);
   const dropdownRef = useRef(null);
+  const searchRef = useRef(null);
 
-  // Debug current pathname
-  useEffect(() => {
-    console.log("Current pathname:", pathname);
-  }, [pathname]);
+  const isHome = pathname === "/";
+  const overlay = isHome && !isScrolled;
 
-  // Check if current path is active
   const isActive = (path) => {
     if (!pathname) return false;
-
     if (path === "/") {
       return pathname === path;
     }
     return pathname.startsWith(path);
   };
 
-  // Check if any service page is active
   const isServicesActive = () => {
     if (!pathname) return false;
-
     const servicePaths = [
       "/services/design-development",
       "/services/e-commerce",
@@ -67,24 +69,17 @@ const Navbar = () => {
       "/services/server-hosting",
       "/services/e-bay",
     ];
-
     return servicePaths.some((path) => pathname.startsWith(path));
   };
 
   useEffect(() => {
     const handleScroll = () => {
-      if (window.scrollY > 10) {
-        setIsScrolled(true);
-      } else {
-        setIsScrolled(false);
-      }
+      setIsScrolled(window.scrollY > 10);
     };
-
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Close mobile menu when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (
@@ -105,13 +100,21 @@ const Navbar = () => {
       ) {
         setDropdownOpen(false);
       }
+
+      if (
+        searchOpen &&
+        searchRef.current &&
+        !searchRef.current.contains(event.target)
+      ) {
+        setSearchOpen(false);
+      }
     };
 
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [mobileMenuOpen, dropdownOpen]);
+  }, [mobileMenuOpen, dropdownOpen, searchOpen]);
 
   const handleMouseEnter = () => {
     clearTimeout(timeoutRef.current);
@@ -155,167 +158,294 @@ const Navbar = () => {
   }, []);
 
   const services = [
-    ["Design & Development", "/services/design-development", <FaLaptopCode />],
-    ["E-Commerce", "/services/e-commerce", <FaCartShopping />],
-    ["Amazon", "/services/amazon", <FaAmazon />],
-    ["Shopify", "/services/shopify", <FaShopify />],
-    ["ERP System Development", "/services/erp", <FaVectorSquare />],
-    ["SEO / SEM / PPC", "/services/seo", <FaSearch />],
-    ["Server and Hosting Services", "/services/server-hosting", <FaUsers />],
-    ["E-bay", "/services/e-bay", <FaEbay />],
+    [
+      "Design & Development",
+      "/services/design-development",
+      <FaLaptopCode />,
+      "Websites, apps & product design built for scale",
+    ],
+    [
+      "E-Commerce",
+      "/services/e-commerce",
+      <FaCartShopping />,
+      "Storefronts and marketplace integrations",
+    ],
+    [
+      "Amazon",
+      "/services/amazon",
+      <FaAmazon />,
+      "FBA, vendor central & marketplace growth",
+    ],
+    [
+      "Shopify",
+      "/services/shopify",
+      <FaShopify />,
+      "Store setup, theming & conversion optimisation",
+    ],
+    [
+      "ERP System Development",
+      "/services/erp",
+      <FaVectorSquare />,
+      "Custom enterprise resource planning systems",
+    ],
+    [
+      "SEO / SEM / PPC",
+      "/services/seo",
+      <FaSearch />,
+      "Search visibility and performance marketing",
+    ],
+    [
+      "Server & Hosting",
+      "/services/server-hosting",
+      <FaUsers />,
+      "Cloud infrastructure, hosting & support",
+    ],
+    [
+      "E-bay",
+      "/services/e-bay",
+      <FaEbay />,
+      "Listing, fulfillment & account management",
+    ],
   ];
+
+  if (shouldHideNavbar) {
+    return null;
+  }
+
+  const linkColorClasses = (active) =>
+    `relative py-2 transition-colors duration-200 ${
+      overlay
+        ? active
+          ? "text-white"
+          : "text-white/85 hover:text-white"
+        : active
+          ? "text-[var(--color-primary)]"
+          : "hover:text-[var(--color-primary)]"
+    }`;
+
+  const underlineClasses = overlay ? "bg-white" : "bg-[var(--color-primary)]";
+
+  const iconButtonClasses = `flex items-center justify-center w-9 h-9 rounded-full border transition-colors ${
+    overlay
+      ? "border-white/50 text-white hover:bg-white/10"
+      : "border-[var(--color-border)] text-[var(--color-heading)] hover:bg-[var(--color-surface)]"
+  }`;
 
   return (
     <nav
-      className={`bg-white text-black px-6 md:px-10 py-4 flex items-center justify-between relative z-50 sticky top-0 transition-all duration-300 font-bold ${
-        isScrolled
-          ? "bg-opacity-90 shadow-[0_4px_20px_0px_rgba(0,240,255,0.3)]"
-          : "bg-opacity-100 shadow-none"
+      className={`px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between z-50 sticky top-0 transition-colors duration-300 ${
+        overlay
+          ? "bg-transparent text-white border-b border-transparent shadow-none"
+          : `bg-white text-[var(--color-heading)] border-b border-[var(--color-border)] ${
+              isScrolled ? "shadow-md" : "shadow-none"
+            }`
       }`}
     >
-      <Link href="/" className="flex items-center space-x-2">
-        <Logo />
+      <Link href="/" className="flex items-center space-x-2 shrink-0">
+        <Logo variant={overlay ? "light" : "default"} />
       </Link>
 
-      <ul className="hidden md:flex space-x-10 items-center text-sm font-medium relative">
-        <li>
-          <Link
-            href="/"
-            className={`hover:text-[#006dff] transition-colors duration-200 ${
-              isActive("/") ? "text-[#006dff] font-bold" : ""
-            }`}
-          >
-            Home
-          </Link>
-        </li>
-
-        <li
-          className="relative"
-          onMouseEnter={handleMouseEnter}
-          onMouseLeave={handleMouseLeave}
-        >
-          <button
-            onClick={handleToggleClick}
-            className={`flex items-center gap-1 hover:text-[#006dff] transition-colors duration-200 ${
-              isServicesActive() ? "text-[#006dff] font-bold" : ""
-            }`}
-          >
-            Our Services{" "}
-            <IoIosArrowDown
-              className={`transition-transform duration-300 ${
-                dropdownOpen ? "rotate-180" : "rotate-0"
-              }`}
-            />
-          </button>
-
-          {dropdownOpen && (
-            <div
-              ref={dropdownRef}
-              className="absolute top-full left-[180px] -translate-x-1/2 mt-4 w-[95vw] sm:w-[700px] md:w-[900px] bg-white text-black grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 rounded-xl shadow-2xl z-20 px-6 sm:px-8 py-6 border"
-              onMouseEnter={handleMouseEnter}
-              onMouseLeave={handleMouseLeave}
-            >
-              <div className="col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-6">
-                {services.map(([title, path, icon], idx) => (
-                  <Link
-                    href={path}
-                    key={idx}
-                    className={`flex items-center gap-3 hover:text-[#006dff] cursor-pointer transition-colors duration-200 ${
-                      isActive(path) ? "text-[#006dff] font-bold" : ""
-                    }`}
-                    onClick={handleServiceClick}
-                  >
-                    <div
-                      className={`p-2 rounded-full text-sm mt-1 ${
-                        isActive(path)
-                          ? "bg-gradient-to-r from-[#00f0ff] to-[#0066ff] text-white"
-                          : "bg-[#0066ff] text-[#fff]"
-                      }`}
-                    >
-                      {icon}
-                    </div>
-                    <div className="text-sm leading-tight mt-1">{title}</div>
-                  </Link>
-                ))}
-              </div>
-
-              <div className="bg-[#0e0e15] border border-[#00f0ff]/20 rounded-lg p-4 relative overflow-hidden flex items-center justify-center text-center">
-                <Image
-                  src="/assets/banner.avif"
-                  alt="banner img"
-                  width="400"
-                  height="400"
-                  unoptimized
-                  className="absolute inset-0 w-full h-full object-cover opacity-30 rounded-md"
+      <div className="flex items-center gap-4 lg:gap-6">
+        <ul className="hidden md:flex gap-6 lg:gap-8 items-center text-sm font-semibold relative">
+          <li>
+            <Link href="/" className={linkColorClasses(isActive("/"))}>
+              Home
+              {isActive("/") && (
+                <span
+                  className={`absolute -bottom-1 left-0 w-full h-0.5 rounded-full ${underlineClasses}`}
                 />
+              )}
+            </Link>
+          </li>
 
-                <div className="relative z-10 flex flex-col items-center justify-center">
-                  <h3 className="text-white font-semibold mb-2">
-                    Download our PDF portfolio
-                  </h3>
+          <li
+            className="relative"
+            onMouseEnter={handleMouseEnter}
+            onMouseLeave={handleMouseLeave}
+          >
+            <button
+              onClick={handleToggleClick}
+              className={`flex items-center gap-1 ${linkColorClasses(
+                isServicesActive(),
+              )}`}
+            >
+              Our Services
+              <IoIosArrowDown
+                className={`transition-transform duration-300 ${
+                  dropdownOpen ? "rotate-180" : "rotate-0"
+                }`}
+              />
+              {isServicesActive() && (
+                <span
+                  className={`absolute -bottom-1 left-0 w-full h-0.5 rounded-full ${underlineClasses}`}
+                />
+              )}
+            </button>
 
-                  <p className="text-sm text-[#b0b0ff] mb-4 font-bold">
-                    See our project experience & offerings in detail.
-                  </p>
+            {dropdownOpen && (
+              <div
+                ref={dropdownRef}
+                className="absolute top-full left-1/2 -translate-x-1/2 mt-3 w-[95vw] sm:w-[720px] lg:w-[920px] bg-white text-[var(--color-heading)] grid grid-cols-1 lg:grid-cols-3 rounded-lg shadow-2xl z-20 border border-[var(--color-border)] overflow-hidden"
+                onMouseEnter={handleMouseEnter}
+                onMouseLeave={handleMouseLeave}
+              >
+                <div className="col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-1 p-6">
+                  {services.map(([title, path, icon, desc], idx) => (
+                    <Link
+                      href={path}
+                      key={idx}
+                      className={`flex items-start gap-3 rounded-md p-3 hover:bg-[var(--color-surface)] transition-colors duration-200 ${
+                        isActive(path) ? "bg-[var(--color-primary-tint)]" : ""
+                      }`}
+                      onClick={handleServiceClick}
+                    >
+                      <div
+                        className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-md text-base ${
+                          isActive(path)
+                            ? "bg-[var(--color-primary)] text-white"
+                            : "bg-[var(--color-primary-tint)] text-[var(--color-primary)]"
+                        }`}
+                      >
+                        {icon}
+                      </div>
+                      <div>
+                        <div
+                          className={`text-sm font-semibold leading-tight ${
+                            isActive(path) ? "text-[var(--color-primary)]" : ""
+                          }`}
+                        >
+                          {title}
+                        </div>
+                        <p className="mt-1 text-xs text-[var(--color-body)] leading-snug">
+                          {desc}
+                        </p>
+                      </div>
+                    </Link>
+                  ))}
+                </div>
 
-                  <a
-                    href="/A2it Portfolio.pdf"
-                    download="A2IT-Portfolio"
-                    className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-[#00f0ff] to-[#0066ff] hover:from-[#00c0ff] hover:to-[#0044ff] rounded-full text-sm font-semibold text-[#0a0a12] transition"
-                    onClick={handleServiceClick}
-                  >
-                    <FaDownload /> Download
-                  </a>
+                <div className="hidden lg:flex flex-col justify-center bg-[var(--color-ink)] p-6 relative overflow-hidden">
+                  <Image
+                    src="/assets/banner.avif"
+                    alt="A2IT portfolio"
+                    width="400"
+                    height="400"
+                    unoptimized
+                    className="absolute inset-0 w-full h-full object-cover opacity-20"
+                  />
+                  <div className="relative z-10">
+                    <h3 className="text-white font-bold mb-2">
+                      Download our PDF portfolio
+                    </h3>
+                    <p className="text-sm text-white/60 mb-5">
+                      See our project experience & offerings in detail.
+                    </p>
+                    <a
+                      href="/A2it Portfolio.pdf"
+                      download="A2IT-Portfolio"
+                      className="inline-flex items-center gap-2 px-4 py-2.5 bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)] rounded-md text-sm font-semibold text-white transition-colors"
+                      onClick={handleServiceClick}
+                    >
+                      <FaDownload /> Download
+                    </a>
+                  </div>
                 </div>
               </div>
-            </div>
+            )}
+          </li>
+
+          <li>
+            <Link href="/about" className={linkColorClasses(isActive("/about"))}>
+              About
+              {isActive("/about") && (
+                <span
+                  className={`absolute -bottom-1 left-0 w-full h-0.5 rounded-full ${underlineClasses}`}
+                />
+              )}
+            </Link>
+          </li>
+
+          <li>
+            <Link
+              href="/portfolio"
+              className={linkColorClasses(isActive("/portfolio"))}
+            >
+              Portfolio
+              {isActive("/portfolio") && (
+                <span
+                  className={`absolute -bottom-1 left-0 w-full h-0.5 rounded-full ${underlineClasses}`}
+                />
+              )}
+            </Link>
+          </li>
+
+          <li>
+            <Link href="/blog" className={linkColorClasses(isActive("/blog"))}>
+              Blog
+              {isActive("/blog") && (
+                <span
+                  className={`absolute -bottom-1 left-0 w-full h-0.5 rounded-full ${underlineClasses}`}
+                />
+              )}
+            </Link>
+          </li>
+        </ul>
+
+        <div className="hidden md:block relative" ref={searchRef}>
+          <button
+            type="button"
+            onClick={() => setSearchOpen((prev) => !prev)}
+            aria-label="Toggle search"
+            className={iconButtonClasses}
+          >
+            <FaSearch className="text-xs" />
+          </button>
+
+          {searchOpen && (
+            <form
+              onSubmit={(e) => e.preventDefault()}
+              className={`absolute right-0 top-full mt-3 w-64 rounded-lg shadow-lg overflow-hidden border z-20 ${
+                overlay
+                  ? "bg-white/95 border-white/40"
+                  : "bg-white border-[var(--color-border)]"
+              }`}
+            >
+              <input
+                type="text"
+                autoFocus
+                placeholder="Search..."
+                className="w-full px-4 py-2.5 text-sm text-[var(--color-heading)] outline-none"
+              />
+            </form>
           )}
-        </li>
+        </div>
 
-        <li>
-          <Link
-            href="/about"
-            className={`hover:text-[#006dff] transition-colors duration-200 ${
-              isActive("/about") ? "text-[#006dff] font-bold" : ""
-            }`}
-          >
-            About
-          </Link>
-        </li>
+        <div className="hidden lg:flex items-center gap-2">
+          {socialLinks.map(({ Icon, href, label }) => (
+            <a
+              key={label}
+              href={href}
+              aria-label={label}
+              className={iconButtonClasses}
+            >
+              <Icon className="text-xs" />
+            </a>
+          ))}
+        </div>
 
-        <li>
-          <Link
-            href="/portfolio"
-            className={`hover:text-[#006dff] transition-colors duration-200 ${
-              isActive("/portfolio") ? "text-[#006dff] font-bold" : ""
-            }`}
-          >
-            Portfolio
-          </Link>
-        </li>
-
-        <li>
-          <Link
-            href="/blog"
-            className={`hover:text-[#006dff] transition-colors duration-200 ${
-              isActive("/blog") ? "text-[#006dff] font-bold" : ""
-            }`}
-          >
-            Blog
-          </Link>
-        </li>
-      </ul>
-
-      <Link
-        href="/contact"
-        className={`bg-gradient-to-r from-[#0066ff] to-[#00f0ff] hover:from-[#00f0ff] hover:to-[#0066ff] transition-all duration-300 text-white px-3 py-2.5 rounded-full shadow-md text-sm font-semibold hidden md:flex items-center gap-1 ${
-          isActive("/contact")
-            ? "from-[#00f0ff] to-[#00f0ff] text-[#0a0a12] shadow-[0_0_15px_rgba(0,240,255,0.5)]"
-            : ""
-        }`}
-      >
-        <span className="animate-wave origin-[70%_70%]">👋</span> Contact Us
-      </Link>
+        <Link
+          href="/contact"
+          className={`hidden md:inline-flex items-center gap-1 px-5 py-2.5 rounded-md text-sm font-semibold transition-colors duration-200 ${
+            overlay
+              ? "bg-white/15 backdrop-blur border border-white/40 text-white hover:bg-white/25"
+              : isActive("/contact")
+                ? "bg-[var(--color-primary-dark)] text-white"
+                : "bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)] text-white"
+          }`}
+        >
+          Contact Us
+        </Link>
+      </div>
 
       <div className="md:hidden">
         <button onClick={toggleMobileMenu} aria-label="Toggle menu">
@@ -326,13 +456,13 @@ const Navbar = () => {
       {mobileMenuOpen && (
         <div
           ref={mobileMenuRef}
-          className="absolute top-full left-0 w-full bg-white text-black px-6 py-4 space-y-4 z-40 shadow-lg"
+          className="absolute top-full left-0 w-full bg-white text-[var(--color-heading)] px-6 py-4 space-y-1 z-40 shadow-lg border-t border-[var(--color-border)]"
         >
           <Link
             href="/"
-            className={`block py-2 hover:text-[#006dff] transition-colors duration-200 ${
+            className={`block py-2.5 hover:text-[var(--color-primary)] transition-colors duration-200 ${
               isActive("/")
-                ? "text-[#006dff] font-bold border-l-4 border-[#00f0ff] pl-3"
+                ? "text-[var(--color-primary)] font-semibold border-l-4 border-[var(--color-primary)] pl-3"
                 : "pl-4"
             }`}
             onClick={handleServiceClick}
@@ -343,9 +473,9 @@ const Navbar = () => {
           <div>
             <button
               onClick={toggleMobileServices}
-              className={`flex items-center justify-between w-full py-2 hover:text-[#006dff] cursor-pointer transition-colors duration-200 ${
+              className={`flex items-center justify-between w-full py-2.5 hover:text-[var(--color-primary)] transition-colors duration-200 ${
                 isServicesActive()
-                  ? "text-[#006dff] font-bold border-l-4 border-[#00f0ff] pl-3"
+                  ? "text-[var(--color-primary)] font-semibold border-l-4 border-[var(--color-primary)] pl-3"
                   : "pl-4"
               }`}
             >
@@ -358,14 +488,14 @@ const Navbar = () => {
             </button>
 
             {servicesOpen && (
-              <div className="mt-2 space-y-1">
+              <div className="mt-1 space-y-1">
                 {services.map(([title, path], idx) => (
                   <Link
                     href={path}
                     key={idx}
-                    className={`block text-sm py-2 hover:text-[#006dff] transition-colors duration-200 ${
+                    className={`block text-sm py-2 hover:text-[var(--color-primary)] transition-colors duration-200 ${
                       isActive(path)
-                        ? "text-[#006dff] font-bold bg-[#00f0ff]/10 border-l-4 border-[#00f0ff] pl-6"
+                        ? "text-[var(--color-primary)] font-semibold bg-[var(--color-primary-tint)] border-l-4 border-[var(--color-primary)] pl-6"
                         : "pl-8"
                     }`}
                     onClick={handleServiceClick}
@@ -379,9 +509,9 @@ const Navbar = () => {
 
           <Link
             href="/about"
-            className={`block py-2 hover:text-[#006dff] transition-colors duration-200 ${
+            className={`block py-2.5 hover:text-[var(--color-primary)] transition-colors duration-200 ${
               isActive("/about")
-                ? "text-[#006dff] font-bold border-l-4 border-[#00f0ff] pl-3"
+                ? "text-[var(--color-primary)] font-semibold border-l-4 border-[var(--color-primary)] pl-3"
                 : "pl-4"
             }`}
             onClick={handleServiceClick}
@@ -391,9 +521,9 @@ const Navbar = () => {
 
           <Link
             href="/portfolio"
-            className={`block py-2 hover:text-[#006dff] transition-colors duration-200 ${
+            className={`block py-2.5 hover:text-[var(--color-primary)] transition-colors duration-200 ${
               isActive("/portfolio")
-                ? "text-[#006dff] font-bold border-l-4 border-[#00f0ff] pl-3"
+                ? "text-[var(--color-primary)] font-semibold border-l-4 border-[var(--color-primary)] pl-3"
                 : "pl-4"
             }`}
             onClick={handleServiceClick}
@@ -403,9 +533,9 @@ const Navbar = () => {
 
           <Link
             href="/blog"
-            className={`block py-2 hover:text-[#006dff] transition-colors duration-200 ${
+            className={`block py-2.5 hover:text-[var(--color-primary)] transition-colors duration-200 ${
               isActive("/blog")
-                ? "text-[#006dff] font-bold border-l-4 border-[#00f0ff] pl-3"
+                ? "text-[var(--color-primary)] font-semibold border-l-4 border-[var(--color-primary)] pl-3"
                 : "pl-4"
             }`}
             onClick={handleServiceClick}
@@ -413,60 +543,28 @@ const Navbar = () => {
             Blog
           </Link>
 
+          <div className="flex items-center gap-2 pt-2 pl-4">
+            {socialLinks.map(({ Icon, href, label }) => (
+              <a
+                key={label}
+                href={href}
+                aria-label={label}
+                className="flex items-center justify-center w-9 h-9 rounded-full border border-[var(--color-border)] text-[var(--color-heading)] hover:bg-[var(--color-surface)] transition-colors"
+              >
+                <Icon className="text-xs" />
+              </a>
+            ))}
+          </div>
+
           <Link
             href="/contact"
-            className={`w-full mt-4 py-3 px-2 rounded-full text-sm font-semibold flex items-center justify-center gap-1 transition-all duration-300 ${
-              isActive("/contact")
-                ? "bg-gradient-to-r from-[#00f0ff] to-[#00f0ff] text-[#0a0a12] shadow-[0_0_10px_rgba(0,240,255,0.5)]"
-                : "bg-gradient-to-r from-[#0066ff] to-[#00f0ff] hover:from-[#0044ff] hover:to-[#00c0ff] text-white"
-            }`}
+            className="block w-full mt-3 py-3 px-2 rounded-md text-sm font-semibold text-center text-white bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)] transition-colors duration-200"
             onClick={handleServiceClick}
           >
-            <span className="animate-wave origin-[70%_70%]">👋</span> Contact Us
+            Contact Us
           </Link>
         </div>
       )}
-
-      <style>{`
-        @keyframes wave {
-          0% { transform: rotate(0deg); }
-          15% { transform: rotate(14deg); }
-          30% { transform: rotate(-8deg); }
-          40% { transform: rotate(14deg); }
-          50% { transform: rotate(-4deg); }
-          60% { transform: rotate(10deg); }
-          100% { transform: rotate(0deg); }
-        }
-        .animate-wave {
-          display: inline-block;
-          animation: wave 2s infinite;
-        }
-        
-        /* Active link animation */
-        .active-link {
-          position: relative;
-        }
-        
-        .active-link::after {
-          content: '';
-          position: absolute;
-          bottom: -4px;
-          left: 0;
-          width: 100%;
-          height: 2px;
-          background: linear-gradient(to right, #00f0ff, #0066ff);
-          animation: underline 0.3s ease-out;
-        }
-        
-        @keyframes underline {
-          from {
-            width: 0;
-          }
-          to {
-            width: 100%;
-          }
-        }
-      `}</style>
     </nav>
   );
 };

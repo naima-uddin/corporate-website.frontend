@@ -1,7 +1,7 @@
 import React from "react";
 import Image from "next/image";
 
-const Logo = () => {
+const Logo = ({ variant = "default", className = "" }) => {
   return (
     <div className="flex">
       <Image
@@ -9,7 +9,9 @@ const Logo = () => {
         alt="A2it Logo"
         width={120}
         height={40}
-        className="h-8 w-auto"
+        className={`h-8 w-auto ${
+          variant === "light" ? "brightness-0 invert" : ""
+        } ${className}`}
         unoptimized
       />
     </div>

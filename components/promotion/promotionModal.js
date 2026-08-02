@@ -53,8 +53,7 @@ const PromotionModal = ({ isOpen, onClose }) => {
     const fetchPlans = async () => {
       try {
         const backendUrl =
-          process.env.NEXT_PUBLIC_BACKEND_URL ||
-          "https://a2it-dashboard-backend.vercel.app";
+          process.env.NEXT_PUBLIC_BACKEND_URL;
         const res = await fetch(`${backendUrl}/api/promotional-packages`);
         const json = await res.json();
 
@@ -151,8 +150,7 @@ const PromotionModal = ({ isOpen, onClose }) => {
 
       // Replace with your actual backend URL
       const backendUrl =
-        process.env.NEXT_PUBLIC_BACKEND_URL ||
-        "https://a2it-dashboard-backend.vercel.app";
+        process.env.NEXT_PUBLIC_BACKEND_URL ;
 
       const response = await fetch(`${backendUrl}/api/send-email`, {
         method: "POST",
