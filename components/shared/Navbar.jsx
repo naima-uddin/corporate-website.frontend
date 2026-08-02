@@ -215,7 +215,7 @@ const Navbar = () => {
 
   return (
     <nav
-      className={`px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between z-50 sticky top-0 transition-colors duration-300 ${
+      className={`px-4 sm:px-6 lg:px-8 h-14 flex items-center justify-between z-50 sticky top-0 transition-colors duration-300 ${
         overlay
           ? "bg-transparent text-white border-b border-transparent shadow-none"
           : `bg-white text-[var(--color-heading)] border-b border-[var(--color-border)] ${
