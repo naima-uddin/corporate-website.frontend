@@ -33,7 +33,7 @@ export default function Page() {
       <div className="mx-auto grid w-full max-w-6xl items-center gap-10 lg:grid-cols-[1.1fr_0.9fr]">
         <section className="hidden rounded-3xl border border-slate-200 bg-white/75 p-10 shadow-[0_20px_80px_rgba(15,23,42,0.08)] backdrop-blur sm:block">
           <p className="text-sm font-semibold uppercase tracking-[0.3em] text-slate-500">
-            A2IT Dashboard
+           Dashboard
           </p>
           <h1 className="mt-6 max-w-xl text-4xl font-semibold tracking-tight text-slate-950 sm:text-5xl">
             Sign in to manage blogs, services, portfolio, and site settings.
