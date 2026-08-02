@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
+import { MessageSquareQuote } from "lucide-react";
 
 const renderQuote = (text) => {
   const parts = String(text || "").split(/(\*\*[^*]+\*\*)/g);
@@ -68,20 +69,23 @@ const WhoRWe = () => {
           >
             <span className="eyebrow mb-4">Who We Are</span>
 
-            <div className="relative mt-6 rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] p-8 md:p-10">
+            <div className="relative mt-8 pb-5">
+              {/* tail, sits behind the bubble so its top half is hidden */}
               <span
-                className="absolute -top-6 left-8 text-7xl md:text-8xl font-serif leading-none text-[var(--color-primary)]/20 select-none"
                 aria-hidden="true"
-              >
-                &ldquo;
-              </span>
-              <p className="relative text-xl md:text-2xl leading-relaxed text-[var(--color-heading)]">
-                {renderQuote(spotlight.quote)}
-              </p>
-              <span
-                className="absolute -bottom-10 right-8 w-10 h-10 border-b border-r border-[var(--color-border)] bg-[var(--color-surface)] rotate-45"
-                aria-hidden="true"
+                className="absolute left-12 bottom-2 z-0 h-8 w-8 rotate-45 rounded-md bg-[var(--color-surface)] ring-1 ring-[var(--color-border)]"
               />
+
+              <div className="relative z-10 rounded-[2rem] bg-[var(--color-surface)] p-8 shadow-md ring-1 ring-[var(--color-border)] md:p-10">
+                <MessageSquareQuote
+                  className="mb-3 h-8 w-8 text-[var(--color-primary)]/40"
+                  strokeWidth={1.5}
+                  aria-hidden="true"
+                />
+                <p className="relative text-xl md:text-2xl leading-relaxed text-[var(--color-heading)]">
+                  {renderQuote(spotlight.quote)}
+                </p>
+              </div>
             </div>
 
             <div className="mt-12">
