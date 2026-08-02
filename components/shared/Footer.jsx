@@ -3,18 +3,8 @@ import React from "react";
 import { FaPhone, FaEnvelope, FaMapMarkerAlt } from "react-icons/fa";
 import { FaFacebookF, FaTwitter, FaLinkedinIn } from "react-icons/fa";
 import Logo from "./Logo";
-import { usePathname } from "next/navigation";
 
 const Footer = () => {
-  const pathname = usePathname();
-
-  const hideNavbarPaths = ["/promotions/website/"];
-  const shouldHideNavbar = hideNavbarPaths.includes(pathname);
-
-  if (shouldHideNavbar) {
-    return null;
-  }
-
   const routes = {
     HOME: "/",
     PORTFOLIO: "/portfolio",

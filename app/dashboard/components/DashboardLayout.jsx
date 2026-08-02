@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
 import {
@@ -11,12 +11,41 @@ import {
   Settings,
   Users,
   ShoppingCart,
-  Image,
-  TrendingUp,
+  Image as ImageIcon,
+  Images,
+  Briefcase,
+  Building2,
+  LayoutDashboard,
+  ChevronsLeft,
+  ChevronsRight,
 } from "lucide-react";
 import Link from "next/link";
 
-const DashboardNavLink = ({ item, pathname, onClick }) => {
+const SIDEBAR_COLLAPSE_KEY = "a2it-sidebar-collapsed";
+
+const NAV_SECTIONS = [
+  {
+    id: "overview",
+    label: null,
+    items: [
+      { id: "dashboard", label: "Overview", icon: LayoutDashboard, href: "/dashboard" },
+    ],
+  },
+  {
+    id: "content",
+    label: "Content",
+    items: [
+      { id: "banner", label: "Manage Banner", icon: ImageIcon, href: "/dashboard/banner" },
+      { id: "services", label: "Manage Services", icon: ShoppingCart, href: "/dashboard/services" },
+      { id: "portfolio", label: "Manage Portfolio", icon: Briefcase, href: "/dashboard/portfolio" },
+      { id: "blog", label: "Manage Blog", icon: FileText, href: "/dashboard/blog" },
+      { id: "media", label: "All Media", icon: Images, href: "/dashboard/media" },
+      { id: "client-showcase", label: "Client Showcase", icon: Building2, href: "/dashboard/client-showcase" },
+    ],
+  },
+];
+
+const DashboardNavLink = ({ item, pathname, onClick, collapsed }) => {
   const Icon = item.icon;
   const isActive =
     pathname === item.href ||
@@ -27,98 +56,52 @@ const DashboardNavLink = ({ item, pathname, onClick }) => {
       href={item.href}
       onClick={onClick}
       aria-current={isActive ? "page" : undefined}
-      className={`flex items-center gap-3 px-4 py-3 rounded-lg transition ${
+      title={collapsed ? item.label : undefined}
+      className={`group relative flex items-center gap-3 rounded-lg px-3.5 py-2.5 text-sm font-medium transition-colors ${
+        collapsed ? "justify-center" : ""
+      } ${
         isActive
-          ? "bg-gradient-to-r from-cyan-500 to-blue-500 text-white"
-          : "text-slate-700 hover:bg-slate-100"
+          ? "bg-gradient-to-r from-cyan-500 to-blue-600 text-white shadow-sm shadow-cyan-500/20"
+          : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
       }`}
     >
-      <Icon className="w-5 h-5" />
-      <span>{item.label}</span>
+      <Icon className="h-[18px] w-[18px] shrink-0" />
+      {!collapsed && <span className="truncate">{item.label}</span>}
+
+      {collapsed && (
+        <span className="pointer-events-none absolute left-full ml-3 whitespace-nowrap rounded-md bg-slate-900 px-2.5 py-1.5 text-xs font-medium text-white opacity-0 shadow-lg transition-opacity duration-150 group-hover:opacity-100 z-50">
+          {item.label}
+        </span>
+      )}
     </Link>
   );
 };
 
-const DashboardNav = () => {
+const DashboardNav = ({ collapsed, onToggleCollapse }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const pathname = usePathname();
   const router = useRouter();
   const { logout, user } = useAuth();
 
-  const menuItems = [
-    {
-      id: "banner",
-      label: "Manage Banner",
-      icon: Image,
-      href: "/dashboard/banner",
-    },
-    {
-      id: "services",
-      label: "Manage Services",
-      icon: ShoppingCart,
-      href: "/dashboard/services",
-    },
-
-    {
-      id: "portfolio",
-      label: "Manage Portfolio",
-      icon: Image,
-      href: "/dashboard/portfolio",
-    },
-    {
-      id: "employees",
-      label: "Manage Employees",
-      icon: Users,
-      href: "/dashboard/employees",
-    },
-    {
-      id: "blog",
-      label: "Manage Blog",
-      icon: FileText,
-      href: "/dashboard/blog",
-    },
-
-    {
-      id: "projects",
-      label: "Promotional Projects",
-      icon: Image,
-      href: "/dashboard/projects",
-    },
-
-    {
-      id: "solutions",
-      label: "Promotional Packages",
-      icon: TrendingUp,
-      href: "/dashboard/solutions",
-    },
-    {
-      id: "media",
-      label: "All Media",
-      icon: Image,
-      href: "/dashboard/media",
-    },
-    {
-      id: "client-showcase",
-      label: "Client Showcase",
-      icon: Image,
-      href: "/dashboard/client-showcase",
-    },
+  const sections = [
+    ...NAV_SECTIONS,
     ...(user?.role === "admin"
       ? [
           {
-            id: "users",
-            label: "Manage Users",
-            icon: Users,
-            href: "/dashboard/users",
+            id: "admin",
+            label: "Administration",
+            items: [
+              { id: "users", label: "Manage Users", icon: Users, href: "/dashboard/users" },
+            ],
           },
         ]
       : []),
-
     {
-      id: "settings",
-      label: "Settings",
-      icon: Settings,
-      href: "/dashboard/settings",
+      id: "account",
+      label: "Account",
+      items: [
+        { id: "settings", label: "Settings", icon: Settings, href: "/dashboard/settings" },
+      ],
     },
   ];
 
@@ -127,64 +110,138 @@ const DashboardNav = () => {
     router.push("/login");
   };
 
+  const initials = (user?.name || "?")
+    .split(" ")
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((part) => part[0]?.toUpperCase())
+    .join("");
+
   return (
     <>
       {/* Mobile Menu Button */}
       <div className="lg:hidden fixed top-4 left-4 z-50">
         <button
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          className="p-2 bg-cyan-500 text-white rounded-lg"
+          className="p-2.5 bg-slate-900 text-white rounded-lg shadow-lg"
+          aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
         >
           {mobileMenuOpen ? (
-            <X className="w-6 h-6" />
+            <X className="w-5 h-5" />
           ) : (
-            <Menu className="w-6 h-6" />
+            <Menu className="w-5 h-5" />
           )}
         </button>
       </div>
 
       {/* Sidebar */}
-      <div
-        className={`fixed left-0 top-0 h-screen w-64 bg-white border-r border-slate-200 transition-transform duration-300 lg:translate-x-0 ${
-          mobileMenuOpen ? "translate-x-0" : "-translate-x-full"
-        } z-40`}
+      <aside
+        className={`fixed left-0 top-0 z-40 flex h-screen w-64 flex-col border-r border-slate-200 bg-white transition-all duration-300 lg:translate-x-0 ${
+          collapsed ? "lg:w-20" : "lg:w-64"
+        } ${mobileMenuOpen ? "translate-x-0" : "-translate-x-full"}`}
       >
-        <div className="p-6">
+        {/* Brand */}
+        <div
+          className={`flex h-16 items-center border-b border-slate-200 px-4 ${
+            collapsed ? "justify-center" : "justify-between"
+          }`}
+        >
           <Link
             href="/dashboard"
-            className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-[#00f0ff] to-[#0066ff] mb-26 text-center"
+            className={`flex items-center gap-2 overflow-hidden ${collapsed ? "justify-center" : ""}`}
           >
-            A2IT Dashbaord
+            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-gradient-to-br from-cyan-400 to-blue-600 text-sm font-extrabold text-white">
+              A2
+            </span>
+            {!collapsed && (
+              <span className="truncate text-lg font-bold text-slate-900">
+                A2IT Dashboard
+              </span>
+            )}
           </Link>
 
-          <nav className="space-y-2">
-            {menuItems.map((item) => (
-              <DashboardNavLink
-                key={item.id}
-                item={item}
-                pathname={pathname}
-                onClick={() => setMobileMenuOpen(false)}
-              />
-            ))}
-          </nav>
+          {!collapsed && (
+            <button
+              onClick={onToggleCollapse}
+              className="hidden lg:inline-flex items-center justify-center rounded-md p-1.5 text-slate-400 hover:bg-slate-100 hover:text-slate-700 transition"
+              aria-label="Collapse sidebar"
+              title="Collapse sidebar"
+            >
+              <ChevronsLeft className="h-4 w-4" />
+            </button>
+          )}
         </div>
 
+        {collapsed && (
+          <button
+            onClick={onToggleCollapse}
+            className="hidden lg:flex mx-auto mt-3 items-center justify-center rounded-md p-1.5 text-slate-400 hover:bg-slate-100 hover:text-slate-700 transition"
+            aria-label="Expand sidebar"
+            title="Expand sidebar"
+          >
+            <ChevronsRight className="h-4 w-4" />
+          </button>
+        )}
+
+        {/* Nav */}
+        <nav className="flex-1 space-y-6 overflow-y-auto px-3 py-5">
+          {sections.map((section) => (
+            <div key={section.id} className="space-y-1.5">
+              {section.label && !collapsed && (
+                <p className="px-3 text-[11px] font-semibold uppercase tracking-wider text-slate-400">
+                  {section.label}
+                </p>
+              )}
+              {section.label && collapsed && (
+                <div className="mx-3 border-t border-slate-100" />
+              )}
+              {section.items.map((item) => (
+                <DashboardNavLink
+                  key={item.id}
+                  item={item}
+                  pathname={pathname}
+                  collapsed={collapsed}
+                  onClick={() => setMobileMenuOpen(false)}
+                />
+              ))}
+            </div>
+          ))}
+        </nav>
+
         {/* User Info & Logout */}
-        <div className="absolute bottom-0 left-0 right-0 p-6 border-t border-slate-200">
-          <div className="mb-4 pb-4 border-b border-slate-200">
-            <p className="text-sm text-slate-500">Logged in as</p>
-            <p className="text-slate-900 font-semibold">{user?.name}</p>
-            <p className="text-xs text-cyan-600 capitalize">{user?.role}</p>
+        <div className="border-t border-slate-200 p-3">
+          <div
+            className={`mb-2 flex items-center gap-3 rounded-lg px-2 py-2 ${
+              collapsed ? "justify-center" : ""
+            }`}
+            title={collapsed ? user?.name : undefined}
+          >
+            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-slate-100 text-xs font-bold text-slate-600">
+              {initials}
+            </span>
+            {!collapsed && (
+              <div className="min-w-0">
+                <p className="truncate text-sm font-semibold text-slate-900">
+                  {user?.name}
+                </p>
+                <p className="truncate text-xs capitalize text-cyan-600">
+                  {user?.role}
+                </p>
+              </div>
+            )}
           </div>
           <button
             onClick={handleLogout}
-            className="w-full flex items-center justify-center gap-2 bg-red-50 hover:bg-red-100 text-red-600 px-4 py-2 rounded-lg transition"
+            title={collapsed ? "Logout" : undefined}
+            className={`flex w-full items-center gap-2 rounded-lg bg-red-50 px-3 py-2.5 text-sm font-semibold text-red-600 transition hover:bg-red-100 ${
+              collapsed ? "justify-center" : "justify-center"
+            }`}
           >
-            <LogOut className="w-4 h-4" />
-            Logout
+            <LogOut className="h-4 w-4 shrink-0" />
+            {!collapsed && "Logout"}
           </button>
         </div>
-      </div>
+      </aside>
 
       {/* Mobile Overlay */}
       {mobileMenuOpen && (
@@ -198,12 +255,31 @@ const DashboardNav = () => {
 };
 
 export default function DashboardLayout({ children }) {
+  const [collapsed, setCollapsed] = useState(false);
+
+  useEffect(() => {
+    const stored = window.localStorage.getItem(SIDEBAR_COLLAPSE_KEY);
+    if (stored === "true") setCollapsed(true);
+  }, []);
+
+  const toggleCollapse = () => {
+    setCollapsed((prev) => {
+      const next = !prev;
+      window.localStorage.setItem(SIDEBAR_COLLAPSE_KEY, String(next));
+      return next;
+    });
+  };
+
   return (
-    <div className="flex h-screen bg-[#ffffff]">
-      <DashboardNav />
+    <div className="flex h-screen bg-slate-50">
+      <DashboardNav collapsed={collapsed} onToggleCollapse={toggleCollapse} />
 
       {/* Main Content */}
-      <div className="flex-1 lg:ml-64 overflow-y-auto">
+      <div
+        className={`flex-1 overflow-y-auto transition-all duration-300 ${
+          collapsed ? "lg:ml-20" : "lg:ml-64"
+        }`}
+      >
         <div className="p-4 lg:p-8">{children}</div>
       </div>
     </div>

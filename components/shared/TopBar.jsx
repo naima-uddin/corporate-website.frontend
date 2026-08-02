@@ -1,5 +1,4 @@
 "use client";
-import { usePathname } from "next/navigation";
 import React from "react";
 import {
   FaPhoneAlt,
@@ -12,15 +11,6 @@ import {
 } from "react-icons/fa";
 
 const TopBar = () => {
-  const pathname = usePathname();
-
-  const hideNavbarPaths = ["/promotions/website/"];
-  const shouldHideNavbar = hideNavbarPaths.includes(pathname);
-
-  if (shouldHideNavbar) {
-    return null;
-  }
-
   return (
     <div className="bg-[var(--color-ink)] text-white/70 px-4 sm:px-6 lg:px-8 py-2 flex flex-col sm:flex-row justify-between items-center text-xs">
       <div className="flex items-center gap-4 mb-1 sm:mb-0">

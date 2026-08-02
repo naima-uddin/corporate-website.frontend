@@ -22,9 +22,6 @@ import { usePathname } from "next/navigation";
 const Navbar = () => {
   const pathname = usePathname();
 
-  const hideNavbarPaths = ["/promotions/website/"];
-  const shouldHideNavbar = hideNavbarPaths.includes(pathname);
-
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [servicesOpen, setServicesOpen] = useState(false);
@@ -197,10 +194,6 @@ const Navbar = () => {
     ],
   ];
 
-  if (shouldHideNavbar) {
-    return null;
-  }
-
   const linkColorClasses = (active) =>
     `relative py-2 transition-colors duration-200 ${
       overlay
@@ -230,40 +223,9 @@ const Navbar = () => {
             }`
       }`}
     >
-      <div className="flex items-center gap-3 sm:gap-4 shrink-0">
-        <div className="hidden md:block relative" ref={searchRef}>
-          <button
-            type="button"
-            onClick={() => setSearchOpen((prev) => !prev)}
-            aria-label="Toggle search"
-            className={iconButtonClasses}
-          >
-            <FaSearch className="text-xs" />
-          </button>
-
-          {searchOpen && (
-            <form
-              onSubmit={(e) => e.preventDefault()}
-              className={`absolute left-0 top-full mt-3 w-64 rounded-lg shadow-lg overflow-hidden border z-20 ${
-                overlay
-                  ? "bg-white/95 border-white/40"
-                  : "bg-white border-[var(--color-border)]"
-              }`}
-            >
-              <input
-                type="text"
-                autoFocus
-                placeholder="Search..."
-                className="w-full px-4 py-2.5 text-sm text-[var(--color-heading)] outline-none"
-              />
-            </form>
-          )}
-        </div>
-
-        <Link href="/" className="flex items-center space-x-2">
-          <Logo variant={overlay ? "light" : "default"} />
-        </Link>
-      </div>
+      <Link href="/" className="flex items-center space-x-2 shrink-0">
+        <Logo variant={overlay ? "light" : "default"} />
+      </Link>
 
       <ul className="hidden md:flex gap-6 lg:gap-8 items-center text-sm font-semibold relative">
           <li>
@@ -409,6 +371,35 @@ const Navbar = () => {
             </Link>
           </li>
         </ul>
+
+      <div className="hidden md:block relative shrink-0" ref={searchRef}>
+        <button
+          type="button"
+          onClick={() => setSearchOpen((prev) => !prev)}
+          aria-label="Toggle search"
+          className={iconButtonClasses}
+        >
+          <FaSearch className="text-xs" />
+        </button>
+
+        {searchOpen && (
+          <form
+            onSubmit={(e) => e.preventDefault()}
+            className={`absolute right-0 top-full mt-3 w-64 rounded-lg shadow-lg overflow-hidden border z-20 ${
+              overlay
+                ? "bg-white/95 border-white/40"
+                : "bg-white border-[var(--color-border)]"
+            }`}
+          >
+            <input
+              type="text"
+              autoFocus
+              placeholder="Search..."
+              className="w-full px-4 py-2.5 text-sm text-[var(--color-heading)] outline-none"
+            />
+          </form>
+        )}
+      </div>
 
       <div className="md:hidden">
         <button onClick={toggleMobileMenu} aria-label="Toggle menu">

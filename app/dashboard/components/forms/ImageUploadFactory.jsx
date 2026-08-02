@@ -8,15 +8,14 @@ import { useAuth } from "@/context/AuthContext";
  * Usage: <ImageUploadFactory type="blogs" currentImage={...} onImageUploaded={...} />
  *
  * Supported types:
- * - employees (default)
  * - blogs
- * - portfolio
+ * - portfolio (default)
  * - services
  * - users
  * - general
  */
 export default function ImageUploadFactory({
-  type = "employees",
+  type = "portfolio",
   onImageUploaded,
   currentImage = null,
   label = "Upload Image",

@@ -2,8 +2,14 @@
 
 import React, { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { Poppins } from "next/font/google";
 import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
 import Button from "@/components/ui/Button";
+
+const poppins = Poppins({
+  subsets: ["latin"],
+  weight: ["500", "600", "700"],
+});
 
 const NAVBAR_HEIGHT_CLASS = "-mt-20";
 
@@ -11,6 +17,7 @@ const Banner = () => {
   const [slides, setSlides] = useState([]);
   const [loading, setLoading] = useState(true);
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [baseSlide, setBaseSlide] = useState(0);
 
   useEffect(() => {
     const fetchBanners = async () => {
@@ -52,7 +59,7 @@ const Banner = () => {
   if (loading) {
     return (
       <div
-        className={`relative w-full h-[75vh] sm:h-[80vh] lg:h-[88vh] bg-[var(--color-ink)] animate-pulse ${NAVBAR_HEIGHT_CLASS}`}
+        className={`relative w-full h-screen bg-[var(--color-ink)] animate-pulse ${NAVBAR_HEIGHT_CLASS}`}
       />
     );
   }
@@ -66,33 +73,41 @@ const Banner = () => {
   }
 
   const slide = slides[currentSlide] || slides[0];
+  const base = slides[baseSlide] || slides[0];
 
   return (
     <div
-      className={`relative w-full h-[75vh] sm:h-[80vh] lg:h-[88vh] overflow-hidden bg-[var(--color-ink)] ${NAVBAR_HEIGHT_CLASS}`}
+      className={`relative w-full h-screen overflow-hidden bg-[var(--color-ink)] ${NAVBAR_HEIGHT_CLASS}`}
     >
-      <AnimatePresence mode="sync">
-        <motion.div
-          key={slide._id}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.9, ease: "easeInOut" }}
-          className="absolute inset-0 z-0"
-        >
-          <motion.img
-            src={slide.image}
-            alt=""
-            initial={{ scale: 1.08 }}
-            animate={{ scale: 1 }}
-            transition={{ duration: 6, ease: "easeOut" }}
-            className="w-full h-full object-cover"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/35 to-black/20" />
-        </motion.div>
-      </AnimatePresence>
+      <div className="absolute inset-0 z-0">
+        {/* Previous slide stays fully visible underneath until the
+            incoming slide has completely grown over it — no black gap. */}
+        <img src={base.image} alt="" className="w-full h-full object-cover" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/35 to-black/20" />
 
-      <div className="relative z-20 h-full flex flex-col justify-end pb-14 sm:pb-16 lg:pb-20 px-4 sm:px-6 lg:px-12">
+        {currentSlide !== baseSlide && (
+          <motion.div
+            key={slide._id}
+            initial={{ scale: 0.15 }}
+            animate={{ scale: 1 }}
+            transition={{ duration: 1.1, ease: [0.16, 1, 0.3, 1] }}
+            onAnimationComplete={() => setBaseSlide(currentSlide)}
+            style={{ transformOrigin: "100% 100%" }}
+            className="absolute inset-0"
+          >
+            <img
+              src={slide.image}
+              alt=""
+              className="w-full h-full object-cover"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/35 to-black/20" />
+          </motion.div>
+        )}
+      </div>
+
+      <div
+        className={`${poppins.className} relative z-20 h-full flex flex-col justify-end pb-14 sm:pb-16 lg:pb-24 px-4 sm:px-6 lg:px-12`}
+      >
         <div className="max-w-7xl mx-auto w-full">
           <AnimatePresence mode="wait">
             <motion.div
@@ -101,18 +116,18 @@ const Banner = () => {
               animate={{ y: 0, opacity: 1 }}
               exit={{ y: -12, opacity: 0 }}
               transition={{ duration: 0.6, ease: "easeOut" }}
-              className="max-w-2xl lg:pr-72"
+              className="max-w-2xl lg:pr-[28rem]"
             >
               {slide.eyebrow && (
                 <span className="eyebrow text-white/90 mb-4 block">
                   {slide.eyebrow}
                 </span>
               )}
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight text-white leading-tight mb-6 text-balance">
+              <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight text-white leading-tight mb-4 text-balance">
                 {slide.title}
               </h1>
               {slide.subtitle && (
-                <p className="text-lg md:text-xl text-white/80 max-w-xl mb-8">
+                <p className="text-base md:text-lg text-white/80 max-w-xl mb-8">
                   {slide.subtitle}
                 </p>
               )}
@@ -128,14 +143,14 @@ const Banner = () => {
       </div>
 
       {slides.length > 1 && (
-        <div className="absolute bottom-6 right-4 sm:right-6 lg:right-12 z-30 w-64 sm:w-72">
-          <div className="hidden lg:flex gap-2 justify-end mb-3 overflow-x-auto">
+        <div className="absolute bottom-6 right-4 sm:right-6 lg:right-12 z-30 w-[30rem]">
+          <div className="no-scrollbar hidden lg:flex gap-3 justify-end mb-4 overflow-x-auto">
             {slides.map((s, index) => (
               <button
                 key={s._id}
                 onClick={() => goToSlide(index)}
                 aria-label={`Show slide: ${s.title}`}
-                className={`relative shrink-0 w-14 h-20 rounded-md overflow-hidden border-2 transition-all duration-300 ${
+                className={`relative shrink-0 w-28 h-36 rounded-lg overflow-hidden border-2 transition-all duration-300 ${
                   currentSlide === index
                     ? "border-white opacity-100 scale-105"
                     : "border-white/30 opacity-55 hover:opacity-85"
@@ -149,6 +164,10 @@ const Banner = () => {
               </button>
             ))}
           </div>
+          <style>{`
+            .no-scrollbar { scrollbar-width: none; -ms-overflow-style: none; }
+            .no-scrollbar::-webkit-scrollbar { display: none; }
+          `}</style>
 
           <div className="flex items-center gap-3">
             <div className="flex-1 h-[3px] rounded-full bg-white/25 overflow-hidden">

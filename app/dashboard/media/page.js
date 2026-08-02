@@ -214,7 +214,6 @@ export default function MediaPage() {
               >
                 <option value="all">All Folders</option>
                 <option value="portfolio">Portfolio</option>
-                <option value="employees">Employees</option>
                 <option value="services">Services</option>
                 <option value="blogs">Blogs</option>
                 <option value="users">Users</option>
