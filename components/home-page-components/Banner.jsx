@@ -128,7 +128,12 @@ const Banner = () => {
               )}
 
               {slide.buttonText && slide.buttonLink && (
-                <Button href={slide.buttonLink} variant="outline" showArrow>
+                <Button
+                  href={slide.buttonLink}
+                  variant="outline"
+                  showArrow
+                  className="text-foreground"
+                >
                   {slide.buttonText}
                 </Button>
               )}

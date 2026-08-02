@@ -146,6 +146,7 @@ const Footer = () => {
                     href={btn.link}
                     variant="outline"
                     showArrow
+                    className="text-foreground"
                   >
                     {btn.text}
                   </Button>
