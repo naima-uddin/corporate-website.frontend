@@ -1,0 +1,55 @@
+
+> a2it-website@0.1.0 build
+> next build --turbopack
+
+   ▲ Next.js 15.5.3 (Turbopack)
+   - Environments: .env.local
+
+   Creating an optimized production build ...
+ ✓ Finished writing to disk in 186ms
+ ✓ Compiled successfully in 9.6s
+   Linting and checking validity of types ...
+
+Failed to compile.
+
+./app/dashboard/blog/[id]/page.js
+34:6  Warning: React Hook useEffect has a missing dependency: 'API'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+
+./app/dashboard/employees/page.js
+30:3  Error: React Hook "useEffect" is called conditionally. React Hooks must be called in the exact same order in every component render.  react-hooks/rules-of-hooks
+32:6  Warning: React Hook useEffect has a missing dependency: 'fetchEmployees'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+
+./app/dashboard/media/page.js
+72:6  Warning: React Hook useEffect has a missing dependency: 'fetchResources'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+
+./app/dashboard/portfolio/page.js
+53:3  Error: React Hook "useEffect" is called conditionally. React Hooks must be called in the exact same order in every component render.  react-hooks/rules-of-hooks
+56:6  Warning: React Hook useEffect has a missing dependency: 'fetchPortfolios'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+
+./app/dashboard/projects/page.js
+129:6  Warning: React Hook useEffect has a missing dependency: 'fetchCategories'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+
+./app/dashboard/services/page.js
+50:3  Error: React Hook "useEffect" is called conditionally. React Hooks must be called in the exact same order in every component render.  react-hooks/rules-of-hooks
+53:6  Warning: React Hook useEffect has missing dependencies: 'fetchCategories' and 'fetchServices'. Either include them or remove the dependency array.  react-hooks/exhaustive-deps
+
+./app/dashboard/solutions/page.js
+75:6  Warning: React Hook useEffect has a missing dependency: 'isAdmin'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+
+./app/dashboard/users/page.js
+22:3  Error: React Hook "useEffect" is called conditionally. React Hooks must be called in the exact same order in every component render.  react-hooks/rules-of-hooks
+24:6  Warning: React Hook useEffect has a missing dependency: 'fetchUsers'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+
+./app/login/exercise.js
+5:31  Error: React Hook "useState" is called in function "loginExercise" that is neither a React function component nor a custom React Hook function. React component names must start with an uppercase letter. React Hook names must start with the word "use".  react-hooks/rules-of-hooks
+6:37  Error: React Hook "useState" is called in function "loginExercise" that is neither a React function component nor a custom React Hook function. React component names must start with an uppercase letter. React Hook names must start with the word "use".  react-hooks/rules-of-hooks
+7:35  Error: React Hook "useState" is called in function "loginExercise" that is neither a React function component nor a custom React Hook function. React component names must start with an uppercase letter. React Hook names must start with the word "use".  react-hooks/rules-of-hooks
+8:31  Error: React Hook "useState" is called in function "loginExercise" that is neither a React function component nor a custom React Hook function. React component names must start with an uppercase letter. React Hook names must start with the word "use".  react-hooks/rules-of-hooks
+
+./components/promotion/project.js
+324:6  Warning: React Hook useEffect has missing dependencies: 'nextImage' and 'prevImage'. Either include them or remove the dependency array.  react-hooks/exhaustive-deps
+
+./components/promotion/promotionModal.js
+97:6  Warning: React Hook useEffect has a missing dependency: 'selectedPlan'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+
+info  - Need to disable some ESLint rules? Learn more here: https://nextjs.org/docs/app/api-reference/config/eslint#disabling-rules
