@@ -42,7 +42,7 @@ const WhoRWe = () => {
   return (
     <section className="relative py-16 md:py-20 bg-white overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+        <div className="grid lg:grid-cols-2 gap-6 lg:gap-12 items-center">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -69,8 +69,11 @@ const WhoRWe = () => {
           >
             <span className="eyebrow mb-4">Who We Are</span>
 
-            <div className="relative mt-8 mb-5">
-              <div className="relative rounded-[2rem] bg-[var(--color-surface)] p-8 shadow-md ring-1 ring-[var(--color-border)] md:p-10">
+            <div className="relative mt-8 mb-10">
+              <div
+                className="relative bg-[var(--color-surface)] p-10 shadow-md ring-1 ring-[var(--color-border)] md:p-14"
+                style={{ borderRadius: "48px / 32px" }}
+              >
                 <MessageSquareQuote
                   className="mb-3 h-8 w-8 text-[var(--color-primary)]/40"
                   strokeWidth={1.5}
@@ -80,33 +83,20 @@ const WhoRWe = () => {
                   {renderQuote(spotlight.quote)}
                 </p>
 
-                {/* bordered speech-bubble tail: outline triangle + slightly smaller fill triangle on top */}
-                <span
+                {/* curled teardrop tail, like a chat-bubble icon */}
+                <svg
                   aria-hidden="true"
-                  className="absolute"
-                  style={{
-                    top: "100%",
-                    left: 48,
-                    width: 0,
-                    height: 0,
-                    borderLeft: "14px solid transparent",
-                    borderRight: "14px solid transparent",
-                    borderTop: "20px solid var(--color-border)",
-                  }}
-                />
-                <span
-                  aria-hidden="true"
-                  className="absolute"
-                  style={{
-                    top: "calc(100% + 1px)",
-                    left: 49,
-                    width: 0,
-                    height: 0,
-                    borderLeft: "13px solid transparent",
-                    borderRight: "13px solid transparent",
-                    borderTop: "19px solid var(--color-surface)",
-                  }}
-                />
+                  viewBox="0 0 24 32"
+                  className="absolute h-10 w-[1.875rem] -mt-1"
+                  style={{ top: "100%", left: 56, transform: "rotate(-12deg)" }}
+                >
+                  <path
+                    d="M12 32C5 24 2 16 2 10.5C2 4.5 6.5 0 12 0C17.5 0 22 4.5 22 10.5C22 16 19 24 12 32Z"
+                    fill="var(--color-surface)"
+                    stroke="var(--color-border)"
+                    strokeWidth="1.5"
+                  />
+                </svg>
               </div>
             </div>
 
