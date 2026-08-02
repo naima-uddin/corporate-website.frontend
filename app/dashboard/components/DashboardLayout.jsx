@@ -20,6 +20,7 @@ import {
   LayoutDashboard,
   ChevronsLeft,
   ChevronsRight,
+  Palette,
 } from "lucide-react";
 import Link from "next/link";
 
@@ -37,6 +38,7 @@ const NAV_SECTIONS = [
     id: "content",
     label: "Content",
     items: [
+      { id: "site-branding", label: "Site Branding", icon: Palette, href: "/dashboard/site-branding" },
       { id: "banner", label: "Manage Banner", icon: ImageIcon, href: "/dashboard/banner" },
       { id: "services", label: "Manage Services", icon: ShoppingCart, href: "/dashboard/services" },
       { id: "portfolio", label: "Manage Portfolio", icon: Briefcase, href: "/dashboard/portfolio" },
