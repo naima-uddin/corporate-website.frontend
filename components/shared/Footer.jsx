@@ -1,134 +1,158 @@
 "use client";
-import React, { useState } from "react";
-import { FaPhone, FaEnvelope, FaMapMarkerAlt } from "react-icons/fa";
-import { FaFacebookF, FaTwitter, FaLinkedinIn } from "react-icons/fa";
-import { FiArrowRight, FiCheck } from "react-icons/fi";
+import React, { useEffect, useState } from "react";
+import { FaPhone, FaEnvelope, FaMapMarkerAlt, FaGlobe } from "react-icons/fa";
+import {
+  FaFacebookF,
+  FaTwitter,
+  FaLinkedinIn,
+  FaInstagram,
+  FaYoutube,
+} from "react-icons/fa";
+import { Button } from "@/components/ui/Button";
 import Logo from "./Logo";
 
+const SOCIAL_ICON_MAP = {
+  facebook: FaFacebookF,
+  twitter: FaTwitter,
+  x: FaTwitter,
+  linkedin: FaLinkedinIn,
+  instagram: FaInstagram,
+  youtube: FaYoutube,
+};
+
+const FALLBACK_FOOTER = {
+  topBandImage: "",
+  topBandEyebrow: "Let's Work Together",
+  topBandHeading: "Ready to build your next digital product?",
+  topBandSubtitle:
+    "Tell us about your project and our team will get back to you within one business day.",
+  topBandButtons: [
+    { text: "Get In Touch", link: "/contact" },
+    { text: "View Our Work", link: "/portfolio" },
+  ],
+  logoImage: "",
+  tagline: "Transforming ideas into digital reality.",
+  columns: [
+    {
+      title: "Quick Links",
+      links: [
+        { label: "Home", url: "/" },
+        { label: "Portfolio", url: "/portfolio" },
+        { label: "About Us", url: "/about" },
+        { label: "Blogs", url: "/blog" },
+        { label: "Contact", url: "/contact" },
+      ],
+    },
+    {
+      title: "Services",
+      links: [
+        { label: "Design & Development", url: "/services/category/development" },
+        { label: "E-Commerce", url: "/services/e-commerce" },
+        { label: "Amazon", url: "/services/category/ecommerce" },
+        { label: "Shopify", url: "/services/shopify" },
+        { label: "ERP System Development", url: "/services/erp" },
+        { label: "SEO / SEM / PPC", url: "/services/seo" },
+      ],
+    },
+  ],
+  address: "Plot No 470, Road No 06, DOHS Mirpur, Dhaka",
+  phone: "+8801846937397",
+  email: "info@a2itltd.com",
+  socialLinks: [
+    { platform: "facebook", url: "https://www.facebook.com/A2ITLtd" },
+    { platform: "twitter", url: "https://twitter.com" },
+    { platform: "linkedin", url: "https://www.linkedin.com/in/a2itlimited/" },
+  ],
+  copyrightText: "© {year} A2IT Ltd. All Rights Reserved",
+  legalLinks: [
+    { label: "Privacy Policy", url: "/privacy-policy" },
+    { label: "Terms of Service", url: "/terms-of-service" },
+    { label: "Sitemap", url: "/contact" },
+  ],
+};
+
 const Footer = () => {
-  const [email, setEmail] = useState("");
-  const [status, setStatus] = useState("idle"); // idle | loading | success | error
+  const [footer, setFooter] = useState(FALLBACK_FOOTER);
 
-  const handleSubscribe = async (e) => {
-    e.preventDefault();
-    if (!email.trim() || status === "loading") return;
+  useEffect(() => {
+    let isMounted = true;
 
-    setStatus("loading");
-    try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/newsletter/subscribe`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email }),
-        },
-      );
+    const fetchFooter = async () => {
+      try {
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/api/footer`,
+        );
 
-      if (!response.ok) throw new Error("Subscription failed");
+        if (!response.ok) return;
 
-      setStatus("success");
-      setEmail("");
-    } catch (error) {
-      setStatus("error");
-    }
-  };
+        const data = await response.json();
 
-  const routes = {
-    HOME: "/",
-    PORTFOLIO: "/portfolio",
-    ABOUT: "/about",
-    BLOGS: "/blog",
-    PRIVACY: "/privacy-policy",
-    TERMS: "/terms-of-service",
-    SITEMAP: "/contact",
-    CONTACT: "/contact",
-  };
+        if (isMounted && data.footer) {
+          setFooter({ ...FALLBACK_FOOTER, ...data.footer });
+        }
+      } catch (error) {
+        console.error("Error fetching footer:", error);
+      }
+    };
 
-  const socialLinks = [
-    { icon: <FaFacebookF />, url: "https://www.facebook.com/A2ITLtd" },
-    { icon: <FaTwitter />, url: "https://twitter.com" },
-    { icon: <FaLinkedinIn />, url: "https://www.linkedin.com/in/a2itlimited/" },
-  ];
+    fetchFooter();
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
-  const quickLinks = [
-    { name: "Home", path: routes.HOME },
-    { name: "Portfolio", path: routes.PORTFOLIO },
-    { name: "About Us", path: routes.ABOUT },
-    { name: "Blogs", path: routes.BLOGS },
-    { name: "Contact", path: routes.CONTACT },
-  ];
-
-  const serviceLinks = [
-    { name: "Design & Development", path: "/services/category/development" },
-    { name: "E-Commerce", path: "/services/e-commerce" },
-    { name: "Amazon", path: "/services/category/ecommerce" },
-    { name: "Shopify", path: "/services/shopify" },
-    { name: "ERP System Development", path: "/services/erp" },
-    { name: "SEO / SEM / PPC", path: "/services/seo" },
-  ];
-
-  const policyLinks = [
-    { name: "Privacy Policy", path: routes.PRIVACY },
-    { name: "Terms of Service", path: routes.TERMS },
-    { name: "Sitemap", path: routes.SITEMAP },
-  ];
+  const copyrightText = (footer.copyrightText || FALLBACK_FOOTER.copyrightText).replace(
+    "{year}",
+    new Date().getFullYear(),
+  );
 
   return (
     <footer className="rounded-t-3xl sm:rounded-t-[2.5rem] overflow-hidden bg-[var(--color-ink)] text-white/60">
-      <div className="bg-[var(--color-ink-2)] border-b border-white/10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 md:py-12 flex flex-col md:flex-row items-center md:items-end justify-between gap-6">
+      {/* Top hero band */}
+      <div
+        className="relative bg-[var(--color-ink)] bg-cover bg-center"
+        style={
+          footer.topBandImage
+            ? { backgroundImage: `url(${footer.topBandImage})` }
+            : undefined
+        }
+      >
+        <div className="absolute inset-0 bg-[var(--color-ink)]/80" />
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-20 flex flex-col md:flex-row items-center justify-between gap-8">
           <div className="text-center md:text-left">
-            <span className="eyebrow text-[var(--color-primary)] mb-3">
-              Stay In The Loop
-            </span>
-            <h3 className="text-2xl md:text-3xl font-extrabold tracking-tight text-white">
-              Subscribe to our newsletter
-            </h3>
-            <p className="mt-2 text-sm text-white/50 max-w-md">
-              Get product updates, industry insights, and company news
-              delivered straight to your inbox.
-            </p>
-          </div>
-
-          <form
-            onSubmit={handleSubscribe}
-            className="w-full md:w-auto shrink-0"
-          >
-            <div className="flex items-center gap-2 rounded-full bg-white/5 border border-white/15 p-1.5 focus-within:border-[var(--color-primary)] transition-colors">
-              <input
-                type="email"
-                required
-                value={email}
-                onChange={(e) => {
-                  setEmail(e.target.value);
-                  if (status !== "idle") setStatus("idle");
-                }}
-                placeholder="Enter your email"
-                className="w-full md:w-64 bg-transparent px-3.5 py-2 text-sm text-white placeholder:text-white/40 focus:outline-none"
-              />
-              <button
-                type="submit"
-                disabled={status === "loading"}
-                className="inline-flex shrink-0 items-center justify-center gap-2 rounded-full bg-[var(--color-primary)] px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-[var(--color-primary-dark)] disabled:opacity-60"
-              >
-                {status === "success" ? (
-                  <>
-                    <FiCheck /> Subscribed
-                  </>
-                ) : (
-                  <>
-                    {status === "loading" ? "Subscribing..." : "Subscribe"}
-                    <FiArrowRight />
-                  </>
-                )}
-              </button>
-            </div>
-            {status === "error" && (
-              <p className="mt-2 text-xs text-red-400">
-                Something went wrong. Please try again.
+            {footer.topBandEyebrow && (
+              <span className="eyebrow text-white/80 mb-3">
+                {footer.topBandEyebrow}
+              </span>
+            )}
+            {footer.topBandHeading && (
+              <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight text-white">
+                {footer.topBandHeading}
+              </h2>
+            )}
+            {footer.topBandSubtitle && (
+              <p className="mt-3 text-white/60 max-w-xl">
+                {footer.topBandSubtitle}
               </p>
             )}
-          </form>
+          </div>
+
+          {footer.topBandButtons?.length > 0 && (
+            <div className="flex flex-wrap items-center justify-center gap-3 shrink-0">
+              {footer.topBandButtons.map((btn, index) =>
+                btn.text && btn.link ? (
+                  <Button
+                    key={index}
+                    href={btn.link}
+                    variant="outline"
+                    showArrow
+                  >
+                    {btn.text}
+                  </Button>
+                ) : null,
+              )}
+            </div>
+          )}
         </div>
       </div>
 
@@ -136,107 +160,104 @@ const Footer = () => {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-10 md:gap-8 mb-12">
           <div className="col-span-2 md:col-span-1">
             <div className="flex items-center gap-2 mb-4">
-              <Logo variant="light" />
+              {footer.logoImage ? (
+                <img src={footer.logoImage} alt="Logo" className="h-9 w-auto" />
+              ) : (
+                <Logo variant="light" />
+              )}
             </div>
-            <p className="text-white font-semibold mb-2">Build Your Dreams</p>
-            <p className="text-sm leading-relaxed">
-              Transforming ideas into digital reality.
-            </p>
+            {footer.tagline && (
+              <p className="text-sm leading-relaxed">{footer.tagline}</p>
+            )}
           </div>
 
-          <div>
-            <h3 className="text-sm font-bold uppercase tracking-wide text-white mb-5">
-              Quick Links
-            </h3>
-            <ul className="space-y-2.5">
-              {quickLinks.map((item) => (
-                <li key={item.name}>
-                  <a
-                    href={item.path}
-                    className="text-sm hover:text-white transition-colors"
-                  >
-                    {item.name}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          <div>
-            <h3 className="text-sm font-bold uppercase tracking-wide text-white mb-5">
-              Services
-            </h3>
-            <ul className="space-y-2.5">
-              {serviceLinks.map((item) => (
-                <li key={item.name}>
-                  <a
-                    href={item.path}
-                    className="text-sm hover:text-white transition-colors"
-                  >
-                    {item.name}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
+          {(footer.columns || []).map((column, colIndex) => (
+            <div key={colIndex}>
+              <h3 className="text-sm font-bold uppercase tracking-wide text-white mb-5">
+                {column.title}
+              </h3>
+              <ul className="space-y-2.5">
+                {(column.links || []).map((link, linkIndex) => (
+                  <li key={linkIndex}>
+                    <a
+                      href={link.url}
+                      className="text-sm hover:text-white transition-colors"
+                    >
+                      {link.label}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
 
           <div>
             <h3 className="text-sm font-bold uppercase tracking-wide text-white mb-5">
               Contact Us
             </h3>
             <address className="not-italic space-y-3 text-sm">
-              <div className="flex items-start gap-2.5">
-                <FaMapMarkerAlt className="text-[var(--color-primary)] mt-1 flex-shrink-0" />
-                <p>
-                  Plot No 470
-                  <br />
-                  Road No 06
-                  <br />
-                  DOHS Mirpur, Dhaka
-                </p>
-              </div>
-              <div className="flex items-center gap-2.5">
-                <FaPhone className="text-[var(--color-primary)] flex-shrink-0" />
-                <a href="tel:+8801846937397" className="hover:text-white transition-colors">
-                  +880 1846-937397
-                </a>
-              </div>
-              <div className="flex items-center gap-2.5">
-                <FaEnvelope className="text-[var(--color-primary)] flex-shrink-0" />
-                <a href="mailto:info@a2itltd.com" className="hover:text-white transition-colors">
-                  info@a2itltd.com
-                </a>
-              </div>
+              {footer.address && (
+                <div className="flex items-start gap-2.5">
+                  <FaMapMarkerAlt className="text-[var(--color-primary)] mt-1 flex-shrink-0" />
+                  <p>{footer.address}</p>
+                </div>
+              )}
+              {footer.phone && (
+                <div className="flex items-center gap-2.5">
+                  <FaPhone className="text-[var(--color-primary)] flex-shrink-0" />
+                  <a
+                    href={`tel:${footer.phone}`}
+                    className="hover:text-white transition-colors"
+                  >
+                    {footer.phone}
+                  </a>
+                </div>
+              )}
+              {footer.email && (
+                <div className="flex items-center gap-2.5">
+                  <FaEnvelope className="text-[var(--color-primary)] flex-shrink-0" />
+                  <a
+                    href={`mailto:${footer.email}`}
+                    className="hover:text-white transition-colors"
+                  >
+                    {footer.email}
+                  </a>
+                </div>
+              )}
             </address>
 
-            <div className="flex gap-3 mt-5">
-              {socialLinks.map((social, index) => (
-                <a
-                  key={index}
-                  href={social.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center text-sm hover:bg-[var(--color-primary)] hover:text-white transition-colors"
-                >
-                  {social.icon}
-                </a>
-              ))}
-            </div>
+            {footer.socialLinks?.length > 0 && (
+              <div className="flex gap-3 mt-5">
+                {footer.socialLinks.map((social, index) => {
+                  const Icon =
+                    SOCIAL_ICON_MAP[social.platform?.toLowerCase()] || FaGlobe;
+                  return (
+                    <a
+                      key={index}
+                      href={social.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center text-sm hover:bg-[var(--color-primary)] hover:text-white transition-colors"
+                    >
+                      <Icon />
+                    </a>
+                  );
+                })}
+              </div>
+            )}
           </div>
         </div>
 
         <div className="flex flex-col sm:flex-row items-center justify-between gap-3 border-t border-white/10 pt-6">
-          <p className="text-xs text-white/40">
-            © {new Date().getFullYear()} A2IT Ltd. All Rights Reserved
-          </p>
+          <p className="text-xs text-white/40">{copyrightText}</p>
           <div className="flex gap-5">
-            {policyLinks.map((policy) => (
+            {(footer.legalLinks || []).map((link, index) => (
               <a
-                key={policy.name}
-                href={policy.path}
+                key={index}
+                href={link.url}
                 className="text-xs text-white/40 hover:text-white transition-colors"
               >
-                {policy.name}
+                {link.label}
               </a>
             ))}
           </div>
