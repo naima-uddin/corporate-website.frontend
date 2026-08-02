@@ -4,7 +4,6 @@ import React, { useState, useEffect } from "react";
 import { useAuth } from "@/context/AuthContext";
 import { motion } from "framer-motion";
 import { Plus, Trash2, Edit2, Search } from "lucide-react";
-import DashboardLayout from "../components/DashboardLayout";
 import ImageUploadFactory from "../components/forms/ImageUploadFactory";
 
 export default function PortfolioPage() {
@@ -40,13 +39,11 @@ export default function PortfolioPage() {
 
   if (!isAdmin && !isModerator) {
     return (
-      <DashboardLayout>
-        <div className="text-center py-12">
-          <p className="text-slate-600">
-            Access Denied. Admin or Moderator only.
-          </p>
-        </div>
-      </DashboardLayout>
+      <div className="text-center py-12">
+        <p className="text-slate-600">
+          Access Denied. Admin or Moderator only.
+        </p>
+      </div>
     );
   }
 
@@ -247,7 +244,6 @@ export default function PortfolioPage() {
   );
 
   return (
-    <DashboardLayout>
       <div className="space-y-6">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -950,6 +946,5 @@ export default function PortfolioPage() {
           </motion.div>
         )}
       </div>
-    </DashboardLayout>
   );
 }

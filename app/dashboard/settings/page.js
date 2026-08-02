@@ -5,7 +5,6 @@ import { useAuth } from "@/context/AuthContext";
 import { motion } from "framer-motion";
 import { Lock, User, LogOut } from "lucide-react";
 import { useRouter } from "next/navigation";
-import DashboardLayout from "../components/DashboardLayout";
 
 export default function SettingsPage() {
   const { user, logout, changePassword } = useAuth();
@@ -43,7 +42,6 @@ export default function SettingsPage() {
   };
 
   return (
-    <DashboardLayout>
       <div className="space-y-8">
         {/* Header */}
         <motion.div
@@ -169,6 +167,5 @@ export default function SettingsPage() {
           </button>
         </motion.div>
       </div>
-    </DashboardLayout>
   );
 }

@@ -3,6 +3,7 @@
 import React, { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
+import DashboardLayout from "./components/DashboardLayout";
 
 export default function ProtectedLayout({ children }) {
   const { user, token, loading } = useAuth();
@@ -29,5 +30,5 @@ export default function ProtectedLayout({ children }) {
     return null;
   }
 
-  return <>{children}</>;
+  return <DashboardLayout>{children}</DashboardLayout>;
 }

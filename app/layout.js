@@ -1,6 +1,5 @@
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import RouteTransitionHandler from "../components/shared/RouteTransitionHandler";
 import RouteAwareChrome from "@/components/shared/RouteAwareChrome";
 import { AuthProvider } from "@/context/AuthContext";
 
@@ -56,7 +55,6 @@ export default function RootLayout({ children }) {
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <RouteTransitionHandler />
         <AuthProvider>
           <RouteAwareChrome>{children}</RouteAwareChrome>
         </AuthProvider>

@@ -4,7 +4,6 @@ import React, { useEffect, useMemo, useState } from "react";
 import { useAuth } from "@/context/AuthContext";
 import { motion } from "framer-motion";
 import { Plus, Trash2, Copy, RefreshCw, Search, Upload, X } from "lucide-react";
-import DashboardLayout from "../components/DashboardLayout";
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL;
 
@@ -143,18 +142,15 @@ export default function MediaPage() {
 
   if (!canAccess) {
     return (
-      <DashboardLayout>
-        <div className="text-center py-12">
-          <p className="text-slate-600">
-            Access Denied. Admin or Moderator only.
-          </p>
-        </div>
-      </DashboardLayout>
+      <div className="text-center py-12">
+        <p className="text-slate-600">
+          Access Denied. Admin or Moderator only.
+        </p>
+      </div>
     );
   }
 
   return (
-    <DashboardLayout>
       <div className="space-y-6">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -437,6 +433,5 @@ export default function MediaPage() {
           </div>
         )}
       </div>
-    </DashboardLayout>
   );
 }

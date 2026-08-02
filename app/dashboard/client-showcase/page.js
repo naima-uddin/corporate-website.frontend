@@ -4,7 +4,6 @@ import React, { useState, useEffect } from "react";
 import { useAuth } from "@/context/AuthContext";
 import { motion } from "framer-motion";
 import { Plus, Trash2, GripVertical, Power } from "lucide-react";
-import DashboardLayout from "../components/DashboardLayout";
 import ImageUploadFactory from "../components/forms/ImageUploadFactory";
 
 export default function ClientShowcasePage() {
@@ -18,13 +17,11 @@ export default function ClientShowcasePage() {
 
   if (!isAdmin && !isModerator) {
     return (
-      <DashboardLayout>
-        <div className="text-center py-12">
-          <p className="text-slate-600">
-            Access Denied. Admin or Moderator only.
-          </p>
-        </div>
-      </DashboardLayout>
+      <div className="text-center py-12">
+        <p className="text-slate-600">
+          Access Denied. Admin or Moderator only.
+        </p>
+      </div>
     );
   }
 
@@ -132,7 +129,6 @@ export default function ClientShowcasePage() {
   };
 
   return (
-    <DashboardLayout>
       <div className="space-y-6">
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
           <h1 className="text-4xl font-bold text-slate-900 mb-2">
@@ -249,6 +245,5 @@ export default function ClientShowcasePage() {
           </motion.div>
         )}
       </div>
-    </DashboardLayout>
   );
 }

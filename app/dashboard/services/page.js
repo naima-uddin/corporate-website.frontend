@@ -4,7 +4,6 @@ import React, { useState, useEffect } from "react";
 import { useAuth } from "@/context/AuthContext";
 import { motion } from "framer-motion";
 import { Plus, Trash2, Edit2, Search } from "lucide-react";
-import DashboardLayout from "../components/DashboardLayout";
 
 export default function ServicesPage() {
   const { token, isAdmin, isModerator } = useAuth();
@@ -37,13 +36,11 @@ export default function ServicesPage() {
 
   if (!isAdmin && !isModerator) {
     return (
-      <DashboardLayout>
-        <div className="text-center py-12">
-          <p className="text-slate-600">
-            Access Denied. Admin or Moderator only.
-          </p>
-        </div>
-      </DashboardLayout>
+      <div className="text-center py-12">
+        <p className="text-slate-600">
+          Access Denied. Admin or Moderator only.
+        </p>
+      </div>
     );
   }
 
@@ -240,7 +237,6 @@ export default function ServicesPage() {
   );
 
   return (
-    <DashboardLayout>
       <div className="space-y-6">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -510,6 +506,5 @@ export default function ServicesPage() {
           </motion.div>
         )}
       </div>
-    </DashboardLayout>
   );
 }

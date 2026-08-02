@@ -5,7 +5,6 @@ import { useAuth } from "@/context/AuthContext";
 import { motion } from "framer-motion";
 import { Users, FileText, ShoppingCart, Image, Calendar } from "lucide-react";
 import Link from "next/link";
-import DashboardLayout from "./components/DashboardLayout";
 
 export default function Dashboard() {
   const { user } = useAuth();
@@ -46,7 +45,6 @@ export default function Dashboard() {
   ];
 
   return (
-    <DashboardLayout>
       <div className="space-y-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -186,6 +184,5 @@ export default function Dashboard() {
           </div>
         </motion.div>
       </div>
-    </DashboardLayout>
   );
 }
