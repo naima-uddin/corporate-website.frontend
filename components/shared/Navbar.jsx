@@ -11,10 +11,6 @@ import {
   FaLaptopCode,
   FaBars,
   FaTimes,
-  FaFacebookF,
-  FaInstagram,
-  FaTwitter,
-  FaLinkedinIn,
 } from "react-icons/fa";
 import { FaCartShopping } from "react-icons/fa6";
 import { IoIosArrowDown } from "react-icons/io";
@@ -22,13 +18,6 @@ import Logo from "./Logo";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-
-const socialLinks = [
-  { Icon: FaFacebookF, href: "https://www.facebook.com/A2ITLtd", label: "Facebook" },
-  { Icon: FaInstagram, href: "#", label: "Instagram" },
-  { Icon: FaTwitter, href: "#", label: "Twitter" },
-  { Icon: FaLinkedinIn, href: "https://www.linkedin.com/in/a2itlimited/", label: "LinkedIn" },
-];
 
 const Navbar = () => {
   const pathname = usePathname();
@@ -241,12 +230,42 @@ const Navbar = () => {
             }`
       }`}
     >
-      <Link href="/" className="flex items-center space-x-2 shrink-0">
-        <Logo variant={overlay ? "light" : "default"} />
-      </Link>
+      <div className="flex items-center gap-3 sm:gap-4 shrink-0">
+        <div className="hidden md:block relative" ref={searchRef}>
+          <button
+            type="button"
+            onClick={() => setSearchOpen((prev) => !prev)}
+            aria-label="Toggle search"
+            className={iconButtonClasses}
+          >
+            <FaSearch className="text-xs" />
+          </button>
 
-      <div className="flex items-center gap-4 lg:gap-6">
-        <ul className="hidden md:flex gap-6 lg:gap-8 items-center text-sm font-semibold relative">
+          {searchOpen && (
+            <form
+              onSubmit={(e) => e.preventDefault()}
+              className={`absolute left-0 top-full mt-3 w-64 rounded-lg shadow-lg overflow-hidden border z-20 ${
+                overlay
+                  ? "bg-white/95 border-white/40"
+                  : "bg-white border-[var(--color-border)]"
+              }`}
+            >
+              <input
+                type="text"
+                autoFocus
+                placeholder="Search..."
+                className="w-full px-4 py-2.5 text-sm text-[var(--color-heading)] outline-none"
+              />
+            </form>
+          )}
+        </div>
+
+        <Link href="/" className="flex items-center space-x-2">
+          <Logo variant={overlay ? "light" : "default"} />
+        </Link>
+      </div>
+
+      <ul className="hidden md:flex gap-6 lg:gap-8 items-center text-sm font-semibold relative">
           <li>
             <Link href="/" className={linkColorClasses(isActive("/"))}>
               Home
@@ -391,62 +410,6 @@ const Navbar = () => {
           </li>
         </ul>
 
-        <div className="hidden md:block relative" ref={searchRef}>
-          <button
-            type="button"
-            onClick={() => setSearchOpen((prev) => !prev)}
-            aria-label="Toggle search"
-            className={iconButtonClasses}
-          >
-            <FaSearch className="text-xs" />
-          </button>
-
-          {searchOpen && (
-            <form
-              onSubmit={(e) => e.preventDefault()}
-              className={`absolute right-0 top-full mt-3 w-64 rounded-lg shadow-lg overflow-hidden border z-20 ${
-                overlay
-                  ? "bg-white/95 border-white/40"
-                  : "bg-white border-[var(--color-border)]"
-              }`}
-            >
-              <input
-                type="text"
-                autoFocus
-                placeholder="Search..."
-                className="w-full px-4 py-2.5 text-sm text-[var(--color-heading)] outline-none"
-              />
-            </form>
-          )}
-        </div>
-
-        <div className="hidden lg:flex items-center gap-2">
-          {socialLinks.map(({ Icon, href, label }) => (
-            <a
-              key={label}
-              href={href}
-              aria-label={label}
-              className={iconButtonClasses}
-            >
-              <Icon className="text-xs" />
-            </a>
-          ))}
-        </div>
-
-        <Link
-          href="/contact"
-          className={`hidden md:inline-flex items-center gap-1 px-5 py-2.5 rounded-md text-sm font-semibold transition-colors duration-200 ${
-            overlay
-              ? "bg-white/15 backdrop-blur border border-white/40 text-white hover:bg-white/25"
-              : isActive("/contact")
-                ? "bg-[var(--color-primary-dark)] text-white"
-                : "bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)] text-white"
-          }`}
-        >
-          Contact Us
-        </Link>
-      </div>
-
       <div className="md:hidden">
         <button onClick={toggleMobileMenu} aria-label="Toggle menu">
           {mobileMenuOpen ? <FaTimes size={22} /> : <FaBars size={22} />}
@@ -543,26 +506,28 @@ const Navbar = () => {
             Blog
           </Link>
 
-          <div className="flex items-center gap-2 pt-2 pl-4">
-            {socialLinks.map(({ Icon, href, label }) => (
-              <a
-                key={label}
-                href={href}
-                aria-label={label}
-                className="flex items-center justify-center w-9 h-9 rounded-full border border-[var(--color-border)] text-[var(--color-heading)] hover:bg-[var(--color-surface)] transition-colors"
+          <div className="pt-2 pl-4">
+            <button
+              type="button"
+              onClick={() => setSearchOpen((prev) => !prev)}
+              className="flex items-center gap-2 text-sm text-[var(--color-heading)]"
+            >
+              <FaSearch className="text-xs" /> Search
+            </button>
+            {searchOpen && (
+              <form
+                onSubmit={(e) => e.preventDefault()}
+                className="mt-2 rounded-lg border border-[var(--color-border)] overflow-hidden"
               >
-                <Icon className="text-xs" />
-              </a>
-            ))}
+                <input
+                  type="text"
+                  autoFocus
+                  placeholder="Search..."
+                  className="w-full px-4 py-2.5 text-sm text-[var(--color-heading)] outline-none"
+                />
+              </form>
+            )}
           </div>
-
-          <Link
-            href="/contact"
-            className="block w-full mt-3 py-3 px-2 rounded-md text-sm font-semibold text-center text-white bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)] transition-colors duration-200"
-            onClick={handleServiceClick}
-          >
-            Contact Us
-          </Link>
         </div>
       )}
     </nav>
