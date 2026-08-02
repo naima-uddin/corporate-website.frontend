@@ -25,7 +25,7 @@ const Button = ({
   const base =
     variant === "link"
       ? "inline-flex items-center gap-2 text-sm transition-all duration-200"
-      : "inline-flex items-center justify-center gap-2 px-6 py-3 rounded-md text-sm font-semibold tracking-wide transition-all duration-200";
+      : "inline-flex items-center justify-center gap-2 px-6 py-3  text-sm font-semibold tracking-wide transition-all duration-200";
 
   const classes = `${base} ${VARIANTS[variant] || VARIANTS.primary} ${className}`;
 

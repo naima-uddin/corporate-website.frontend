@@ -46,7 +46,7 @@ const Banner = () => {
     if (slides.length < 2) return;
     const id = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % slides.length);
-    }, 5000);
+    }, 10000);
     return () => clearInterval(id);
   }, [slides.length, currentSlide]);
 
@@ -106,9 +106,9 @@ const Banner = () => {
       </div>
 
       <div
-        className={`${poppins.className} relative z-20 h-full flex flex-col justify-end pb-4 md:pb-6 lg:pb-10 `}
+        className={`${poppins.className} relative z-20 h-full flex flex-col justify-end pb-4 md:pb-6 lg:pb-10 px-4 sm:px-6 lg:px-12`}
       >
-        <div className="max-w-7xl mx-auto w-full">
+        <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6 lg:gap-10 ">
           <AnimatePresence mode="wait">
             <motion.div
               key={slide._id}
@@ -116,14 +116,9 @@ const Banner = () => {
               animate={{ y: 0, opacity: 1 }}
               exit={{ y: -12, opacity: 0 }}
               transition={{ duration: 0.6, ease: "easeOut" }}
-              className="max-w-2xl lg:pr-[36rem]"
+              className="max-w-xl ml-4 mb-26"
             >
-              {slide.eyebrow && (
-                <span className="eyebrow text-white/90 mb-4 block">
-                  {slide.eyebrow}
-                </span>
-              )}
-              <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight text-white leading-tight mb-4 text-balance">
+              <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight text-white leading-tight mb-4 text-balance ">
                 {slide.title}
               </h1>
               {slide.subtitle && (
@@ -139,63 +134,63 @@ const Banner = () => {
               )}
             </motion.div>
           </AnimatePresence>
+
+          {slides.length > 1 && (
+            <div className="w-full lg:w-[39rem] shrink-0">
+              <div className="no-scrollbar hidden lg:flex gap-3 justify-end mb-4 overflow-x-auto">
+                {slides.map((s, index) => (
+                  <button
+                    key={s._id}
+                    onClick={() => goToSlide(index)}
+                    aria-label={`Show slide: ${s.title}`}
+                    className={`relative shrink-0 w-36 h-52 rounded-sm overflow-hidden border-2 transition-all duration-300 ${
+                      currentSlide === index
+                        ? "border-white opacity-100 scale-105"
+                        : "border-white/30 opacity-55 hover:opacity-85"
+                    }`}
+                  >
+                    <img
+                      src={s.image}
+                      alt={s.title}
+                      className="w-full h-full object-cover"
+                    />
+                  </button>
+                ))}
+              </div>
+              <style>{`
+                .no-scrollbar { scrollbar-width: none; -ms-overflow-style: none; }
+                .no-scrollbar::-webkit-scrollbar { display: none; }
+              `}</style>
+
+              <div className="flex items-center gap-3">
+                <div className="flex-1 h-[3px] rounded-full bg-white/25 overflow-hidden">
+                  <motion.div
+                    key={currentSlide}
+                    initial={{ width: 0 }}
+                    animate={{ width: "100%" }}
+                    transition={{ duration: 5, ease: "linear" }}
+                    className="h-full bg-white"
+                  />
+                </div>
+                <button
+                  onClick={prevSlide}
+                  aria-label="Previous slide"
+                  className="flex items-center justify-center w-9 h-9 shrink-0 rounded-full border border-white/50 text-white hover:bg-white/10 transition-colors"
+                >
+                  <FiChevronLeft />
+                </button>
+                <button
+                  onClick={nextSlide}
+                  aria-label="Next slide"
+                  className="flex items-center justify-center w-9 h-9 shrink-0 rounded-full border border-white/50 text-white hover:bg-white/10 transition-colors"
+                >
+                  <FiChevronRight />
+                </button>
+              </div>
+            </div>
+          )}
         </div>
       </div>
-
-      {slides.length > 1 && (
-        <div className="absolute bottom-6 right-4 sm:right-6 lg:right-12 z-30 w-[39rem]">
-          <div className="no-scrollbar hidden lg:flex gap-3 justify-end mb-4 overflow-x-auto">
-            {slides.map((s, index) => (
-              <button
-                key={s._id}
-                onClick={() => goToSlide(index)}
-                aria-label={`Show slide: ${s.title}`}
-                className={`relative shrink-0 w-36 h-52 rounded-sm overflow-hidden border-2 transition-all duration-300 ${
-                  currentSlide === index
-                    ? "border-white opacity-100 scale-105"
-                    : "border-white/30 opacity-55 hover:opacity-85"
-                }`}
-              >
-                <img
-                  src={s.image}
-                  alt={s.title}
-                  className="w-full h-full object-cover"
-                />
-              </button>
-            ))}
-          </div>
-          <style>{`
-            .no-scrollbar { scrollbar-width: none; -ms-overflow-style: none; }
-            .no-scrollbar::-webkit-scrollbar { display: none; }
-          `}</style>
-
-          <div className="flex items-center gap-3">
-            <div className="flex-1 h-[3px] rounded-full bg-white/25 overflow-hidden">
-              <motion.div
-                key={currentSlide}
-                initial={{ width: 0 }}
-                animate={{ width: "100%" }}
-                transition={{ duration: 5, ease: "linear" }}
-                className="h-full bg-white"
-              />
-            </div>
-            <button
-              onClick={prevSlide}
-              aria-label="Previous slide"
-              className="flex items-center justify-center w-9 h-9 shrink-0 rounded-full border border-white/50 text-white hover:bg-white/10 transition-colors"
-            >
-              <FiChevronLeft />
-            </button>
-            <button
-              onClick={nextSlide}
-              aria-label="Next slide"
-              className="flex items-center justify-center w-9 h-9 shrink-0 rounded-full border border-white/50 text-white hover:bg-white/10 transition-colors"
-            >
-              <FiChevronRight />
-            </button>
-          </div>
-        </div>
-      )}
     </div>
   );
 };

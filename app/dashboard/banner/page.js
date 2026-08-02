@@ -8,7 +8,6 @@ import ImageUploadFactory from "../components/forms/ImageUploadFactory";
 
 const emptyForm = {
   image: "",
-  eyebrow: "",
   title: "",
   subtitle: "",
   buttonText: "",
@@ -72,7 +71,6 @@ export default function BannerPage() {
     setEditingId(banner._id);
     setForm({
       image: banner.image || "",
-      eyebrow: banner.eyebrow || "",
       title: banner.title || "",
       subtitle: banner.subtitle || "",
       buttonText: banner.buttonText || "",
@@ -219,19 +217,6 @@ export default function BannerPage() {
             />
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div className="sm:col-span-2">
-                <label className="block text-sm font-semibold text-slate-700 mb-2">
-                  Eyebrow (small label above title)
-                </label>
-                <input
-                  type="text"
-                  value={form.eyebrow}
-                  onChange={handleFieldChange("eyebrow")}
-                  placeholder="e.g. Travel Website"
-                  className="w-full px-4 py-3 bg-white border border-slate-300 rounded-lg text-slate-900"
-                />
-              </div>
-
               <div className="sm:col-span-2">
                 <label className="block text-sm font-semibold text-slate-700 mb-2">
                   Title *
