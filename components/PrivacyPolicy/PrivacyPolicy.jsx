@@ -233,7 +233,7 @@ const PrivacyPolicy = () => {
                 contact us:
               </p>
               <ul className="space-y-2">
-                <li>By email: info@a2it.com</li>
+                <li>By email: info@a2itltd.com</li>
                 <li>By phone: +880 1846-937397</li>
                 <li>
                   By visiting this page on our website:{" "}

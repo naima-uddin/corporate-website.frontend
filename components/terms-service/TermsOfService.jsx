@@ -249,7 +249,7 @@ const TermsOfService = () => {
                 Contact Us
               </Link>
               <a
-                href="mailto:info@a2it.com"
+                href="mailto:info@a2itltd.com"
                 className="px-6 py-3 border border-[#00f0ff] text-[#006dff] font-semibold rounded-lg hover:bg-[#006dff] hover:text-white transition-all duration-300"
               >
                 Email Us
