@@ -16,6 +16,7 @@ import {
   Loader2,
   ArrowRight,
 } from "lucide-react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import SectionHeading from "@/components/ui/SectionHeading";
 
@@ -119,58 +120,21 @@ const WhatWeOffer = () => {
   };
 
   const categoryIconMap = {
-    ecommerce: ShoppingBag,
-    development: Code,
-    marketing: TrendingUp,
-    design: Palette,
-  };
-
-  const serviceIconMap = {
-    amazon: ShoppingCart,
-    shopify: Store,
-    "design-development": Code,
-    "e-bay": Tag,
-    "mobile-app": Smartphone,
-    "e-commerce": ShoppingBag,
     erp: Database,
-    seo: TrendingUp,
-    "social-media": Share2,
-    "server-hosting": Server,
+    amazon: ShoppingCart,
+    "digital-marketing": TrendingUp,
+    "design-development": Code,
+    shopify: Store,
+    ebay: Tag,
+    hosting: Server,
+    "ecommerce-dev": ShoppingBag,
   };
 
-  const resolveServiceIcon = (service) => {
-    const categoryIcon = categoryIconMap[service?.category];
-    if (categoryIcon) {
-      return categoryIcon.name;
-    }
-
-    const pathKey = (service?.path || "")
-      .replace(/^\/services\//, "")
-      .replace(/^\//, "")
-      .toLowerCase();
-
-    if (serviceIconMap[pathKey]) {
-      return serviceIconMap[pathKey].name;
-    }
-
-    const titleKey = (service?.title || "")
-      .toLowerCase()
-      .replace(/[^a-z0-9]+/g, "-")
-      .replace(/^-+|-+$/g, "");
-
-    if (serviceIconMap[titleKey]) {
-      return serviceIconMap[titleKey].name;
-    }
-
-    return Code.name;
-  };
-
-  const servicesWithPresentation = useMemo(
+  const servicesWithIcon = useMemo(
     () =>
       services.map((service) => ({
         ...service,
-        iconName: resolveServiceIcon(service),
-        features: Array.isArray(service.features) ? service.features : [],
+        iconName: categoryIconMap[service.category]?.name || "Code",
       })),
     [services],
   );
@@ -178,20 +142,21 @@ const WhatWeOffer = () => {
   const categoryTiles = useMemo(
     () =>
       categories.map((category) => {
-        const servicesInCategory = servicesWithPresentation.filter(
+        const servicesInCategory = servicesWithIcon.filter(
           (service) => service.category === category.name,
         );
-        const image = servicesInCategory.find((service) => service.image)?.image || "";
+        const image =
+          servicesInCategory.find((service) => service.image)?.image || "";
 
         return {
           id: category.name,
           label: category.displayName || formatCategoryLabel(category.name),
           image,
-          iconName: servicesInCategory[0]?.iconName,
+          iconName: servicesInCategory[0]?.iconName || "Code",
           services: servicesInCategory,
         };
       }),
-    [categories, servicesWithPresentation],
+    [categories, servicesWithIcon],
   );
 
   useEffect(() => {
@@ -248,7 +213,7 @@ const WhatWeOffer = () => {
                   <button
                     key={tile.id}
                     onClick={() => setActiveCategory(tile.id)}
-                    className={`group relative h-40 sm:h-44 overflow-hidden rounded-md text-left transition-all duration-300 ${
+                    className={`group relative h-32 sm:h-36 overflow-hidden rounded-md text-left transition-all duration-300 ${
                       isActive ? "shadow-lg" : "hover:-translate-y-0.5 hover:shadow-lg"
                     }`}
                   >
@@ -323,12 +288,12 @@ const WhatWeOffer = () => {
                         ))}
                       </div>
                     )}
-                    <button
-                      onClick={() => router.push("/services")}
+                    <Link
+                      href={`/services/category/${activeTile?.id}`}
                       className="text-sm font-semibold text-white underline underline-offset-4 decoration-white/70 hover:decoration-white"
                     >
                       Explore More
-                    </button>
+                    </Link>
                   </div>
                 </motion.div>
               </AnimatePresence>

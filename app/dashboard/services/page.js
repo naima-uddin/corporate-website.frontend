@@ -3,7 +3,23 @@
 import React, { useState, useEffect } from "react";
 import { useAuth } from "@/context/AuthContext";
 import { motion } from "framer-motion";
-import { Plus, Trash2, Edit2, Search } from "lucide-react";
+import { Plus, Trash2, Edit2, Search, X } from "lucide-react";
+import ImageUploadFactory from "../components/forms/ImageUploadFactory";
+
+const emptyFormData = {
+  title: "",
+  description: "",
+  icon: "Code",
+  features: "",
+  category: "erp",
+  path: "",
+  color: "bg-[#0066ff]",
+  image: "",
+  images: [],
+  details: "",
+  process: "",
+  stats: "",
+};
 
 export default function ServicesPage() {
   const { token, isAdmin, isModerator } = useAuth();
@@ -13,18 +29,17 @@ export default function ServicesPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [showForm, setShowForm] = useState(false);
   const [editingService, setEditingService] = useState(null);
-  const [formData, setFormData] = useState({
-    title: "",
-    description: "",
-    icon: "Code",
-    features: "",
-    category: "development",
-    path: "",
-    color: "bg-[#0066ff]",
-  });
+  const [formData, setFormData] = useState(emptyFormData);
+  const [galleryUploadKey, setGalleryUploadKey] = useState(0);
 
   const [categories, setCategories] = useState([]);
   const [newCategory, setNewCategory] = useState("");
+  const [categoryEditName, setCategoryEditName] = useState("");
+  const [categoryEditData, setCategoryEditData] = useState({
+    bannerImage: "",
+    description: "",
+  });
+  const [savingCategoryDetails, setSavingCategoryDetails] = useState(false);
 
   const formatCategoryLabel = (value) =>
     String(value || "")
@@ -109,6 +124,42 @@ export default function ServicesPage() {
     }
   };
 
+  const handleSelectCategoryToEdit = (categoryName) => {
+    setCategoryEditName(categoryName);
+    const category = categories.find((c) => c.name === categoryName);
+    setCategoryEditData({
+      bannerImage: category?.bannerImage || "",
+      description: category?.description || "",
+    });
+  };
+
+  const handleSaveCategoryDetails = async () => {
+    if (!categoryEditName) return;
+
+    try {
+      setSavingCategoryDetails(true);
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/service-categories/${encodeURIComponent(categoryEditName)}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(categoryEditData),
+        },
+      );
+
+      if (response.ok) {
+        await fetchCategories();
+      }
+    } catch (error) {
+      console.error("Error saving category details:", error);
+    } finally {
+      setSavingCategoryDetails(false);
+    }
+  };
+
   const handleDeleteCategory = async (categoryName) => {
     if (!window.confirm("Delete this category?")) return;
 
@@ -188,6 +239,8 @@ export default function ServicesPage() {
         body: JSON.stringify({
           ...formData,
           features: formData.features.split("\n").filter((f) => f.trim()),
+          process: formData.process.split("\n").filter((p) => p.trim()),
+          stats: formData.stats.split("\n").filter((s) => s.trim()),
         }),
       });
 
@@ -195,15 +248,8 @@ export default function ServicesPage() {
         fetchServices();
         setShowForm(false);
         setEditingService(null);
-        setFormData({
-          title: "",
-          description: "",
-          icon: "Code",
-          features: "",
-          category: "development",
-          path: "",
-          color: "bg-[#0066ff]",
-        });
+        setFormData(emptyFormData);
+        setGalleryUploadKey((prev) => prev + 1);
       }
     } catch (error) {
       console.error("Error saving service:", error);
@@ -255,14 +301,10 @@ export default function ServicesPage() {
             onClick={() => {
               setEditingService(null);
               setFormData({
-                title: "",
-                description: "",
-                icon: "Code",
-                features: "",
-                category: categories[0]?.name || "development",
-                path: "",
-                color: "bg-[#0066ff]",
+                ...emptyFormData,
+                category: categories[0]?.name || "erp",
               });
+              setGalleryUploadKey((prev) => prev + 1);
               setShowForm(!showForm);
             }}
             className="bg-gradient-to-r from-[#00f0ff] to-[#0066ff] text-[#0a0a12] font-semibold px-6 py-3 rounded-lg flex items-center gap-2"
@@ -322,6 +364,59 @@ export default function ServicesPage() {
                   rows="3"
                   className="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-slate-900 shadow-sm focus:border-cyan-400 focus:ring-2 focus:ring-cyan-100 outline-none transition"
                 />
+              </div>
+
+              <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
+                <ImageUploadFactory
+                  type="services"
+                  label="Cover Image"
+                  currentImage={formData.image}
+                  onImageUploaded={(url) =>
+                    setFormData({ ...formData, image: url || "" })
+                  }
+                />
+              </div>
+
+              <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
+                <label className="mb-2 block text-sm font-semibold text-slate-700">
+                  Gallery Images
+                </label>
+                <div className="flex flex-wrap gap-3">
+                  {formData.images.map((url, index) => (
+                    <div key={url} className="relative group">
+                      <img
+                        src={url}
+                        alt={`Gallery ${index + 1}`}
+                        className="w-32 h-32 object-cover rounded-lg border-2 border-slate-300"
+                      />
+                      <button
+                        type="button"
+                        onClick={() =>
+                          setFormData({
+                            ...formData,
+                            images: formData.images.filter((_, i) => i !== index),
+                          })
+                        }
+                        className="absolute -top-2 -right-2 bg-red-500 text-white p-1.5 rounded-full opacity-0 group-hover:opacity-100 transition"
+                      >
+                        <X className="w-4 h-4" />
+                      </button>
+                    </div>
+                  ))}
+                  <ImageUploadFactory
+                    key={galleryUploadKey}
+                    type="services"
+                    label="Add Image"
+                    onImageUploaded={(url) => {
+                      if (!url) return;
+                      setFormData((prev) => ({
+                        ...prev,
+                        images: [...prev.images, url],
+                      }));
+                      setGalleryUploadKey((prev) => prev + 1);
+                    }}
+                  />
+                </div>
               </div>
 
               <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
@@ -390,6 +485,60 @@ export default function ServicesPage() {
                 </div>
               </div>
 
+              <div className="md:col-span-2 rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
+                <label className="mb-2 block text-sm font-semibold text-slate-700">
+                  Category Page Banner & Description
+                </label>
+                <select
+                  value={categoryEditName}
+                  onChange={(e) => handleSelectCategoryToEdit(e.target.value)}
+                  className="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-slate-900 shadow-sm focus:border-cyan-400 focus:ring-2 focus:ring-cyan-100 outline-none transition mb-4"
+                >
+                  <option value="">Select a category to edit...</option>
+                  {categories.map((c) => (
+                    <option value={c.name} key={c.name}>
+                      {c.displayName}
+                    </option>
+                  ))}
+                </select>
+
+                {categoryEditName && (
+                  <div className="space-y-4">
+                    <ImageUploadFactory
+                      type="services"
+                      label="Banner Image"
+                      currentImage={categoryEditData.bannerImage}
+                      onImageUploaded={(url) =>
+                        setCategoryEditData({
+                          ...categoryEditData,
+                          bannerImage: url || "",
+                        })
+                      }
+                    />
+                    <textarea
+                      placeholder="Category description shown on its banner"
+                      value={categoryEditData.description}
+                      onChange={(e) =>
+                        setCategoryEditData({
+                          ...categoryEditData,
+                          description: e.target.value,
+                        })
+                      }
+                      rows="3"
+                      className="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-slate-900 shadow-sm focus:border-cyan-400 focus:ring-2 focus:ring-cyan-100 outline-none transition"
+                    />
+                    <button
+                      type="button"
+                      onClick={handleSaveCategoryDetails}
+                      disabled={savingCategoryDetails}
+                      className="px-4 py-3 rounded-xl bg-gradient-to-r from-[#00f0ff] to-[#0066ff] text-[#0a0a12] font-semibold shadow-sm disabled:opacity-60"
+                    >
+                      {savingCategoryDetails ? "Saving..." : "Save Category Details"}
+                    </button>
+                  </div>
+                )}
+              </div>
+
               <div className="md:col-span-2">
                 <textarea
                   placeholder="Features (one per line)"
@@ -399,6 +548,48 @@ export default function ServicesPage() {
                   }
                   rows="4"
                   className="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-slate-900 font-mono text-sm shadow-sm focus:border-cyan-400 focus:ring-2 focus:ring-cyan-100 outline-none transition"
+                />
+              </div>
+
+              <div>
+                <label className="mb-2 block text-sm font-semibold text-slate-700">
+                  Process Steps
+                </label>
+                <textarea
+                  placeholder={"One per line: Title | Description\ne.g. Discovery | Understanding your goals and requirements"}
+                  value={formData.process}
+                  onChange={(e) =>
+                    setFormData({ ...formData, process: e.target.value })
+                  }
+                  rows="4"
+                  className="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-slate-900 font-mono text-sm shadow-sm focus:border-cyan-400 focus:ring-2 focus:ring-cyan-100 outline-none transition"
+                />
+              </div>
+
+              <div>
+                <label className="mb-2 block text-sm font-semibold text-slate-700">
+                  Stats
+                </label>
+                <textarea
+                  placeholder={"One per line: Value | Label\ne.g. 98% | Customer Satisfaction"}
+                  value={formData.stats}
+                  onChange={(e) =>
+                    setFormData({ ...formData, stats: e.target.value })
+                  }
+                  rows="4"
+                  className="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-slate-900 font-mono text-sm shadow-sm focus:border-cyan-400 focus:ring-2 focus:ring-cyan-100 outline-none transition"
+                />
+              </div>
+
+              <div className="md:col-span-2">
+                <textarea
+                  placeholder="More Details (long-form description shown on the service page, paragraphs separated by a blank line)"
+                  value={formData.details}
+                  onChange={(e) =>
+                    setFormData({ ...formData, details: e.target.value })
+                  }
+                  rows="5"
+                  className="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-slate-900 shadow-sm focus:border-cyan-400 focus:ring-2 focus:ring-cyan-100 outline-none transition"
                 />
               </div>
 
@@ -482,7 +673,13 @@ export default function ServicesPage() {
                               category: service.category,
                               path: service.path,
                               color: service.color,
+                              image: service.image || "",
+                              images: service.images || [],
+                              details: service.details || "",
+                              process: (service.process || []).join("\n"),
+                              stats: (service.stats || []).join("\n"),
                             });
+                            setGalleryUploadKey((prev) => prev + 1);
                             setShowForm(true);
                           }}
                           className="p-2 bg-[#00f0ff]/10 hover:bg-[#00f0ff]/20 text-[#00f0ff] rounded"

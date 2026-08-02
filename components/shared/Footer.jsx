@@ -1,10 +1,38 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import { FaPhone, FaEnvelope, FaMapMarkerAlt } from "react-icons/fa";
 import { FaFacebookF, FaTwitter, FaLinkedinIn } from "react-icons/fa";
+import { FiArrowRight, FiCheck } from "react-icons/fi";
 import Logo from "./Logo";
 
 const Footer = () => {
+  const [email, setEmail] = useState("");
+  const [status, setStatus] = useState("idle"); // idle | loading | success | error
+
+  const handleSubscribe = async (e) => {
+    e.preventDefault();
+    if (!email.trim() || status === "loading") return;
+
+    setStatus("loading");
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/newsletter/subscribe`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email }),
+        },
+      );
+
+      if (!response.ok) throw new Error("Subscription failed");
+
+      setStatus("success");
+      setEmail("");
+    } catch (error) {
+      setStatus("error");
+    }
+  };
+
   const routes = {
     HOME: "/",
     PORTFOLIO: "/portfolio",
@@ -31,9 +59,9 @@ const Footer = () => {
   ];
 
   const serviceLinks = [
-    { name: "Design & Development", path: "/services/design-development" },
+    { name: "Design & Development", path: "/services/category/development" },
     { name: "E-Commerce", path: "/services/e-commerce" },
-    { name: "Amazon", path: "/services/amazon" },
+    { name: "Amazon", path: "/services/category/ecommerce" },
     { name: "Shopify", path: "/services/shopify" },
     { name: "ERP System Development", path: "/services/erp" },
     { name: "SEO / SEM / PPC", path: "/services/seo" },
@@ -46,7 +74,64 @@ const Footer = () => {
   ];
 
   return (
-    <footer className="bg-[var(--color-ink)] text-white/60">
+    <footer className="rounded-t-3xl sm:rounded-t-[2.5rem] overflow-hidden bg-[var(--color-ink)] text-white/60">
+      <div className="bg-[var(--color-ink-2)] border-b border-white/10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 md:py-12 flex flex-col md:flex-row items-center md:items-end justify-between gap-6">
+          <div className="text-center md:text-left">
+            <span className="eyebrow text-[var(--color-primary)] mb-3">
+              Stay In The Loop
+            </span>
+            <h3 className="text-2xl md:text-3xl font-extrabold tracking-tight text-white">
+              Subscribe to our newsletter
+            </h3>
+            <p className="mt-2 text-sm text-white/50 max-w-md">
+              Get product updates, industry insights, and company news
+              delivered straight to your inbox.
+            </p>
+          </div>
+
+          <form
+            onSubmit={handleSubscribe}
+            className="w-full md:w-auto shrink-0"
+          >
+            <div className="flex items-center gap-2 rounded-full bg-white/5 border border-white/15 p-1.5 focus-within:border-[var(--color-primary)] transition-colors">
+              <input
+                type="email"
+                required
+                value={email}
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                  if (status !== "idle") setStatus("idle");
+                }}
+                placeholder="Enter your email"
+                className="w-full md:w-64 bg-transparent px-3.5 py-2 text-sm text-white placeholder:text-white/40 focus:outline-none"
+              />
+              <button
+                type="submit"
+                disabled={status === "loading"}
+                className="inline-flex shrink-0 items-center justify-center gap-2 rounded-full bg-[var(--color-primary)] px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-[var(--color-primary-dark)] disabled:opacity-60"
+              >
+                {status === "success" ? (
+                  <>
+                    <FiCheck /> Subscribed
+                  </>
+                ) : (
+                  <>
+                    {status === "loading" ? "Subscribing..." : "Subscribe"}
+                    <FiArrowRight />
+                  </>
+                )}
+              </button>
+            </div>
+            {status === "error" && (
+              <p className="mt-2 text-xs text-red-400">
+                Something went wrong. Please try again.
+              </p>
+            )}
+          </form>
+        </div>
+      </div>
+
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14 md:py-16">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-10 md:gap-8 mb-12">
           <div className="col-span-2 md:col-span-1">

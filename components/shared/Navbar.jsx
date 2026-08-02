@@ -45,17 +45,7 @@ const Navbar = () => {
 
   const isServicesActive = () => {
     if (!pathname) return false;
-    const servicePaths = [
-      "/services/design-development",
-      "/services/e-commerce",
-      "/services/amazon",
-      "/services/shopify",
-      "/services/erp",
-      "/services/seo",
-      "/services/server-hosting",
-      "/services/e-bay",
-    ];
-    return servicePaths.some((path) => pathname.startsWith(path));
+    return pathname.startsWith("/services/");
   };
 
   useEffect(() => {
@@ -146,7 +136,7 @@ const Navbar = () => {
   const services = [
     [
       "Design & Development",
-      "/services/design-development",
+      "/services/category/development",
       <FaLaptopCode />,
       "Websites, apps & product design built for scale",
     ],
@@ -158,7 +148,7 @@ const Navbar = () => {
     ],
     [
       "Amazon",
-      "/services/amazon",
+      "/services/category/ecommerce",
       <FaAmazon />,
       "FBA, vendor central & marketplace growth",
     ],

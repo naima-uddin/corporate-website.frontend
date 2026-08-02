@@ -1,38 +1,71 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
+import Link from "next/link";
+import { FiArrowRight } from "react-icons/fi";
 import SectionHeading from "@/components/ui/SectionHeading";
-import NewsCard from "@/components/ui/NewsCard";
-import Button from "@/components/ui/Button";
 
 const API = process.env.NEXT_PUBLIC_API_URL;
 
-const getImageUrl = (featuredImage, thumbnail = null) => {
-  if (!featuredImage && !thumbnail) return null;
-  if (featuredImage && typeof featuredImage === "object" && featuredImage.url) {
+const getImageUrl = (featuredImage) => {
+  if (!featuredImage) return null;
+  if (typeof featuredImage === "object" && featuredImage.url) {
     return featuredImage.url;
   }
-  return thumbnail || null;
+  if (typeof featuredImage === "string") return featuredImage;
+  return null;
 };
 
-const getPrimaryCategory = (blog) => {
-  if (blog?.categories?.length > 0) {
-    const category = blog.categories[0];
-    return typeof category === "string" ? category : category.name || category.slug || "";
-  }
-  return "";
-};
+const getPrimaryCategory = (post) => post?.category || "";
 
-const formatDate = (value) => {
+const formatTimeAgo = (value) => {
   if (!value) return "";
   const date = new Date(value);
   if (Number.isNaN(date.getTime())) return "";
+
+  const diffMs = Date.now() - date.getTime();
+  const diffMinutes = Math.floor(diffMs / (1000 * 60));
+
+  if (diffMinutes < 1) return "Just now";
+  if (diffMinutes < 60) return `${diffMinutes} min ago`;
+
+  const diffHours = Math.floor(diffMinutes / 60);
+  if (diffHours < 24) return `${diffHours} hour${diffHours > 1 ? "s" : ""} ago`;
+
+  const diffDays = Math.floor(diffHours / 24);
+  if (diffDays < 7) return `${diffDays} day${diffDays > 1 ? "s" : ""} ago`;
+
   return date.toLocaleDateString("en-US", {
     year: "numeric",
     month: "short",
     day: "numeric",
   });
 };
+
+const NewsListItem = ({ post }) => (
+  <Link
+    href={`/news/${post.slug}`}
+    className="group flex items-start justify-between gap-3 py-4 first:pt-0"
+  >
+    <div className="min-w-0 flex-1">
+      <h3 className="text-sm font-semibold leading-snug text-[var(--color-heading)] line-clamp-2 group-hover:text-[var(--color-primary)] transition-colors">
+        {post.title}
+      </h3>
+      <span className="mt-2 block text-xs text-[var(--color-body)]">
+        {formatTimeAgo(post.publishDate || post.createdAt)}
+      </span>
+    </div>
+    <div className="h-16 w-16 shrink-0 overflow-hidden rounded-md bg-[var(--color-surface)]">
+      {getImageUrl(post.featuredImage) && (
+        <img
+          src={getImageUrl(post.featuredImage)}
+          alt={post.title}
+          className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+        />
+      )}
+    </div>
+  </Link>
+);
 
 const Newsroom = () => {
   const [posts, setPosts] = useState([]);
@@ -42,14 +75,14 @@ const Newsroom = () => {
 
     const fetchLatest = async () => {
       try {
-        const res = await fetch(`${API}/api/blog?page=1&limit=3`);
+        const res = await fetch(`${API}/api/news?limit=7`);
         if (!res.ok) return;
         const data = await res.json();
         if (isMounted) {
-          setPosts(data.data || data.blogs || []);
+          setPosts(data.news || []);
         }
       } catch (error) {
-        console.error("Failed to fetch latest posts", error);
+        console.error("Failed to fetch latest news", error);
       }
     };
 
@@ -61,39 +94,86 @@ const Newsroom = () => {
 
   if (posts.length === 0) return null;
 
+  const featured = posts.find((post) => post.isFeatured) || posts[0];
+  const rest = posts.filter((post) => post._id !== featured._id).slice(0, 6);
+  const leftPosts = rest.slice(0, 3);
+  const rightPosts = rest.slice(3, 6);
+
   return (
     <section className="py-16 md:py-20 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex flex-col md:flex-row md:items-end md:justify-between mb-12">
+        <div className="flex flex-col md:flex-row md:items-end md:justify-between mb-10">
           <SectionHeading
             eyebrow="Newsroom"
-            title="Latest Insights"
+            title="News & Media"
             align="left"
             className="mb-0"
           />
-          <Button href="/blog" variant="link" className="mb-2 hidden md:inline-flex">
+          <Link
+            href="/news"
+            className="mb-2 hidden items-center gap-2 text-sm font-semibold text-[var(--color-primary)] transition-all duration-200 hover:gap-3 md:inline-flex"
+          >
             View All News
-          </Button>
+            <FiArrowRight />
+          </Link>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {posts.slice(0, 3).map((post) => (
-            <NewsCard
-              key={post._id || post.slug}
-              href={`/blog/${post.slug}`}
-              image={getImageUrl(post.featuredImage, post.thumbnail)}
-              date={formatDate(post.createdAt || post.publishedAt)}
-              category={getPrimaryCategory(post)}
-              title={post.title}
-              excerpt={post.excerpt}
-            />
-          ))}
+        <div className="grid grid-cols-1 gap-x-8 gap-y-8 lg:grid-cols-12 lg:divide-x lg:divide-[var(--color-border)]">
+          {leftPosts.length > 0 && (
+            <div className="lg:col-span-3 divide-y divide-[var(--color-border)]">
+              {leftPosts.map((post) => (
+                <NewsListItem key={post._id || post.slug} post={post} />
+              ))}
+            </div>
+          )}
+
+          <div className="lg:col-span-6 lg:px-8">
+            <Link href={`/news/${featured.slug}`} className="group block">
+              <div className="relative h-64 sm:h-80 w-full overflow-hidden rounded-lg bg-[var(--color-surface)]">
+                {getImageUrl(featured.featuredImage) && (
+                  <img
+                    src={getImageUrl(featured.featuredImage)}
+                    alt={featured.title}
+                    className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                  />
+                )}
+                {getPrimaryCategory(featured) && (
+                  <span className="absolute left-4 top-4 rounded bg-[var(--color-primary)] px-3 py-1 text-xs font-semibold uppercase tracking-wide text-white">
+                    {getPrimaryCategory(featured)}
+                  </span>
+                )}
+              </div>
+              <h3 className="mt-5 text-xl sm:text-2xl font-bold leading-snug text-[var(--color-heading)] group-hover:text-[var(--color-primary)] transition-colors">
+                {featured.title}
+              </h3>
+              {featured.excerpt && (
+                <p className="mt-3 text-sm sm:text-base text-[var(--color-body)] line-clamp-2">
+                  {featured.excerpt}
+                </p>
+              )}
+              <span className="mt-3 block text-xs text-[var(--color-body)]">
+                {formatTimeAgo(featured.publishDate || featured.createdAt)}
+              </span>
+            </Link>
+          </div>
+
+          {rightPosts.length > 0 && (
+            <div className="lg:col-span-3 divide-y divide-[var(--color-border)] lg:pl-8">
+              {rightPosts.map((post) => (
+                <NewsListItem key={post._id || post.slug} post={post} />
+              ))}
+            </div>
+          )}
         </div>
 
         <div className="mt-10 text-center md:hidden">
-          <Button href="/blog" variant="link">
+          <Link
+            href="/news"
+            className="inline-flex items-center gap-2 text-sm font-semibold text-[var(--color-primary)] transition-all duration-200 hover:gap-3"
+          >
             View All News
-          </Button>
+            <FiArrowRight />
+          </Link>
         </div>
       </div>
     </section>

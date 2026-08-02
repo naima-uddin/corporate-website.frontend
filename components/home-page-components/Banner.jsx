@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Poppins } from "next/font/google";
 import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
-import Button from "@/components/ui/Button";
+import { Button } from "@/components/ui/Button";
 
 const poppins = Poppins({
   subsets: ["latin"],
