@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useMemo, useState } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   Code,
   Smartphone,
@@ -14,14 +14,14 @@ import {
   Palette,
   Server,
   Loader2,
+  ArrowRight,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import SectionHeading from "@/components/ui/SectionHeading";
 
 const WhatWeOffer = () => {
   const router = useRouter();
-  const [activeCategory, setActiveCategory] = useState("all");
-  const [visibleCount, setVisibleCount] = useState(4);
+  const [activeCategory, setActiveCategory] = useState("");
   const [services, setServices] = useState([]);
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -175,38 +175,40 @@ const WhatWeOffer = () => {
     [services],
   );
 
-  const filteredServices =
-    activeCategory === "all"
-      ? servicesWithPresentation
-      : servicesWithPresentation.filter(
-          (service) => service.category === activeCategory,
-        );
-
-  const visibleServices = filteredServices.slice(0, visibleCount);
-  const allLoaded = visibleCount >= filteredServices.length;
-
-  const categoryButtons = useMemo(
-    () => [
-      {
-        id: "all",
-        label: "All Services",
-        count: servicesWithPresentation.length,
-      },
-      ...categories.map((category) => ({
-        id: category.name,
-        label: category.displayName || formatCategoryLabel(category.name),
-        count: servicesWithPresentation.filter(
+  const categoryTiles = useMemo(
+    () =>
+      categories.map((category) => {
+        const servicesInCategory = servicesWithPresentation.filter(
           (service) => service.category === category.name,
-        ).length,
-      })),
-    ],
+        );
+        const image = servicesInCategory.find((service) => service.image)?.image || "";
+
+        return {
+          id: category.name,
+          label: category.displayName || formatCategoryLabel(category.name),
+          image,
+          iconName: servicesInCategory[0]?.iconName,
+          services: servicesInCategory,
+        };
+      }),
     [categories, servicesWithPresentation],
   );
 
-  const renderIcon = (iconName) => {
+  useEffect(() => {
+    if (!activeCategory && categoryTiles.length > 0) {
+      setActiveCategory(categoryTiles[0].id);
+    }
+  }, [categoryTiles, activeCategory]);
+
+  const activeTile =
+    categoryTiles.find((tile) => tile.id === activeCategory) || categoryTiles[0];
+
+  const renderIcon = (iconName, className = "w-6 h-6 text-[var(--color-primary)]") => {
     const Icon = iconMap[iconName] || Code;
-    return <Icon className="w-6 h-6 text-[var(--color-primary)]" />;
+    return <Icon className={className} />;
   };
+
+  const isLoading = loading || categoriesLoading;
 
   return (
     <section className="py-16 md:py-20 bg-[var(--color-surface)]">
@@ -215,105 +217,122 @@ const WhatWeOffer = () => {
           eyebrow="What We Do"
           title="Our Services"
           subtitle="Comprehensive digital solutions tailored to elevate your business to new heights."
+          align="left"
         />
 
-        <div className="flex flex-wrap justify-center gap-2 mb-12 border-b border-[var(--color-border)] pb-4">
-          {categoriesLoading && categories.length === 0 ? (
-            <div className="text-sm text-[var(--color-body)]">Loading categories...</div>
-          ) : null}
-          {categoryButtons.map((category) => (
-            <button
-              key={category.id}
-              onClick={() => {
-                setActiveCategory(category.id);
-                setVisibleCount(4);
-              }}
-              className={`px-4 py-2 text-sm font-semibold transition-colors duration-200 border-b-2 -mb-[17px] ${
-                activeCategory === category.id
-                  ? "text-[var(--color-primary)] border-[var(--color-primary)]"
-                  : "text-[var(--color-body)] border-transparent hover:text-[var(--color-primary)]"
-              }`}
-            >
-              {category.label}
-            </button>
-          ))}
-        </div>
-
-        {loading && (
+        {isLoading && categoryTiles.length === 0 && (
           <div className="flex items-center justify-center py-12 text-[var(--color-body)]">
             <Loader2 className="w-5 h-5 mr-2 animate-spin" />
             Loading services...
           </div>
         )}
 
-        {!loading && error && (
-          <div className="max-w-xl mx-auto mb-8 rounded-md border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+        {!isLoading && error && categoryTiles.length === 0 && (
+          <div className="max-w-xl mx-auto rounded-md border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
             {error}
           </div>
         )}
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {visibleServices.map((service, index) => (
-            <motion.div
-              key={service._id || service.title}
-              layout
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4, delay: index * 0.05 }}
-              className="group"
-            >
-              <div
-                onClick={() => router.push(service.path)}
-                className="cursor-pointer relative flex h-full flex-col overflow-hidden rounded-lg border border-[var(--color-border)] bg-white transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
-              >
-                <div className="h-36 w-full overflow-hidden bg-[var(--color-primary-tint)] flex items-center justify-center">
-                  {service.image ? (
-                    <img
-                      src={service.image}
-                      alt={service.title}
-                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                    />
-                  ) : (
-                    renderIcon(service.iconName)
-                  )}
-                </div>
-                <div className="p-5 flex flex-1 flex-col">
-                  <span className="text-xs font-semibold uppercase tracking-wide text-[var(--color-primary)] mb-2">
-                    {categories.find((cat) => cat.name === service.category)
-                      ?.displayName || formatCategoryLabel(service.category)}
-                  </span>
-                  <h3 className="text-base font-bold text-[var(--color-heading)] mb-2">
-                    {service.title}
-                  </h3>
-                  <p className="text-sm text-[var(--color-body)] mb-4 line-clamp-2">
-                    {service.description}
-                  </p>
-
-                  <div className="mt-auto pt-3 border-t border-[var(--color-border)]">
-                    <span className="text-sm font-semibold text-[var(--color-primary)]">
-                      Know More →
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </motion.div>
-          ))}
-        </div>
-
-        {!loading && filteredServices.length > 4 && (
-          <div className="text-center mt-10">
-            <button
-              onClick={() => setVisibleCount(allLoaded ? 4 : visibleCount + 4)}
-              className="px-6 py-2.5 bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)] text-white font-semibold rounded-md text-sm transition-colors duration-200"
-            >
-              {allLoaded ? "Show Less" : "Load More"}
-            </button>
+        {!isLoading && !error && categoryTiles.length === 0 && (
+          <div className="text-center py-12 text-[var(--color-body)]">
+            No services found.
           </div>
         )}
 
-        {!loading && !error && filteredServices.length === 0 && (
-          <div className="text-center py-12 text-[var(--color-body)]">
-            No services found.
+        {categoryTiles.length > 0 && (
+          <div className="flex flex-col lg:flex-row items-stretch gap-4 lg:gap-6">
+            <div className="grid grid-cols-2 gap-4 lg:w-[46%]">
+              {categoryTiles.map((tile) => {
+                const isActive = tile.id === activeTile?.id;
+                return (
+                  <button
+                    key={tile.id}
+                    onClick={() => setActiveCategory(tile.id)}
+                    className={`group relative h-40 sm:h-44 overflow-hidden rounded-md text-left transition-all duration-300 ${
+                      isActive ? "shadow-lg" : "hover:-translate-y-0.5 hover:shadow-lg"
+                    }`}
+                  >
+                    {isActive ? (
+                      <div className="absolute inset-0 bg-gradient-to-br from-[var(--color-primary)] to-[var(--color-ink-2)]" />
+                    ) : tile.image ? (
+                      <img
+                        src={tile.image}
+                        alt={tile.label}
+                        className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                      />
+                    ) : (
+                      <div className="absolute inset-0 flex items-center justify-center bg-[var(--color-primary-tint)]">
+                        {renderIcon(tile.iconName)}
+                      </div>
+                    )}
+
+                    {!isActive && (
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
+                    )}
+
+                    <div className="absolute inset-x-0 bottom-0 flex items-center justify-between px-4 py-3">
+                      <span className="text-sm sm:text-base font-semibold text-white">
+                        {tile.label}
+                      </span>
+                      {isActive && <ArrowRight className="w-4 h-4 text-white" />}
+                    </div>
+
+                    {isActive && (
+                      <span className="absolute bottom-0 left-0 h-[3px] w-10 bg-white" />
+                    )}
+                  </button>
+                );
+              })}
+            </div>
+
+            <div className="relative min-h-[320px] flex-1 overflow-hidden rounded-md">
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={activeTile?.id}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.3 }}
+                  className="absolute inset-0"
+                >
+                  {activeTile?.image ? (
+                    <img
+                      src={activeTile.image}
+                      alt={activeTile.label}
+                      className="h-full w-full object-cover"
+                    />
+                  ) : (
+                    <div className="flex h-full w-full items-center justify-center bg-[var(--color-primary-tint)]">
+                      {renderIcon(activeTile?.iconName, "w-16 h-16 text-[var(--color-primary)]")}
+                    </div>
+                  )}
+
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent" />
+
+                  <div className="absolute inset-x-0 bottom-0 p-5 sm:p-6">
+                    {activeTile?.services?.length > 0 && (
+                      <div className="mb-5 flex flex-wrap gap-2">
+                        {activeTile.services.slice(0, 8).map((service) => (
+                          <button
+                            key={service._id || service.title}
+                            onClick={() => router.push(service.path)}
+                            className="rounded border border-white/30 bg-black/30 px-3 py-1.5 text-xs sm:text-sm font-medium text-white backdrop-blur-sm transition-colors hover:bg-white hover:text-[var(--color-heading)]"
+                          >
+                            {service.title}
+                          </button>
+                        ))}
+                      </div>
+                    )}
+                    <button
+                      onClick={() => router.push("/services")}
+                      className="text-sm font-semibold text-white underline underline-offset-4 decoration-white/70 hover:decoration-white"
+                    >
+                      Explore More
+                    </button>
+                  </div>
+                </motion.div>
+              </AnimatePresence>
+            </div>
           </div>
         )}
       </div>
