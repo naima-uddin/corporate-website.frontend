@@ -206,14 +206,14 @@ const WhatWeOffer = () => {
 
         {categoryTiles.length > 0 && (
           <div className="flex flex-col lg:flex-row items-stretch gap-4 lg:gap-6">
-            <div className="grid grid-cols-2 gap-4 lg:w-[46%]">
+            <div className="grid grid-cols-2 gap-4 lg:w-[40%]">
               {categoryTiles.map((tile) => {
                 const isActive = tile.id === activeTile?.id;
                 return (
                   <button
                     key={tile.id}
                     onClick={() => setActiveCategory(tile.id)}
-                    className={`group relative h-32 sm:h-36 overflow-hidden rounded-md text-left transition-all duration-300 ${
+                    className={`group relative h-28 sm:h-32 overflow-hidden rounded-md text-left transition-all duration-300 ${
                       isActive ? "shadow-lg" : "hover:-translate-y-0.5 hover:shadow-lg"
                     }`}
                   >
