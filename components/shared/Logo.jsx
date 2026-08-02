@@ -48,7 +48,7 @@ const Logo = ({ variant = "default", className = "", showName = true }) => {
         alt={siteName}
         width={120}
         height={40}
-        className={`h-8 w-auto ${variant === "light" ? "brightness-0 invert" : ""}`}
+        className="h-8 w-auto"
         unoptimized
       />
       {showName && (
