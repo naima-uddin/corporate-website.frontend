@@ -120,7 +120,7 @@ const Newsroom = () => {
 
         <div className="grid grid-cols-1 gap-x-8 gap-y-8 lg:grid-cols-12 lg:divide-x lg:divide-[var(--color-border)]">
           {leftPosts.length > 0 && (
-            <div className="lg:col-span-3 divide-y divide-[var(--color-border)]">
+            <div className="lg:col-span-3 divide-y divide-[var(--color-border)] lg:pr-4">
               {leftPosts.map((post) => (
                 <NewsListItem key={post._id || post.slug} post={post} />
               ))}
@@ -158,7 +158,7 @@ const Newsroom = () => {
           </div>
 
           {rightPosts.length > 0 && (
-            <div className="lg:col-span-3 divide-y divide-[var(--color-border)]">
+            <div className="lg:col-span-3 divide-y divide-[var(--color-border)] lg:-pl-2">
               {rightPosts.map((post) => (
                 <NewsListItem key={post._id || post.slug} post={post} />
               ))}

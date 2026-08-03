@@ -130,11 +130,27 @@ export default function RichTextEditor({ value, onChange, placeholder }) {
     editor.focus();
     restoreSelection();
 
-    document.execCommand("fontSize", false, "7");
-    editor.querySelectorAll('font[size="7"]').forEach((el) => {
-      el.removeAttribute("size");
-      el.style.fontSize = `${clamped}px`;
-    });
+    const sel = window.getSelection();
+    if (!sel || sel.rangeCount === 0 || sel.isCollapsed) {
+      // Nothing selected — there's no existing text to resize.
+      return;
+    }
+
+    // Wrap the selected range directly in a sized span instead of relying on
+    // document.execCommand("fontSize"), which (especially with styleWithCSS)
+    // doesn't reliably produce a wrapper we can find and override across browsers.
+    const range = sel.getRangeAt(0);
+    const span = document.createElement("span");
+    span.style.fontSize = `${clamped}px`;
+    span.appendChild(range.extractContents());
+    range.insertNode(span);
+
+    const newRange = document.createRange();
+    newRange.selectNodeContents(span);
+    sel.removeAllRanges();
+    sel.addRange(newRange);
+    lastRangeRef.current = newRange.cloneRange();
+
     handleInput();
   };
 
