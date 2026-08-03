@@ -15,6 +15,48 @@ const MotionDiv =
     ...props
   }) => <div {...props}>{children}</div>);
 
+const AwardCard = ({ award, featured }) => (
+  <div className="relative h-full flex flex-col rounded-lg overflow-hidden border border-slate-200 shadow-sm hover:shadow-lg transition-all duration-300 bg-white">
+    <div
+      className={`relative bg-slate-50 ${featured ? "flex-1 min-h-[220px]" : "flex-1 min-h-[140px]"}`}
+    >
+      {award.image ? (
+        <Image
+          src={award.image}
+          alt={award.title || "Award"}
+          fill
+          unoptimized
+          className="object-cover"
+        />
+      ) : (
+        <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-[#00f0ff]/10 to-[#0066ff]/10 text-[#0066ff] font-semibold text-sm px-4 text-center">
+          {award.title}
+        </div>
+      )}
+      
+    </div>
+
+    {(award.title || award.description) && (
+      <div className={`px-4 py-3 ${featured ? "md:px-6 md:py-4" : ""}`}>
+        {award.title && (
+          <h3
+            className={`font-semibold text-black ${featured ? "text-lg md:text-xl" : "text-sm md:text-base"}`}
+          >
+            {award.title}
+          </h3>
+        )}
+        {award.description && (
+          <p
+            className={`text-slate-600 mt-1 leading-relaxed ${featured ? "text-sm md:text-base" : "text-xs md:text-sm line-clamp-3"}`}
+          >
+            {award.description}
+          </p>
+        )}
+      </div>
+    )}
+  </div>
+);
+
 const AwardsSection = ({ awards }) => {
   if (!Array.isArray(awards) || awards.length === 0) return null;
 
@@ -25,39 +67,21 @@ const AwardsSection = ({ awards }) => {
           Awards &amp; <span className="text-[#0066ff]">Accolades</span>
         </h2>
 
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-          {awards.map((award, index) => (
-            <MotionDiv
-              key={index}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
-            >
-              <div className="rounded-lg overflow-hidden border border-slate-200 shadow-sm hover:shadow-lg transition-all duration-300">
-                <div className="relative h-44 md:h-52 bg-slate-50">
-                  {award.image ? (
-                    <Image
-                      src={award.image}
-                      alt={award.title || "Award"}
-                      fill
-                      unoptimized
-                      className="object-cover"
-                    />
-                  ) : (
-                    <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-[#00f0ff]/10 to-[#0066ff]/10 text-[#0066ff] font-semibold text-sm px-4 text-center">
-                      {award.title}
-                    </div>
-                  )}
-                  <div className="absolute bottom-0 left-0 right-0 h-1.5 bg-gradient-to-r from-[#00f0ff] via-[#0066ff] to-[#ff2d95]"></div>
-                </div>
-              </div>
-              {award.description && (
-                <p className="text-black text-sm md:text-base leading-relaxed mt-4">
-                  {award.description}
-                </p>
-              )}
-            </MotionDiv>
-          ))}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 lg:auto-rows-[240px]">
+          {awards.map((award, index) => {
+            const featured = index === 0;
+            return (
+              <MotionDiv
+                key={index}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+                className={`h-full ${featured ? "lg:col-span-2 lg:row-span-2" : ""}`}
+              >
+                <AwardCard award={award} featured={featured} />
+              </MotionDiv>
+            );
+          })}
         </div>
       </div>
     </section>
