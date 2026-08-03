@@ -67,7 +67,9 @@ const Portfolio = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [selectedProject, setSelectedProject] = useState(null);
+  const [activeImage, setActiveImage] = useState("");
   const [showAllContracts, setShowAllContracts] = useState(false);
+  const [showAllFeatured, setShowAllFeatured] = useState(false);
 
   useEffect(() => {
     const fetchAll = async () => {
@@ -112,6 +114,28 @@ const Portfolio = () => {
 
   const featuredProjects = contracts.filter((c) => c.featured);
   const visibleContracts = showAllContracts ? contracts : contracts.slice(0, 6);
+  const visibleFeatured = showAllFeatured
+    ? featuredProjects
+    : featuredProjects.slice(0, 3);
+
+  const openProject = (project) => {
+    setSelectedProject(project);
+    setActiveImage(project.image);
+  };
+
+  const closeProject = () => {
+    setSelectedProject(null);
+    setActiveImage("");
+  };
+
+  const galleryImages = selectedProject
+    ? [
+        selectedProject.image,
+        ...(Array.isArray(selectedProject.images)
+          ? selectedProject.images
+          : []),
+      ].filter((url, idx, arr) => url && arr.indexOf(url) === idx)
+    : [];
 
   return (
     <div className="bg-white text-[var(--color-heading)]">
@@ -268,7 +292,7 @@ const Portfolio = () => {
                           </td>
                           <td className="px-4 py-3 text-center">
                             <button
-                              onClick={() => setSelectedProject(item)}
+                              onClick={() => openProject(item)}
                               className="text-[var(--color-primary)] hover:text-[var(--color-primary-dark)]"
                               aria-label={`View ${item.title}`}
                             >
@@ -290,9 +314,18 @@ const Portfolio = () => {
                   <h2 className="text-xl sm:text-2xl font-bold">
                     {featuredSection.heading || "Featured Government Projects"}
                   </h2>
+                  {featuredProjects.length > 3 && (
+                    <button
+                      onClick={() => setShowAllFeatured((prev) => !prev)}
+                      className="text-sm font-semibold text-[var(--color-primary)] hover:underline flex items-center gap-1"
+                    >
+                      {showAllFeatured ? "Show Less" : "View All"}
+                      <ArrowRight className="w-3.5 h-3.5" />
+                    </button>
+                  )}
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {featuredProjects.map((project, idx) => (
+                  {visibleFeatured.map((project, idx) => (
                     <div
                       key={project._id || idx}
                       className="bg-white rounded-2xl border border-[var(--color-border)] shadow-sm hover:shadow-lg transition-shadow duration-300 overflow-hidden"
@@ -346,7 +379,7 @@ const Portfolio = () => {
                           </p>
                         </div>
                         <button
-                          onClick={() => setSelectedProject(project)}
+                          onClick={() => openProject(project)}
                           className="mt-3 inline-flex items-center gap-2 border border-[var(--color-primary)] text-[var(--color-primary)] font-semibold text-sm px-4 py-2 rounded-md hover:bg-[var(--color-primary)] hover:text-white transition-colors"
                         >
                           View Details <ArrowRight className="w-3.5 h-3.5" />
@@ -426,18 +459,18 @@ const Portfolio = () => {
       </div>
 
       {/* CTA */}
-      <section className="bg-[var(--color-ink)] py-14 mt-6">
+      <section className=" py-14 mt-6">
         <div className="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">
+          <h2 className="text-3xl sm:text-4xl font-bold text-black mb-4">
             {cta.heading || "Let's Build a Better Tomorrow Together"}
           </h2>
-          <p className="text-white/70 mb-8 max-w-2xl mx-auto">
+          <p className="text-gray-600 mb-8 max-w-2xl mx-auto">
             {cta.description}
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
               href={cta.buttonLink || "/contact"}
-              className="inline-flex items-center justify-center gap-2 bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)] text-white font-semibold px-6 py-3 rounded-lg transition-colors"
+              className="inline-flex items-center justify-center gap-2 bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)] text- font-semibold px-6 py-3 rounded-lg transition-colors"
             >
               {cta.buttonText || "Contact Us"} <ArrowRight className="w-4 h-4" />
             </Link>
@@ -445,7 +478,7 @@ const Portfolio = () => {
               <a
                 href={cta.secondaryButtonLink}
                 download
-                className="inline-flex items-center justify-center gap-2 border border-white/40 text-white font-semibold px-6 py-3 rounded-lg hover:bg-white/10 transition-colors"
+                className="inline-flex items-center justify-center bg-gray-400 gap-2 border border-white/40 text-black font-semibold px-6 py-3 rounded-lg hover:bg-white/10 transition-colors"
               >
                 <Download className="w-4 h-4" />{" "}
                 {cta.secondaryButtonText || "Download Company Profile"}
@@ -459,7 +492,7 @@ const Portfolio = () => {
       {selectedProject && (
         <div
           className="fixed inset-0 z-[70] bg-black/70 backdrop-blur-sm p-3 sm:p-4 md:p-8 overflow-y-auto"
-          onClick={() => setSelectedProject(null)}
+          onClick={closeProject}
         >
           <div
             className="max-w-3xl mx-auto bg-white rounded-2xl overflow-hidden shadow-2xl max-h-[92vh] flex flex-col"
@@ -467,13 +500,13 @@ const Portfolio = () => {
           >
             <div className="relative h-56 sm:h-64 shrink-0">
               <img
-                src={selectedProject.image}
+                src={activeImage || selectedProject.image}
                 alt={selectedProject.title}
                 className="w-full h-full object-cover"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
               <button
-                onClick={() => setSelectedProject(null)}
+                onClick={closeProject}
                 className="absolute top-3 right-3 bg-white/90 hover:bg-white text-slate-700 p-2 rounded-full"
               >
                 <X className="w-4 h-4" />
@@ -484,6 +517,28 @@ const Portfolio = () => {
                 </h3>
               </div>
             </div>
+
+            {galleryImages.length > 1 && (
+              <div className="flex gap-2 overflow-x-auto p-3 border-b border-[var(--color-border)] shrink-0">
+                {galleryImages.map((url, idx) => (
+                  <button
+                    key={`${url}-${idx}`}
+                    onClick={() => setActiveImage(url)}
+                    className={`shrink-0 w-16 h-16 rounded-lg overflow-hidden border-2 transition-colors ${
+                      (activeImage || selectedProject.image) === url
+                        ? "border-[var(--color-primary)]"
+                        : "border-transparent"
+                    }`}
+                  >
+                    <img
+                      src={url}
+                      alt={`${selectedProject.title} ${idx + 1}`}
+                      className="w-full h-full object-cover"
+                    />
+                  </button>
+                ))}
+              </div>
+            )}
 
             <div className="p-5 sm:p-6 space-y-4 overflow-y-auto">
               <p className="text-[var(--color-body)]">

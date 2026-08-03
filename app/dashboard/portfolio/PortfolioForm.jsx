@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { ArrowLeft, Save } from "lucide-react";
 import ImageUploadFactory from "../components/forms/ImageUploadFactory";
+import MultiImageUploadFactory from "../components/forms/MultiImageUploadFactory";
 
 export default function PortfolioForm({
   form,
@@ -259,7 +260,7 @@ export default function PortfolioForm({
               <div>
                 <ImageUploadFactory
                   type="portfolio"
-                  label="Project Image"
+                  label="Project Image (main/cover)"
                   currentImage={form.image}
                   onImageUploaded={(url) =>
                     setForm({ ...form, image: url || "" })
@@ -279,6 +280,27 @@ export default function PortfolioForm({
                 />
               </div>
             </div>
+
+            <div className="mt-4">
+              <MultiImageUploadFactory
+                type="portfolio"
+                images={form.images || []}
+                onImagesChange={(images) => setForm({ ...form, images })}
+                label="Additional Images (gallery)"
+              />
+            </div>
+
+            <label className="mt-4 flex items-center gap-2 text-sm font-semibold text-slate-700">
+              <input
+                type="checkbox"
+                checked={!!form.featured}
+                onChange={(e) =>
+                  setForm({ ...form, featured: e.target.checked })
+                }
+                className="h-4 w-4 rounded border-slate-300"
+              />
+              Featured (show in the "Featured Government Projects" cards)
+            </label>
           </div>
 
           {/* Contract Info Section */}
