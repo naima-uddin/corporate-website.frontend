@@ -26,6 +26,7 @@ import {
   Users2,
   Info,
   Landmark,
+  FolderKanban,
 } from "lucide-react";
 import Link from "next/link";
 
@@ -49,8 +50,9 @@ const NAV_SECTIONS = [
       { id: "join-us", label: "Join Us Section", icon: Users2, href: "/dashboard/join-us" },
       { id: "about", label: "About Page", icon: Info, href: "/dashboard/about" },
       { id: "government-enlistment", label: "Government Enlistment", icon: Landmark, href: "/dashboard/government-enlistment" },
+      { id: "projects-page", label: "Projects Page Settings", icon: FolderKanban, href: "/dashboard/projects-page" },
       { id: "services", label: "Manage Services", icon: ShoppingCart, href: "/dashboard/services" },
-      { id: "portfolio", label: "Manage Portfolio", icon: Briefcase, href: "/dashboard/portfolio" },
+      { id: "portfolio", label: "Manage Contracts/Projects", icon: Briefcase, href: "/dashboard/portfolio" },
       { id: "gallery", label: "Manage Gallery", icon: Camera, href: "/dashboard/gallery" },
       { id: "blog", label: "Manage Blog", icon: FileText, href: "/dashboard/blog" },
       { id: "news", label: "Manage News", icon: Newspaper, href: "/dashboard/news" },

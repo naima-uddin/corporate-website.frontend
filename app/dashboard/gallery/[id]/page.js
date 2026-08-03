@@ -1,10 +1,11 @@
 "use client";
 
 import React, { use, useEffect, useState } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
+import { Images } from "lucide-react";
 import GalleryImageForm from "../GalleryImageForm";
-import BulkImageUploader from "../BulkImageUploader";
 
 const emptyForm = { image: "", title: "", category: "", order: 0 };
 
@@ -13,6 +14,7 @@ export default function EditGalleryImagePage({ params }) {
   const { token, isAdmin, isModerator } = useAuth();
   const router = useRouter();
   const [form, setForm] = useState(emptyForm);
+  const [groupKey, setGroupKey] = useState(id);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
@@ -42,6 +44,9 @@ export default function EditGalleryImagePage({ params }) {
             category: item.category || "",
             order: item.order ?? 0,
           });
+          setGroupKey(
+            item.batchId && item.batchId.trim() ? item.batchId : item._id,
+          );
         } else {
           setNotFound(true);
         }
@@ -134,14 +139,13 @@ export default function EditGalleryImagePage({ params }) {
       />
 
       <div className="max-w-xl bg-white border border-slate-200 rounded-xl p-6 shadow-sm">
-        <h2 className="text-lg font-bold text-slate-900 mb-1">
-          Add More Images to "{form.category || "this"}"
-        </h2>
-        <p className="text-sm text-slate-500 mb-4">
-          Upload one or many more images (10+) tagged with this same
-          category.
-        </p>
-        <BulkImageUploader lockCategory initialCategory={form.category} />
+        <Link
+          href={`/dashboard/gallery/group/${groupKey}`}
+          className="inline-flex items-center gap-2 text-sm font-semibold text-blue-600 hover:text-blue-700"
+        >
+          <Images className="w-4 h-4" />
+          View & manage all images in this group
+        </Link>
       </div>
     </div>
   );

@@ -281,6 +281,93 @@ export default function PortfolioForm({
             </div>
           </div>
 
+          {/* Contract Info Section */}
+          <div className="bg-white rounded-lg p-6 border border-slate-200">
+            <h3 className="text-lg font-semibold text-slate-900 mb-4">
+              Government Contract Info
+            </h3>
+            <p className="text-slate-500 text-xs mb-4">
+              Shown in the "Recent Government Contracts" table and featured
+              project cards on the Projects page.
+            </p>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+              <div>
+                <label className="block text-sm font-semibold text-slate-700 mb-2">
+                  Contract No.
+                </label>
+                <input
+                  type="text"
+                  placeholder="e.g., EED/2024/001"
+                  value={form.contractNo}
+                  onChange={(e) =>
+                    setForm({ ...form, contractNo: e.target.value })
+                  }
+                  className="w-full px-4 py-2 bg-white border border-slate-300 rounded-lg text-slate-900 focus:outline-none focus:ring-2 focus:ring-cyan-500 transition"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-semibold text-slate-700 mb-2">
+                  Contract Value (BDT)
+                </label>
+                <input
+                  type="text"
+                  placeholder="e.g., 62,45,80,000"
+                  value={form.contractValue}
+                  onChange={(e) =>
+                    setForm({ ...form, contractValue: e.target.value })
+                  }
+                  className="w-full px-4 py-2 bg-white border border-slate-300 rounded-lg text-slate-900 focus:outline-none focus:ring-2 focus:ring-cyan-500 transition"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-semibold text-slate-700 mb-2">
+                  Status
+                </label>
+                <select
+                  value={form.status}
+                  onChange={(e) => setForm({ ...form, status: e.target.value })}
+                  className="w-full px-4 py-2 bg-white border border-slate-300 rounded-lg text-slate-900 focus:outline-none focus:ring-2 focus:ring-cyan-500 transition"
+                >
+                  <option value="Completed">Completed</option>
+                  <option value="Ongoing">Ongoing</option>
+                  <option value="Upcoming">Upcoming</option>
+                </select>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-semibold text-slate-700 mb-2">
+                  Location
+                </label>
+                <input
+                  type="text"
+                  placeholder="e.g., Jessore"
+                  value={form.location}
+                  onChange={(e) =>
+                    setForm({ ...form, location: e.target.value })
+                  }
+                  className="w-full px-4 py-2 bg-white border border-slate-300 rounded-lg text-slate-900 focus:outline-none focus:ring-2 focus:ring-cyan-500 transition"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-semibold text-slate-700 mb-2">
+                  Completion Year
+                </label>
+                <input
+                  type="text"
+                  placeholder="e.g., 2024"
+                  value={form.completionYear}
+                  onChange={(e) =>
+                    setForm({ ...form, completionYear: e.target.value })
+                  }
+                  className="w-full px-4 py-2 bg-white border border-slate-300 rounded-lg text-slate-900 focus:outline-none focus:ring-2 focus:ring-cyan-500 transition"
+                />
+              </div>
+            </div>
+          </div>
+
           {/* Detailed Fields - Conditional */}
           {detailedMode && (
             <>

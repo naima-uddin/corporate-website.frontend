@@ -45,7 +45,13 @@ export default function NewGalleryImagePage() {
         className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm"
       >
         <BulkImageUploader
-          onComplete={() => router.push("/dashboard/gallery")}
+          onComplete={(batchId) =>
+            router.push(
+              batchId
+                ? `/dashboard/gallery/group/${batchId}`
+                : "/dashboard/gallery",
+            )
+          }
         />
       </motion.div>
     </div>

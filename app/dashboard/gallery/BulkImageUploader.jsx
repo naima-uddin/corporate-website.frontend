@@ -12,18 +12,28 @@ const titleFromFilename = (filename) =>
     .trim()
     .replace(/\b\w/g, (c) => c.toUpperCase()) || "Untitled";
 
-// Upload one or many images at once, all tagged with the same category.
-// Pass `lockCategory` + `initialCategory` to fix the category (e.g. when
-// adding more images to an existing category from the edit page).
+const generateBatchId = () =>
+  typeof crypto !== "undefined" && crypto.randomUUID
+    ? crypto.randomUUID()
+    : `batch-${Date.now()}-${Math.random().toString(36).slice(2)}`;
+
+// Upload one or many images at once, all tagged with the same category and
+// the same batchId, so they render as a single grouped card in the gallery
+// list. Pass `lockCategory` + `initialCategory` to fix the category, and
+// `initialBatchId` to append uploads to an existing group (e.g. when adding
+// more images to a group from its detail page). Without `initialBatchId` a
+// fresh batch id is generated so a new group is created.
 export default function BulkImageUploader({
   lockCategory = false,
   initialCategory = "",
+  initialBatchId = "",
   onComplete,
 }) {
   const { token } = useAuth();
   const [categories, setCategories] = useState([]);
   const [loadingCategories, setLoadingCategories] = useState(!lockCategory);
   const [category, setCategory] = useState(initialCategory);
+  const [batchId] = useState(() => initialBatchId || generateBatchId());
   const [files, setFiles] = useState([]);
   const [uploading, setUploading] = useState(false);
   const [progress, setProgress] = useState([]);
@@ -110,6 +120,7 @@ export default function BulkImageUploader({
               publicId: uploadData.publicId,
               title: titleFromFilename(file.name),
               category,
+              batchId,
               order: 0,
             }),
           },
@@ -133,7 +144,7 @@ export default function BulkImageUploader({
 
     setUploading(false);
     setFiles([]);
-    onComplete?.();
+    onComplete?.(batchId);
   };
 
   return (

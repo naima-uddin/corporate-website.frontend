@@ -1,17 +1,22 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
 import { useAuth } from "@/context/AuthContext";
 import { motion } from "framer-motion";
 import {
   Plus,
   Trash2,
-  GripVertical,
   Power,
   Pencil,
   FolderPlus,
+  Images,
+  ChevronLeft,
+  ChevronRight,
 } from "lucide-react";
+
+const groupKeyOf = (item) =>
+  item.batchId && item.batchId.trim() ? item.batchId : item._id;
 
 export default function GalleryPage() {
   const { token, isAdmin, isModerator } = useAuth();
@@ -27,6 +32,68 @@ export default function GalleryPage() {
     fetchImages();
     fetchCategories();
   }, [token]);
+
+  const groups = useMemo(() => {
+    const map = new Map();
+    for (const item of images) {
+      const key = groupKeyOf(item);
+      if (!map.has(key)) map.set(key, []);
+      map.get(key).push(item);
+    }
+    return Array.from(map.entries()).map(([key, items]) => ({ key, items }));
+  }, [images]);
+
+  // Local, reorderable copy of the groups. Synced from `groups` whenever the
+  // underlying images change (initial load, after a save, etc).
+  const [orderedGroups, setOrderedGroups] = useState([]);
+  const [savingOrder, setSavingOrder] = useState(false);
+
+  useEffect(() => {
+    setOrderedGroups(groups);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [images]);
+
+  const persistOrder = async (newOrderedGroups) => {
+    setSavingOrder(true);
+    try {
+      const updates = [];
+      newOrderedGroups.forEach((group, index) => {
+        group.items.forEach((item) => {
+          if (item.order !== index) {
+            updates.push(
+              fetch(
+                `${process.env.NEXT_PUBLIC_API_URL}/api/gallery-images/${item._id}`,
+                {
+                  method: "PUT",
+                  headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
+                  },
+                  body: JSON.stringify({ order: index }),
+                },
+              ),
+            );
+          }
+        });
+      });
+      await Promise.all(updates);
+      fetchImages();
+    } catch (err) {
+      console.error("Error saving gallery order:", err);
+    } finally {
+      setSavingOrder(false);
+    }
+  };
+
+  const handleMove = (index, direction) => {
+    const targetIndex = index + direction;
+    if (targetIndex < 0 || targetIndex >= orderedGroups.length) return;
+
+    const next = [...orderedGroups];
+    [next[index], next[targetIndex]] = [next[targetIndex], next[index]];
+    setOrderedGroups(next);
+    persistOrder(next);
+  };
 
   const fetchImages = async () => {
     try {
@@ -115,41 +182,53 @@ export default function GalleryPage() {
     }
   };
 
-  const handleToggleActive = async (item) => {
-    try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/gallery-images/${item._id}`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({ isActive: !item.isActive }),
-        },
-      );
+  const handleToggleGroup = async (group) => {
+    const nextActive = !group.items[0].isActive;
 
-      if (response.ok) fetchImages();
+    try {
+      await Promise.all(
+        group.items.map((item) =>
+          fetch(
+            `${process.env.NEXT_PUBLIC_API_URL}/api/gallery-images/${item._id}`,
+            {
+              method: "PUT",
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+              },
+              body: JSON.stringify({ isActive: nextActive }),
+            },
+          ),
+        ),
+      );
+      fetchImages();
     } catch (err) {
-      console.error("Error updating gallery image:", err);
+      console.error("Error updating gallery images:", err);
     }
   };
 
-  const handleDelete = async (id) => {
-    if (!window.confirm("Delete this gallery image?")) return;
+  const handleDeleteGroup = async (group) => {
+    const message =
+      group.items.length > 1
+        ? `Delete all ${group.items.length} images in this group?`
+        : "Delete this gallery image?";
+    if (!window.confirm(message)) return;
 
     try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/gallery-images/${id}`,
-        {
-          method: "DELETE",
-          headers: { Authorization: `Bearer ${token}` },
-        },
+      await Promise.all(
+        group.items.map((item) =>
+          fetch(
+            `${process.env.NEXT_PUBLIC_API_URL}/api/gallery-images/${item._id}`,
+            {
+              method: "DELETE",
+              headers: { Authorization: `Bearer ${token}` },
+            },
+          ),
+        ),
       );
-
-      if (response.ok) fetchImages();
+      fetchImages();
     } catch (err) {
-      console.error("Error deleting gallery image:", err);
+      console.error("Error deleting gallery images:", err);
     }
   };
 
@@ -321,65 +400,104 @@ export default function GalleryPage() {
           animate={{ opacity: 1 }}
           className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm"
         >
-          <h2 className="text-xl font-bold text-slate-900 mb-4">
-            Current Images ({images.length})
-          </h2>
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-xl font-bold text-slate-900">
+              Current Images ({images.length} in {groups.length} group
+              {groups.length === 1 ? "" : "s"})
+            </h2>
+            <p className="text-xs text-slate-400">
+              {savingOrder
+                ? "Saving order..."
+                : "Use the arrows on a card to change its position on the public gallery."}
+            </p>
+          </div>
 
-          {images.length === 0 ? (
+          {orderedGroups.length === 0 ? (
             <p className="text-slate-500 text-sm">No gallery images yet.</p>
           ) : (
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
-              {images.map((item) => (
-                <div
-                  key={item._id}
-                  className={`relative group border rounded-lg p-3 flex flex-col items-center gap-2 ${
-                    item.isActive
-                      ? "border-slate-200"
-                      : "border-slate-200 opacity-50"
-                  }`}
-                >
-                  <GripVertical className="w-4 h-4 text-slate-300 absolute top-2 left-2" />
-                  <img
-                    src={item.image}
-                    alt={item.title}
-                    className="w-full h-24 object-cover rounded"
-                  />
-                  <p className="text-xs font-semibold text-slate-700 truncate w-full text-center">
-                    {item.title}
-                  </p>
-                  <p className="text-xs text-slate-400 truncate w-full text-center">
-                    {item.category || "—"} · order {item.order}
-                  </p>
-                  <div className="flex gap-2">
+              {orderedGroups.map((group, index) => {
+                const cover = group.items[0];
+                return (
+                  <div
+                    key={group.key}
+                    className={`relative group border rounded-lg p-3 flex flex-col items-center gap-2 ${
+                      cover.isActive
+                        ? "border-slate-200"
+                        : "border-slate-200 opacity-50"
+                    }`}
+                  >
                     <Link
-                      href={`/dashboard/gallery/${item._id}`}
-                      title="Edit"
-                      className="p-2 rounded bg-blue-500/10 text-blue-600 hover:bg-blue-500/20"
+                      href={`/dashboard/gallery/group/${group.key}`}
+                      className="w-full relative"
                     >
-                      <Pencil className="w-4 h-4" />
+                      <img
+                        src={cover.image}
+                        alt={cover.title}
+                        className="w-full h-24 object-cover rounded"
+                      />
+                      {group.items.length > 1 && (
+                        <span className="absolute bottom-1 right-1 flex items-center gap-1 bg-black/70 text-white text-[10px] font-semibold px-2 py-0.5 rounded-full">
+                          <Images className="w-3 h-3" />
+                          {group.items.length}
+                        </span>
+                      )}
                     </Link>
-                    <button
-                      onClick={() => handleToggleActive(item)}
-                      title={item.isActive ? "Hide from site" : "Show on site"}
-                      className={`p-2 rounded ${
-                        item.isActive
-                          ? "bg-green-500/10 text-green-600 hover:bg-green-500/20"
-                          : "bg-slate-100 text-slate-400 hover:bg-slate-200"
-                      }`}
-                    >
-                      <Power className="w-4 h-4" />
-                    </button>
-                    {isAdmin && (
+                    <p className="text-xs font-semibold text-slate-700 truncate w-full text-center">
+                      {cover.category || cover.title}
+                    </p>
+                    <p className="text-xs text-slate-400 truncate w-full text-center">
+                      {group.items.length > 1
+                        ? `${group.items.length} images`
+                        : cover.title}
+                    </p>
+                    <div className="flex gap-1">
                       <button
-                        onClick={() => handleDelete(item._id)}
-                        className="p-2 bg-red-500/10 hover:bg-red-500/20 text-red-500 rounded"
+                        onClick={() => handleMove(index, -1)}
+                        disabled={savingOrder || index === 0}
+                        title="Move earlier"
+                        className="p-2 rounded bg-slate-100 text-slate-600 hover:bg-slate-200 disabled:opacity-30 disabled:cursor-not-allowed"
                       >
-                        <Trash2 className="w-4 h-4" />
+                        <ChevronLeft className="w-4 h-4" />
                       </button>
-                    )}
+                      <button
+                        onClick={() => handleMove(index, 1)}
+                        disabled={savingOrder || index === orderedGroups.length - 1}
+                        title="Move later"
+                        className="p-2 rounded bg-slate-100 text-slate-600 hover:bg-slate-200 disabled:opacity-30 disabled:cursor-not-allowed"
+                      >
+                        <ChevronRight className="w-4 h-4" />
+                      </button>
+                      <Link
+                        href={`/dashboard/gallery/group/${group.key}`}
+                        title="Open"
+                        className="p-2 rounded bg-blue-500/10 text-blue-600 hover:bg-blue-500/20"
+                      >
+                        <Pencil className="w-4 h-4" />
+                      </Link>
+                      <button
+                        onClick={() => handleToggleGroup(group)}
+                        title={cover.isActive ? "Hide from site" : "Show on site"}
+                        className={`p-2 rounded ${
+                          cover.isActive
+                            ? "bg-green-500/10 text-green-600 hover:bg-green-500/20"
+                            : "bg-slate-100 text-slate-400 hover:bg-slate-200"
+                        }`}
+                      >
+                        <Power className="w-4 h-4" />
+                      </button>
+                      {isAdmin && (
+                        <button
+                          onClick={() => handleDeleteGroup(group)}
+                          className="p-2 bg-red-500/10 hover:bg-red-500/20 text-red-500 rounded"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      )}
+                    </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           )}
         </motion.div>

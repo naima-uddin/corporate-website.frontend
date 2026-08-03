@@ -2,46 +2,35 @@ import Portfolio from "@/components/portfolio-page-component/Portfolio";
 import React from "react";
 
 export const metadata = {
-  title: "Projects | A2IT Ltd | Our Work in Web, eCommerce & Marketplaces",
+  title: "Projects | M/S. MD. RAKIB HASAN | Government Contracts & Supply",
   description:
-    "Explore A2IT Ltd's projects showcasing web development, mobile apps, UI/UX, eCommerce stores, Amazon, Shopify, and eBay work. See our innovative IT solutions in action.",
+    "Explore government contracts, construction and supply projects delivered by M/S. MD. RAKIB HASAN — a 1st Class Government Contractor, Supplier, General Merchant & Auctioneer serving departments across Bangladesh since 2012.",
   keywords: [
-    "A2IT Projects",
-    "Web Development Projects",
-    "Mobile App Projects",
-    "UI/UX Design Projects",
-    "eCommerce Projects",
-    "Shopify Projects",
-    "Amazon Projects",
-    "eBay Projects",
-    "Digital Marketing Case Studies",
-    "IT Solutions Projects",
+    "Government Contractor Bangladesh",
+    "Government Supply Projects",
+    "Construction Projects",
+    "Education Engineering Department Contracts",
+    "Health Engineering Department Contracts",
+    "Public Works Department Contracts",
+    "BADC Contracts",
+    "Government Auction Services",
   ],
   alternates: {
-    canonical: "https://a2itltd.com/projects",
+    canonical: "https://msmdrakibhasan.com/projects",
   },
   openGraph: {
-    title: "Projects | A2IT Ltd | Web, eCommerce & Marketplace Projects",
+    title: "Projects | M/S. MD. RAKIB HASAN | Government Contracts & Supply",
     description:
-      "Discover A2IT Ltd's projects in web, mobile, UI/UX, eCommerce, Shopify, Amazon, and eBay delivered with excellence.",
-    url: "https://a2itltd.com/projects",
-    siteName: "A2IT Ltd",
-    images: [
-      {
-        url: "/og-portfolio.jpg",
-        width: 1200,
-        height: 630,
-        alt: "Projects of A2IT Ltd",
-      },
-    ],
+      "Government contracts, construction and supply projects delivered by M/S. MD. RAKIB HASAN across Bangladesh.",
+    url: "https://msmdrakibhasan.com/projects",
+    siteName: "M/S. MD. RAKIB HASAN",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Projects | A2IT Ltd | Web, eCommerce & Marketplace Projects",
+    title: "Projects | M/S. MD. RAKIB HASAN | Government Contracts & Supply",
     description:
-      "Explore A2IT Ltd's projects showcasing web, mobile, UI/UX, eCommerce, Shopify, Amazon, and eBay work.",
-    images: ["/og-portfolio.jpg"],
+      "Government contracts, construction and supply projects delivered by M/S. MD. RAKIB HASAN across Bangladesh.",
   },
 };
 
@@ -59,21 +48,19 @@ export default function Page() {
             name: "Projects",
             author: {
               "@type": "Organization",
-              name: "A2IT Ltd",
-              url: "https://a2itltd.com",
-              logo: "https://a2itltd.com/logo.png",
+              name: "M/S. MD. RAKIB HASAN",
+              url: "https://msmdrakibhasan.com",
             },
             description:
-              "A2IT Ltd's projects showcasing work in web development, mobile apps, UI/UX, eCommerce, Shopify, Amazon, and eBay.",
-            url: "https://a2itltd.com/projects",
+              "Government contracts, construction and supply projects delivered by M/S. MD. RAKIB HASAN, a 1st Class Government Contractor, Supplier, General Merchant & Auctioneer in Bangladesh.",
+            url: "https://msmdrakibhasan.com/projects",
             about: [
-              { "@type": "Thing", name: "Web Development" },
-              { "@type": "Thing", name: "Mobile App Development" },
-              { "@type": "Thing", name: "UI/UX Design" },
-              { "@type": "Thing", name: "eCommerce" },
-              { "@type": "Thing", name: "Shopify" },
-              { "@type": "Thing", name: "Amazon" },
-              { "@type": "Thing", name: "eBay" },
+              { "@type": "Thing", name: "Government Contracting" },
+              { "@type": "Thing", name: "Construction" },
+              { "@type": "Thing", name: "Government Supply" },
+              { "@type": "Thing", name: "General Merchant" },
+              { "@type": "Thing", name: "Auction Services" },
+              { "@type": "Thing", name: "Procurement" },
             ],
           }),
         }}

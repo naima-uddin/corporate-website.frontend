@@ -13,7 +13,7 @@ export default function LoadingProvider({ children }) {
       // এখানে চাইলে future API call করতে পারো
 
       const elapsed = Date.now() - start;
-      const minimumTime = 2500;
+      const minimumTime = 2000;
 
       if (elapsed < minimumTime) {
         await new Promise((resolve) =>

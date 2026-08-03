@@ -10,6 +10,7 @@ import {
   Building2,
   Users,
   Handshake,
+  Images,
 } from "lucide-react";
 
 // Icon shown next to each category tab
@@ -25,8 +26,14 @@ const CATEGORY_ICONS = {
 const ROW_PATTERN = [1, 1, 1, 2, 1, 1, 2, 1, 1, 1];
 const getColSpan = (index) => ROW_PATTERN[index % ROW_PATTERN.length];
 
+// Images uploaded together share a batchId — group them into a single card
+// so a batch of 4 shows as one tile with a "4" badge instead of 4 tiles.
+const groupKeyOf = (image) =>
+  image.batchId && image.batchId.trim() ? image.batchId : image.id;
+
 export default function CompanyGallery() {
   const [selectedImageIndex, setSelectedImageIndex] = useState(null);
+  const [activeGroupImages, setActiveGroupImages] = useState([]);
   const [currentSlide, setCurrentSlide] = useState(0);
   const [activeCategory, setActiveCategory] = useState("All");
   const [companyImages, setCompanyImages] = useState([]);
@@ -45,6 +52,7 @@ export default function CompanyGallery() {
             alt: img.title,
             title: img.title,
             category: img.category || "General",
+            batchId: img.batchId || "",
           }))
         )
       )
@@ -56,22 +64,22 @@ export default function CompanyGallery() {
     const checkMobile = () => {
       setIsMobile(window.innerWidth < 768);
     };
-    
+
     // Initially set to true for SSR
     setIsMobile(window.innerWidth < 768);
     window.addEventListener('resize', checkMobile);
-    
+
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
   // Auto slide on mobile
   useEffect(() => {
     if (!isMobile) return;
-    
+
     const interval = setInterval(() => {
       nextSlide();
     }, 5000);
-    
+
     return () => clearInterval(interval);
   }, [isMobile, currentSlide]);
 
@@ -90,14 +98,27 @@ export default function CompanyGallery() {
     [companyImages, activeCategory]
   );
 
+  // Group the filtered images by batchId so images uploaded together render
+  // as a single card, with the group's own image list for the lightbox.
+  const displayGroups = useMemo(() => {
+    const map = new Map();
+    for (const img of filteredImages) {
+      const key = groupKeyOf(img);
+      if (!map.has(key)) map.set(key, []);
+      map.get(key).push(img);
+    }
+    return Array.from(map.values());
+  }, [filteredImages]);
+
   // Reset slider/modal state whenever the selected category changes
   useEffect(() => {
     setCurrentSlide(0);
     setSelectedImageIndex(null);
+    setActiveGroupImages([]);
   }, [activeCategory]);
 
   // Calculate total slides for mobile
-  const totalSlides = filteredImages.length;
+  const totalSlides = displayGroups.length;
 
   // Slider functions
   const nextSlide = useCallback(() => {
@@ -110,54 +131,74 @@ export default function CompanyGallery() {
     setCurrentSlide((prev) => (prev - 1 + totalSlides) % totalSlides);
   }, [totalSlides]);
 
-  const openModal = (index) => setSelectedImageIndex(index);
-  const closeModal = () => setSelectedImageIndex(null);
+  const openGroup = (group, index = 0) => {
+    setActiveGroupImages(group);
+    setSelectedImageIndex(index);
+  };
+  const closeModal = () => {
+    setSelectedImageIndex(null);
+    setActiveGroupImages([]);
+  };
 
   const nextImage = () => {
-    setSelectedImageIndex((prev) => (prev + 1) % filteredImages.length);
+    setSelectedImageIndex((prev) => (prev + 1) % activeGroupImages.length);
   };
 
   const prevImage = () => {
     setSelectedImageIndex((prev) =>
-      prev === 0 ? filteredImages.length - 1 : prev - 1
+      prev === 0 ? activeGroupImages.length - 1 : prev - 1
     );
   };
 
-  const MobileImageCard = ({ image, index }) => (
-    <div
-      onClick={() => openModal(index)}
-      className="group relative overflow-hidden rounded-lg shadow-md hover:shadow-lg transition-all duration-300 bg-[#12121a] h-full border border-[#00f0ff]/20 min-w-full cursor-pointer"
-    >
-      <div className="relative overflow-hidden h-full">
-        <img
-          src={image.src}
-          alt={image.alt}
-          className="w-full h-56 object-cover transition-all duration-300 group-hover:scale-105 group-hover:brightness-75"
-        />
+  const GroupBadge = ({ count }) =>
+    count > 1 ? (
+      <span className="absolute top-2 right-2 z-10 flex items-center gap-1 bg-[#0a0a12]/80 text-[#e0e0ff] text-xs font-semibold px-2 py-1 rounded-full backdrop-blur-sm border border-[#00f0ff]/20">
+        <Images className="w-3 h-3" />
+        {count}
+      </span>
+    ) : null;
 
-        {/* Title Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a12]/90 via-[#0a0a12]/10 to-transparent flex flex-col justify-end p-4">
-          <h3 className="font-bold text-md text-[#e0e0ff]">{image.title}</h3>
+  const MobileImageCard = ({ group }) => {
+    const cover = group[0];
+    return (
+      <div
+        onClick={() => openGroup(group)}
+        className="group relative overflow-hidden rounded-lg shadow-md hover:shadow-lg transition-all duration-300 bg-[#12121a] h-full border border-[#00f0ff]/20 min-w-full cursor-pointer"
+      >
+        <div className="relative overflow-hidden h-full">
+          <GroupBadge count={group.length} />
+          <img
+            src={cover.src}
+            alt={cover.alt}
+            className="w-full h-56 object-cover transition-all duration-300 group-hover:scale-105 group-hover:brightness-75"
+          />
+
+          {/* Title Overlay */}
+          <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a12]/90 via-[#0a0a12]/10 to-transparent flex flex-col justify-end p-4">
+            <h3 className="font-bold text-md text-[#e0e0ff]">{cover.title}</h3>
+          </div>
         </div>
       </div>
-    </div>
-  );
+    );
+  };
 
-  const DesktopImageCard = ({ image, index }) => {
-    if (!image) return null;
+  const DesktopImageCard = ({ group, index }) => {
+    if (!group) return null;
+    const cover = group[0];
     const colSpan = getColSpan(index);
 
     return (
       <div
-        onClick={() => openModal(index)}
+        onClick={() => openGroup(group)}
         className={`group relative overflow-hidden rounded-lg shadow-md hover:shadow-lg transition-all duration-300 bg-[#12121a] h-full border border-[#00f0ff]/20 cursor-pointer ${
           colSpan === 2 ? "md:col-span-2" : ""
         }`}
       >
         <div className="relative overflow-hidden h-full">
+          <GroupBadge count={group.length} />
           <img
-            src={image.src}
-            alt={image.alt}
+            src={cover.src}
+            alt={cover.alt}
             className={`w-full ${
               colSpan === 2 ? "h-72" : "h-56"
             } object-cover transition-all duration-300 group-hover:scale-105 group-hover:brightness-75`}
@@ -166,7 +207,7 @@ export default function CompanyGallery() {
           {/* Title Overlay */}
           <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a12]/90 via-[#0a0a12]/10 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300 flex flex-col justify-end p-4">
             <h3 className="font-bold text-md text-[#e0e0ff] transform translate-y-3 group-hover:translate-y-0 transition-all duration-300">
-              {image.title}
+              {cover.title}
             </h3>
           </div>
         </div>
@@ -218,8 +259,12 @@ export default function CompanyGallery() {
 
             {/* Desktop Grid Layout */}
             <div className="hidden md:grid grid-cols-3 gap-4">
-              {filteredImages.map((image, index) => (
-                <DesktopImageCard key={image.id} image={image} index={index} />
+              {displayGroups.map((group, index) => (
+                <DesktopImageCard
+                  key={groupKeyOf(group[0])}
+                  group={group}
+                  index={index}
+                />
               ))}
             </div>
 
@@ -230,9 +275,12 @@ export default function CompanyGallery() {
                 className="flex transition-transform duration-500 ease-in-out"
                 style={{ transform: `translateX(-${currentSlide * 100}%)` }}
               >
-                {filteredImages.map((image, index) => (
-                  <div key={image.id} className="flex-shrink-0 w-full px-2">
-                    <MobileImageCard image={image} index={index} />
+                {displayGroups.map((group) => (
+                  <div
+                    key={groupKeyOf(group[0])}
+                    className="flex-shrink-0 w-full px-2"
+                  >
+                    <MobileImageCard group={group} />
                   </div>
                 ))}
               </div>
@@ -253,7 +301,7 @@ export default function CompanyGallery() {
 
               {/* Slide Counter */}
               <div className="text-center mt-2 text-[#b0b0ff] text-sm">
-                {currentSlide + 1} / {filteredImages.length}
+                {currentSlide + 1} / {totalSlides}
               </div>
             </div>
           </>
@@ -261,7 +309,7 @@ export default function CompanyGallery() {
       </div>
 
       {/* Fullscreen Modal with responsive fixes */}
-      {selectedImageIndex !== null && (
+      {selectedImageIndex !== null && activeGroupImages.length > 0 && (
         <div className="fixed inset-0 bg-[#0a0a12]/95 z-50 flex items-center justify-center p-2 md:p-4">
           {/* Close Button */}
           <button
@@ -272,22 +320,26 @@ export default function CompanyGallery() {
           </button>
 
           {/* Navigation Arrows - Larger on mobile for touch */}
-          <button
-            onClick={prevImage}
-            className="absolute left-2 md:left-4 top-1/2 -translate-y-1/2 bg-[#12121a]/90 hover:bg-[#12121a] text-[#e0e0ff] border border-[#00f0ff]/20 z-10 backdrop-blur-sm p-2 md:p-2 rounded-md w-10 h-10 md:w-auto md:h-auto flex items-center justify-center"
-          >
-            <ChevronLeft className="w-5 h-5 md:w-5 md:h-5" />
-          </button>
-          <button
-            onClick={nextImage}
-            className="absolute right-2 md:right-4 top-1/2 -translate-y-1/2 bg-[#12121a]/90 hover:bg-[#12121a] text-[#e0e0ff] border border-[#00f0ff]/20 z-10 backdrop-blur-sm p-2 md:p-2 rounded-md w-10 h-10 md:w-auto md:h-auto flex items-center justify-center"
-          >
-            <ChevronRight className="w-5 h-5 md:w-5 md:h-5" />
-          </button>
+          {activeGroupImages.length > 1 && (
+            <>
+              <button
+                onClick={prevImage}
+                className="absolute left-2 md:left-4 top-1/2 -translate-y-1/2 bg-[#12121a]/90 hover:bg-[#12121a] text-[#e0e0ff] border border-[#00f0ff]/20 z-10 backdrop-blur-sm p-2 md:p-2 rounded-md w-10 h-10 md:w-auto md:h-auto flex items-center justify-center"
+              >
+                <ChevronLeft className="w-5 h-5 md:w-5 md:h-5" />
+              </button>
+              <button
+                onClick={nextImage}
+                className="absolute right-2 md:right-4 top-1/2 -translate-y-1/2 bg-[#12121a]/90 hover:bg-[#12121a] text-[#e0e0ff] border border-[#00f0ff]/20 z-10 backdrop-blur-sm p-2 md:p-2 rounded-md w-10 h-10 md:w-auto md:h-auto flex items-center justify-center"
+              >
+                <ChevronRight className="w-5 h-5 md:w-5 md:h-5" />
+              </button>
+            </>
+          )}
 
           {/* Image Counter */}
           <div className="absolute top-3 md:top-4 left-3 md:left-4 bg-[#0a0a12]/90 text-[#e0e0ff] px-2 py-1 md:px-3 md:py-1 rounded-full text-xs font-medium backdrop-blur-sm border border-[#00f0ff]/20">
-            {selectedImageIndex + 1} / {filteredImages.length}
+            {selectedImageIndex + 1} / {activeGroupImages.length}
           </div>
 
           {/* Action Buttons - Mobile: bottom, Desktop: bottom center */}
@@ -307,39 +359,41 @@ export default function CompanyGallery() {
           {/* Main Image Content */}
           <div className="relative w-full h-full max-w-6xl max-h-[60vh] md:max-h-[70vh]">
             <img
-              src={filteredImages[selectedImageIndex].src}
-              alt={filteredImages[selectedImageIndex].alt}
+              src={activeGroupImages[selectedImageIndex].src}
+              alt={activeGroupImages[selectedImageIndex].alt}
               className="w-full h-full object-contain rounded-md"
             />
 
             {/* Image Info */}
             <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-[#0a0a12]/95 to-transparent p-3 md:p-4 rounded-b-md">
               <h3 className="text-[#e0e0ff] text-sm md:text-md font-bold line-clamp-1">
-                {filteredImages[selectedImageIndex].title}
+                {activeGroupImages[selectedImageIndex].title}
               </h3>
             </div>
           </div>
 
           {/* Thumbnail Strip - Mobile: smaller and scrollable */}
-          <div className="absolute bottom-20 md:bottom-16 left-1/2 -translate-x-1/2 flex gap-1 max-w-[90vw] md:max-w-full overflow-x-auto px-2 py-1 md:py-1">
-            {filteredImages.map((image, index) => (
-              <button
-                key={image.id}
-                onClick={() => setSelectedImageIndex(index)}
-                className={`flex-shrink-0 w-10 h-8 md:w-12 md:h-9 rounded-sm overflow-hidden border transition-all ${
-                  index === selectedImageIndex
-                    ? "border-[#00f0ff] scale-110 md:scale-110"
-                    : "border-[#b0b0ff]/30 hover:border-[#00f0ff]/60"
-                }`}
-              >
-                <img
-                  src={image.src}
-                  alt={image.alt}
-                  className="w-full h-full object-cover"
-                />
-              </button>
-            ))}
-          </div>
+          {activeGroupImages.length > 1 && (
+            <div className="absolute bottom-20 md:bottom-16 left-1/2 -translate-x-1/2 flex gap-1 max-w-[90vw] md:max-w-full overflow-x-auto px-2 py-1 md:py-1">
+              {activeGroupImages.map((image, index) => (
+                <button
+                  key={image.id}
+                  onClick={() => setSelectedImageIndex(index)}
+                  className={`flex-shrink-0 w-10 h-8 md:w-12 md:h-9 rounded-sm overflow-hidden border transition-all ${
+                    index === selectedImageIndex
+                      ? "border-[#00f0ff] scale-110 md:scale-110"
+                      : "border-[#b0b0ff]/30 hover:border-[#00f0ff]/60"
+                  }`}
+                >
+                  <img
+                    src={image.src}
+                    alt={image.alt}
+                    className="w-full h-full object-cover"
+                  />
+                </button>
+              ))}
+            </div>
+          )}
         </div>
       )}
     </section>
