@@ -58,17 +58,6 @@ const MemberCard = ({ member }) => (
 const BoardOfDirectorsSection = ({ members }) => {
   if (!Array.isArray(members) || members.length === 0) return null;
 
-  const rows = members.reduce((acc, member) => {
-    const rowNumber = member.row || 1;
-    if (!acc[rowNumber]) acc[rowNumber] = [];
-    acc[rowNumber].push(member);
-    return acc;
-  }, {});
-
-  const rowNumbers = Object.keys(rows)
-    .map(Number)
-    .sort((a, b) => a - b);
-
   return (
     <section className="py-16 px-4 md:px-16 bg-white">
       <div className="max-w-6xl mx-auto">
@@ -83,21 +72,16 @@ const BoardOfDirectorsSection = ({ members }) => {
           </h2>
         </MotionDiv>
 
-        <div className="flex flex-col gap-4">
-          {rowNumbers.map((rowNumber) => (
-            <MotionDiv
-              key={rowNumber}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-              className="flex flex-wrap divide-x divide-slate-200 bg-white border border-slate-200"
-            >
-              {rows[rowNumber].map((member, index) => (
-                <MemberCard key={index} member={member} />
-              ))}
-            </MotionDiv>
+        <MotionDiv
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="flex flex-wrap divide-x divide-slate-200 bg-white border border-slate-200"
+        >
+          {members.map((member, index) => (
+            <MemberCard key={index} member={member} />
           ))}
-        </div>
+        </MotionDiv>
       </div>
     </section>
   );

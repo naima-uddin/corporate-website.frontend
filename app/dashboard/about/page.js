@@ -30,7 +30,6 @@ const emptyMember = {
   publicId: "",
   name: "",
   title: "",
-  row: 1,
 };
 
 const emptyMilestone = { year: "", description: "" };
@@ -346,7 +345,7 @@ export default function AboutPageAdmin() {
 
       <SectionCard
         title="3. Meet Our Board of Directors"
-        description="Shown third on the About page. Members with the same Row number appear together in one row — e.g. Row 1 = Chairman alone, Row 2 = three Managing Directors."
+        description="Shown third on the About page, in a single row."
       >
         <div className="space-y-6">
           {about.boardOfDirectors.map((member, index) => (
@@ -375,7 +374,7 @@ export default function AboutPageAdmin() {
                 currentImage={member.image}
               />
 
-              <div className="grid sm:grid-cols-3 gap-4">
+              <div className="grid sm:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-semibold text-slate-700 mb-2">
                     Name
@@ -396,20 +395,6 @@ export default function AboutPageAdmin() {
                     value={member.title}
                     onChange={(e) => updateMember(index, "title", e.target.value)}
                     placeholder="e.g. Chairman, Managing Director"
-                    className="w-full px-4 py-3 bg-white border border-slate-300 rounded-lg text-slate-900"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-semibold text-slate-700 mb-2">
-                    Row
-                  </label>
-                  <input
-                    type="number"
-                    min={1}
-                    value={member.row}
-                    onChange={(e) =>
-                      updateMember(index, "row", Number(e.target.value) || 1)
-                    }
                     className="w-full px-4 py-3 bg-white border border-slate-300 rounded-lg text-slate-900"
                   />
                 </div>

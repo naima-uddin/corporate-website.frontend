@@ -341,7 +341,7 @@ const Navbar = () => {
               href="/government-enlistment"
               className={linkColorClasses(isActive("/government-enlistment"))}
             >
-              Government Enlistment
+              Govt. Enlistment
               {isActive("/government-enlistment") && (
                 <span
                   className={`absolute -bottom-1 left-0 w-full h-0.5 rounded-full ${underlineClasses}`}
@@ -503,7 +503,7 @@ const Navbar = () => {
             }`}
             onClick={handleServiceClick}
           >
-            Government Enlistment
+            Govt. Enlistment
           </Link>
 
           <Link
