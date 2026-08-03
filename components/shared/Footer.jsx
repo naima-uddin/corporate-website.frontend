@@ -119,7 +119,7 @@ const Footer = () => {
         }
       >
         <div className="absolute inset-0 bg-[var(--color-ink)]/80" />
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-20 flex flex-col md:flex-row items-center justify-between gap-8">
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16 flex flex-col md:flex-row items-center justify-between gap-8">
           <div className="text-center md:text-left">
             {footer.topBandEyebrow && (
               <span className="eyebrow text-white/80 mb-3">
