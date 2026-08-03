@@ -14,14 +14,15 @@ const emptyAbout = {
     image: "",
     publicId: "",
   },
-  mission: { label: "Our Mission", heading: "", body: "" },
-  vision: { label: "Our Vision", heading: "", body: "" },
+  mission: { label: "Our Mission", heading: "", body: "", image: "", publicId: "" },
+  vision: { label: "Our Vision", heading: "", body: "", image: "", publicId: "" },
   boardOfDirectors: [],
   ourStory: {
     label: "Our Story",
     heading: "",
     milestones: [],
   },
+  awards: [],
 };
 
 const emptyMember = {
@@ -33,6 +34,8 @@ const emptyMember = {
 };
 
 const emptyMilestone = { year: "", description: "" };
+
+const emptyAward = { image: "", publicId: "", title: "", description: "" };
 
 const SectionCard = ({ title, description, children }) => (
   <motion.div
@@ -85,6 +88,7 @@ export default function AboutPageAdmin() {
                 ? data.about.ourStory.milestones
                 : [],
             },
+            awards: Array.isArray(data.about.awards) ? data.about.awards : [],
           });
         }
       }
@@ -149,6 +153,28 @@ export default function AboutPageAdmin() {
         ...prev.ourStory,
         milestones: prev.ourStory.milestones.filter((_, i) => i !== index),
       },
+    }));
+  };
+
+  const updateAward = (index, field, value) => {
+    setAbout((prev) => {
+      const awards = [...prev.awards];
+      awards[index] = { ...awards[index], [field]: value };
+      return { ...prev, awards };
+    });
+  };
+
+  const addAward = () => {
+    setAbout((prev) => ({
+      ...prev,
+      awards: [...prev.awards, { ...emptyAward }],
+    }));
+  };
+
+  const removeAward = (index) => {
+    setAbout((prev) => ({
+      ...prev,
+      awards: prev.awards.filter((_, i) => i !== index),
     }));
   };
 
@@ -281,6 +307,14 @@ export default function AboutPageAdmin() {
               onChange={(e) => updateSection("mission", "body", e.target.value)}
               className="w-full px-4 py-3 bg-white border border-slate-300 rounded-lg text-slate-900"
             />
+            <ImageUploadFactory
+              type="about"
+              label="Image (optional)"
+              onImageUploaded={(url) =>
+                updateSection("mission", "image", url || "")
+              }
+              currentImage={about.mission.image}
+            />
           </div>
           <div className="space-y-3">
             <p className="text-sm font-semibold text-slate-700">Vision</p>
@@ -297,6 +331,14 @@ export default function AboutPageAdmin() {
               value={about.vision.body}
               onChange={(e) => updateSection("vision", "body", e.target.value)}
               className="w-full px-4 py-3 bg-white border border-slate-300 rounded-lg text-slate-900"
+            />
+            <ImageUploadFactory
+              type="about"
+              label="Image (optional)"
+              onImageUploaded={(url) =>
+                updateSection("vision", "image", url || "")
+              }
+              currentImage={about.vision.image}
             />
           </div>
         </div>
@@ -463,6 +505,77 @@ export default function AboutPageAdmin() {
           >
             <Plus className="w-4 h-4" />
             Add Step
+          </button>
+        </div>
+      </SectionCard>
+
+      <SectionCard
+        title="5. Awards & Accolades"
+        description="Optional. Shown at the bottom of the About page. Leave empty to hide this section."
+      >
+        <div className="space-y-6">
+          {about.awards.map((award, index) => (
+            <div
+              key={index}
+              className="border border-slate-200 rounded-lg p-4 space-y-3"
+            >
+              <div className="flex items-center justify-between">
+                <p className="text-sm font-semibold text-slate-700">
+                  Award {index + 1}
+                </p>
+                <button
+                  type="button"
+                  onClick={() => removeAward(index)}
+                  className="inline-flex items-center gap-1 text-xs font-semibold text-red-600 hover:text-red-700"
+                >
+                  <Trash2 className="w-3.5 h-3.5" />
+                  Remove
+                </button>
+              </div>
+
+              <ImageUploadFactory
+                type="about"
+                label="Image"
+                onImageUploaded={(url) => updateAward(index, "image", url || "")}
+                currentImage={award.image}
+              />
+
+              <div>
+                <label className="block text-sm font-semibold text-slate-700 mb-2">
+                  Title
+                </label>
+                <input
+                  type="text"
+                  value={award.title}
+                  onChange={(e) => updateAward(index, "title", e.target.value)}
+                  placeholder="e.g. Best Supplier Award"
+                  className="w-full px-4 py-3 bg-white border border-slate-300 rounded-lg text-slate-900"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-semibold text-slate-700 mb-2">
+                  Description
+                </label>
+                <textarea
+                  rows={2}
+                  value={award.description}
+                  onChange={(e) =>
+                    updateAward(index, "description", e.target.value)
+                  }
+                  className="w-full px-4 py-3 bg-white border border-slate-300 rounded-lg text-slate-900"
+                />
+              </div>
+            </div>
+          ))}
+
+          <button
+            type="button"
+            onClick={addAward}
+            className="inline-flex items-center gap-2 text-sm font-semibold text-cyan-600 hover:text-cyan-700"
+          >
+            <Plus className="w-4 h-4" />
+            Add Award
           </button>
         </div>
       </SectionCard>

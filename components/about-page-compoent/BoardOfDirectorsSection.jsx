@@ -2,6 +2,7 @@
 
 import React from "react";
 import { motion } from "framer-motion";
+import { ArrowRight } from "lucide-react";
 import Image from "next/image";
 
 const MotionDiv =
@@ -24,41 +25,34 @@ const initials = (name = "") =>
     .map((part) => part[0]?.toUpperCase())
     .join("");
 
-const MemberCard = ({ member, index }) => (
-  <MotionDiv
-    initial={{ opacity: 0, y: 20 }}
-    whileInView={{ opacity: 1, y: 0 }}
-    transition={{ duration: 0.5, delay: index * 0.08 }}
-    className="w-60 md:w-68 shrink-0"
-  >
-    <div className="border border-[#00f0ff]/20 rounded-lg overflow-hidden shadow-lg hover:border-[#00f0ff]/40 hover:shadow-xl transition-all duration-300">
-      <div className="relative h-50 md:h-58 bg-slate-100">
-        {member.image ? (
-          <Image
-            src={member.image}
-            alt={member.name}
-            fill
-            unoptimized
-            className="object-cover"
-          />
-        ) : (
-          <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-[#00f0ff]/20 to-[#0066ff]/20">
-            <span className="text-3xl font-bold text-[#0066ff]">
-              {initials(member.name)}
-            </span>
-          </div>
-        )}
-      </div>
-      <div className="bg-[#0a0a12] text-center py-2.5 px-2">
-        <p className="text-[#00f0ff] font-semibold text-xs sm:text-sm truncate">
-          {member.name}
-        </p>
-        <p className="text-[#ffb020] text-[11px] sm:text-xs truncate">
-          {member.title}
-        </p>
-      </div>
+const MemberCard = ({ member }) => (
+  <div className="flex-1 min-w-[160px] px-5 py-5 sm:px-6 sm:py-6">
+    <div className="relative h-40 sm:h-48 w-full overflow-hidden rounded-md bg-slate-100 mb-4">
+      {member.image ? (
+        <Image
+          src={member.image}
+          alt={member.name}
+          fill
+          unoptimized
+          className="object-cover"
+        />
+      ) : (
+        <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-[#00f0ff]/15 to-[#0066ff]/15">
+          <span className="text-2xl font-bold text-[#0066ff]">
+            {initials(member.name)}
+          </span>
+        </div>
+      )}
     </div>
-  </MotionDiv>
+
+    <div className="flex items-center gap-1.5">
+      <p className="font-bold text-sm sm:text-base text-black uppercase tracking-tight truncate">
+        {member.name}
+      </p>
+      <ArrowRight className="w-3.5 h-3.5 text-black shrink-0" />
+    </div>
+    <p className="text-slate-500 text-xs sm:text-sm mt-1">{member.title}</p>
+  </div>
 );
 
 const BoardOfDirectorsSection = ({ members }) => {
@@ -77,29 +71,31 @@ const BoardOfDirectorsSection = ({ members }) => {
 
   return (
     <section className="py-16 px-4 md:px-16 bg-white">
-      <div className="max-w-7xl mx-auto">
+      <div className="max-w-6xl mx-auto">
         <MotionDiv
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="text-center mb-12 md:mb-16"
+          className="mb-8 md:mb-10"
         >
-          <h2 className="text-3xl md:text-5xl font-bold mb-3 md:mb-4">
-            Meet Our <span className="text-[#006dff]">Board of Directors</span>
+          <h2 className="text-2xl md:text-4xl font-bold tracking-tight">
+            Meet Our <span className="text-[#0066ff]">Board of Directors</span>
           </h2>
-          <div className="h-1 bg-gradient-to-r from-[#00f0ff] via-[#0066ff] to-transparent rounded-full w-24 md:w-32 mx-auto mb-4 md:mb-6"></div>
         </MotionDiv>
 
-        <div className="flex flex-col items-center gap-8 md:gap-10">
+        <div className="flex flex-col gap-4">
           {rowNumbers.map((rowNumber) => (
-            <div
+            <MotionDiv
               key={rowNumber}
-              className="flex flex-wrap justify-center gap-6 md:gap-8"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+              className="flex flex-wrap divide-x divide-slate-200 bg-white border border-slate-200"
             >
               {rows[rowNumber].map((member, index) => (
-                <MemberCard key={index} member={member} index={index} />
+                <MemberCard key={index} member={member} />
               ))}
-            </div>
+            </MotionDiv>
           ))}
         </div>
       </div>
