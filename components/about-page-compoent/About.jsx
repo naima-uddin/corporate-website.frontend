@@ -2,11 +2,8 @@
 import React, { useEffect, useState } from "react";
 import WhoWeAreSection from "./WhoWeAreSection";
 import MissionVisionSection from "./MissionVisionSection";
-import TeamSection from "./TeamSection";
+import BoardOfDirectorsSection from "./BoardOfDirectorsSection";
 import OurStorySection from "./OurStorySection";
-import ValuesSection from "./ValuesSection";
-import CapabilitiesSection from "./CapabilitiesSection";
-import CompanyGallery from "@/components/home-page-components/CompanyGallery";
 
 const About = () => {
   const [about, setAbout] = useState(null);
@@ -26,13 +23,13 @@ const About = () => {
     };
 
     fetchAbout();
-  }, []);
+  }, []) ;
 
   return (
     <div className="bg-white text-black">
       {/* Hero Section */}
       <section className="relative overflow-hidden">
-        <div className="container mx-auto px-6 py-6 text-center relative z-10">
+        <div className="max-w-7xl mx-auto px-6 py-6 text-center relative z-10">
           <h1 className="text-5xl md:text-7xl font-bold mb-6 leading-tight">
             About <span className="text-[#0066ff]">Us</span>
           </h1>
@@ -65,15 +62,11 @@ const About = () => {
       {/* 2. Mission & Vision */}
       <MissionVisionSection mission={about?.mission} vision={about?.vision} />
 
-      {/* 3. Meet Our Team */}
-      <TeamSection members={about?.team} />
+      {/* 3. Meet Our Board of Directors */}
+      <BoardOfDirectorsSection members={about?.boardOfDirectors} />
 
       {/* 4. Our Story */}
       <OurStorySection data={about?.ourStory} />
-
-      <ValuesSection />
-      <CapabilitiesSection />
-      <CompanyGallery />
     </div>
   );
 };

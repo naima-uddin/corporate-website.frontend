@@ -16,14 +16,12 @@ const emptyAbout = {
   },
   mission: { label: "Our Mission", heading: "", body: "" },
   vision: { label: "Our Vision", heading: "", body: "" },
+  boardOfDirectors: [],
   ourStory: {
     label: "Our Story",
     heading: "",
-    body: "",
-    image: "",
-    publicId: "",
+    milestones: [],
   },
-  team: [],
 };
 
 const emptyMember = {
@@ -31,9 +29,10 @@ const emptyMember = {
   publicId: "",
   name: "",
   title: "",
-  bio: "",
-  quote: "",
+  row: 1,
 };
+
+const emptyMilestone = { year: "", description: "" };
 
 const SectionCard = ({ title, description, children }) => (
   <motion.div
@@ -59,20 +58,6 @@ export default function AboutPageAdmin() {
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
 
-  useEffect(() => {
-    fetchAbout();
-  }, [token]);
-
-  if (!isAdmin && !isModerator) {
-    return (
-      <div className="text-center py-12">
-        <p className="text-slate-600">
-          Access Denied. Admin or Moderator only.
-        </p>
-      </div>
-    );
-  }
-
   const fetchAbout = async () => {
     try {
       setLoading(true);
@@ -90,8 +75,16 @@ export default function AboutPageAdmin() {
             whoWeAre: { ...emptyAbout.whoWeAre, ...data.about.whoWeAre },
             mission: { ...emptyAbout.mission, ...data.about.mission },
             vision: { ...emptyAbout.vision, ...data.about.vision },
-            ourStory: { ...emptyAbout.ourStory, ...data.about.ourStory },
-            team: Array.isArray(data.about.team) ? data.about.team : [],
+            boardOfDirectors: Array.isArray(data.about.boardOfDirectors)
+              ? data.about.boardOfDirectors
+              : [],
+            ourStory: {
+              ...emptyAbout.ourStory,
+              ...data.about.ourStory,
+              milestones: Array.isArray(data.about.ourStory?.milestones)
+                ? data.about.ourStory.milestones
+                : [],
+            },
           });
         }
       }
@@ -111,23 +104,51 @@ export default function AboutPageAdmin() {
 
   const updateMember = (index, field, value) => {
     setAbout((prev) => {
-      const team = [...prev.team];
-      team[index] = { ...team[index], [field]: value };
-      return { ...prev, team };
+      const boardOfDirectors = [...prev.boardOfDirectors];
+      boardOfDirectors[index] = { ...boardOfDirectors[index], [field]: value };
+      return { ...prev, boardOfDirectors };
     });
   };
 
   const addMember = () => {
     setAbout((prev) => ({
       ...prev,
-      team: [...prev.team, { ...emptyMember }],
+      boardOfDirectors: [...prev.boardOfDirectors, { ...emptyMember }],
     }));
   };
 
   const removeMember = (index) => {
     setAbout((prev) => ({
       ...prev,
-      team: prev.team.filter((_, i) => i !== index),
+      boardOfDirectors: prev.boardOfDirectors.filter((_, i) => i !== index),
+    }));
+  };
+
+  const updateMilestone = (index, field, value) => {
+    setAbout((prev) => {
+      const milestones = [...prev.ourStory.milestones];
+      milestones[index] = { ...milestones[index], [field]: value };
+      return { ...prev, ourStory: { ...prev.ourStory, milestones } };
+    });
+  };
+
+  const addMilestone = () => {
+    setAbout((prev) => ({
+      ...prev,
+      ourStory: {
+        ...prev.ourStory,
+        milestones: [...prev.ourStory.milestones, { ...emptyMilestone }],
+      },
+    }));
+  };
+
+  const removeMilestone = (index) => {
+    setAbout((prev) => ({
+      ...prev,
+      ourStory: {
+        ...prev.ourStory,
+        milestones: prev.ourStory.milestones.filter((_, i) => i !== index),
+      },
     }));
   };
 
@@ -164,6 +185,20 @@ export default function AboutPageAdmin() {
     }
   };
 
+  useEffect(() => {
+    fetchAbout();
+  }, [token]);
+
+  if (!isAdmin && !isModerator) {
+    return (
+      <div className="text-center py-12">
+        <p className="text-slate-600">
+          Access Denied. Admin or Moderator only.
+        </p>
+      </div>
+    );
+  }
+
   if (loading) {
     return <p className="text-slate-500 text-sm">Loading about page...</p>;
   }
@@ -174,7 +209,7 @@ export default function AboutPageAdmin() {
         <h1 className="text-4xl font-bold text-slate-900 mb-2">About Page</h1>
         <p className="text-slate-600">
           Manage the &quot;About Us&quot; page — Who We Are, Mission &amp;
-          Vision, Team and Our Story.
+          Vision, Board of Directors and Our Story.
         </p>
       </motion.div>
 
@@ -203,7 +238,6 @@ export default function AboutPageAdmin() {
             onChange={(e) =>
               updateSection("whoWeAre", "heading", e.target.value)
             }
-            placeholder="Founded by industry veterans"
             className="w-full px-4 py-3 bg-white border border-slate-300 rounded-lg text-slate-900"
           />
         </div>
@@ -239,7 +273,6 @@ export default function AboutPageAdmin() {
               onChange={(e) =>
                 updateSection("mission", "heading", e.target.value)
               }
-              placeholder="Setting growth with technology"
               className="w-full px-4 py-3 bg-white border border-slate-300 rounded-lg text-slate-900"
             />
             <textarea
@@ -257,7 +290,6 @@ export default function AboutPageAdmin() {
               onChange={(e) =>
                 updateSection("vision", "heading", e.target.value)
               }
-              placeholder="Shaping the future of technology"
               className="w-full px-4 py-3 bg-white border border-slate-300 rounded-lg text-slate-900"
             />
             <textarea
@@ -271,11 +303,11 @@ export default function AboutPageAdmin() {
       </SectionCard>
 
       <SectionCard
-        title="3. Meet Our Team"
-        description="Shown third on the About page. Add, edit or remove team members."
+        title="3. Meet Our Board of Directors"
+        description="Shown third on the About page. Members with the same Row number appear together in one row — e.g. Row 1 = Chairman alone, Row 2 = three Managing Directors."
       >
         <div className="space-y-6">
-          {about.team.map((member, index) => (
+          {about.boardOfDirectors.map((member, index) => (
             <div
               key={index}
               className="border border-slate-200 rounded-lg p-4 space-y-3"
@@ -301,7 +333,7 @@ export default function AboutPageAdmin() {
                 currentImage={member.image}
               />
 
-              <div className="grid sm:grid-cols-2 gap-4">
+              <div className="grid sm:grid-cols-3 gap-4">
                 <div>
                   <label className="block text-sm font-semibold text-slate-700 mb-2">
                     Name
@@ -321,34 +353,24 @@ export default function AboutPageAdmin() {
                     type="text"
                     value={member.title}
                     onChange={(e) => updateMember(index, "title", e.target.value)}
-                    placeholder="e.g. Proprietor, Officer, Secretary"
+                    placeholder="e.g. Chairman, Managing Director"
                     className="w-full px-4 py-3 bg-white border border-slate-300 rounded-lg text-slate-900"
                   />
                 </div>
-              </div>
-
-              <div>
-                <label className="block text-sm font-semibold text-slate-700 mb-2">
-                  Bio
-                </label>
-                <textarea
-                  rows={3}
-                  value={member.bio}
-                  onChange={(e) => updateMember(index, "bio", e.target.value)}
-                  className="w-full px-4 py-3 bg-white border border-slate-300 rounded-lg text-slate-900"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-semibold text-slate-700 mb-2">
-                  Quote (optional)
-                </label>
-                <input
-                  type="text"
-                  value={member.quote}
-                  onChange={(e) => updateMember(index, "quote", e.target.value)}
-                  className="w-full px-4 py-3 bg-white border border-slate-300 rounded-lg text-slate-900"
-                />
+                <div>
+                  <label className="block text-sm font-semibold text-slate-700 mb-2">
+                    Row
+                  </label>
+                  <input
+                    type="number"
+                    min={1}
+                    value={member.row}
+                    onChange={(e) =>
+                      updateMember(index, "row", Number(e.target.value) || 1)
+                    }
+                    className="w-full px-4 py-3 bg-white border border-slate-300 rounded-lg text-slate-900"
+                  />
+                </div>
               </div>
             </div>
           ))}
@@ -359,14 +381,14 @@ export default function AboutPageAdmin() {
             className="inline-flex items-center gap-2 text-sm font-semibold text-cyan-600 hover:text-cyan-700"
           >
             <Plus className="w-4 h-4" />
-            Add Team Member
+            Add Board Member
           </button>
         </div>
       </SectionCard>
 
       <SectionCard
         title="4. Our Story"
-        description="Shown fourth on the About page."
+        description="Shown fourth on the About page, as a year-by-year timeline."
       >
         <div>
           <label className="block text-sm font-semibold text-slate-700 mb-2">
@@ -382,23 +404,67 @@ export default function AboutPageAdmin() {
             className="w-full px-4 py-3 bg-white border border-slate-300 rounded-lg text-slate-900"
           />
         </div>
-        <div>
-          <label className="block text-sm font-semibold text-slate-700 mb-2">
-            Body
-          </label>
-          <textarea
-            rows={4}
-            value={about.ourStory.body}
-            onChange={(e) => updateSection("ourStory", "body", e.target.value)}
-            className="w-full px-4 py-3 bg-white border border-slate-300 rounded-lg text-slate-900"
-          />
+
+        <div className="space-y-4">
+          {about.ourStory.milestones.map((milestone, index) => (
+            <div
+              key={index}
+              className="border border-slate-200 rounded-lg p-4 space-y-3"
+            >
+              <div className="flex items-center justify-between">
+                <p className="text-sm font-semibold text-slate-700">
+                  Step {index + 1}
+                </p>
+                <button
+                  type="button"
+                  onClick={() => removeMilestone(index)}
+                  className="inline-flex items-center gap-1 text-xs font-semibold text-red-600 hover:text-red-700"
+                >
+                  <Trash2 className="w-3.5 h-3.5" />
+                  Remove
+                </button>
+              </div>
+
+              <div>
+                <label className="block text-sm font-semibold text-slate-700 mb-2">
+                  Year
+                </label>
+                <input
+                  type="text"
+                  value={milestone.year}
+                  onChange={(e) =>
+                    updateMilestone(index, "year", e.target.value)
+                  }
+                  placeholder="e.g. 2012"
+                  className="w-full px-4 py-3 bg-white border border-slate-300 rounded-lg text-slate-900"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-semibold text-slate-700 mb-2">
+                  What happened
+                </label>
+                <textarea
+                  rows={3}
+                  value={milestone.description}
+                  onChange={(e) =>
+                    updateMilestone(index, "description", e.target.value)
+                  }
+                  className="w-full px-4 py-3 bg-white border border-slate-300 rounded-lg text-slate-900"
+                />
+              </div>
+            </div>
+          ))}
+
+          <button
+            type="button"
+            onClick={addMilestone}
+            className="inline-flex items-center gap-2 text-sm font-semibold text-cyan-600 hover:text-cyan-700"
+          >
+            <Plus className="w-4 h-4" />
+            Add Step
+          </button>
         </div>
-        <ImageUploadFactory
-          type="about"
-          label="Image"
-          onImageUploaded={(url) => updateSection("ourStory", "image", url || "")}
-          currentImage={about.ourStory.image}
-        />
       </SectionCard>
 
       <div className="flex justify-end">
