@@ -1,18 +1,15 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import { useRouter } from "next/navigation";
+import { motion } from "framer-motion";
+import { ArrowLeft } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
-import GalleryImageForm from "../GalleryImageForm";
-
-const emptyForm = { image: "", title: "", category: "", order: 0 };
+import BulkImageUploader from "../BulkImageUploader";
 
 export default function NewGalleryImagePage() {
-  const { token, isAdmin, isModerator } = useAuth();
+  const { isAdmin, isModerator } = useAuth();
   const router = useRouter();
-  const [form, setForm] = useState(emptyForm);
-  const [saving, setSaving] = useState(false);
-  const [error, setError] = useState("");
 
   if (!isAdmin && !isModerator) {
     return (
@@ -24,58 +21,33 @@ export default function NewGalleryImagePage() {
     );
   }
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    if (!form.image) {
-      setError("Please upload a gallery image first");
-      return;
-    }
-
-    if (!form.title) {
-      setError("Please provide a title");
-      return;
-    }
-
-    setSaving(true);
-    setError("");
-
-    try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/gallery-images`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({ ...form, order: Number(form.order) || 0 }),
-        },
-      );
-
-      if (response.ok) {
-        router.push("/dashboard/gallery");
-      } else {
-        const data = await response.json();
-        setError(data.message || "Failed to save image");
-      }
-    } catch (err) {
-      console.error("Error saving gallery image:", err);
-      setError("Failed to save image");
-    } finally {
-      setSaving(false);
-    }
-  };
-
   return (
-    <GalleryImageForm
-      form={form}
-      setForm={setForm}
-      onSubmit={handleSubmit}
-      saving={saving}
-      error={error}
-      heading="Add New Gallery Image"
-      submitLabel="Add Image"
-    />
+    <div className="space-y-6 max-w-xl">
+      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
+        <button
+          type="button"
+          onClick={() => router.push("/dashboard/gallery")}
+          className="mb-2 inline-flex items-center gap-1 text-sm text-slate-500 hover:text-slate-700"
+        >
+          <ArrowLeft className="w-4 h-4" /> Back to Gallery
+        </button>
+        <h1 className="text-4xl font-bold text-slate-900">
+          Add Gallery Image(s)
+        </h1>
+        <p className="text-slate-600 mt-1">
+          Add a single image or many at once (10+) under one category.
+        </p>
+      </motion.div>
+
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm"
+      >
+        <BulkImageUploader
+          onComplete={() => router.push("/dashboard/gallery")}
+        />
+      </motion.div>
+    </div>
   );
 }

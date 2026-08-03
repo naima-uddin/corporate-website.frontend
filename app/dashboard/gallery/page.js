@@ -10,7 +10,6 @@ import {
   GripVertical,
   Power,
   Pencil,
-  Images,
   FolderPlus,
 } from "lucide-react";
 
@@ -187,13 +186,6 @@ export default function GalleryPage() {
             <FolderPlus className="w-5 h-5" />
             Manage Categories
           </button>
-          <Link
-            href="/dashboard/gallery/bulk"
-            className="bg-slate-900 hover:bg-slate-800 text-white font-semibold px-6 py-3 rounded-lg flex items-center gap-2"
-          >
-            <Images className="w-5 h-5" />
-            Bulk Upload
-          </Link>
           <Link
             href="/dashboard/gallery/new"
             className="bg-gradient-to-r from-[#00f0ff] to-[#0066ff] text-[#0a0a12] font-semibold px-6 py-3 rounded-lg flex items-center gap-2"
