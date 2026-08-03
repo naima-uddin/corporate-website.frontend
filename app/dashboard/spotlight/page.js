@@ -153,8 +153,9 @@ export default function SpotlightPage() {
           />
           <p className="mt-2 text-xs text-slate-500">
             Select text and use the toolbar to make it bold, italic,
-            underlined, or a different color. It will appear exactly like
-            this on the homepage.
+            underlined, or a different color. Click where you want a line
+            break and use +/- to add or remove space between lines. It will
+            appear exactly like this on the homepage.
           </p>
         </div>
 

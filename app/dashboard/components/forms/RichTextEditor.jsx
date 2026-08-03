@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useRef } from "react";
-import { Bold, Italic, Underline, Eraser } from "lucide-react";
+import { Bold, Italic, Underline, Eraser, CornerDownLeft, Plus, Minus } from "lucide-react";
 
 const COLORS = [
   "#0f172a",
@@ -48,6 +48,43 @@ export default function RichTextEditor({ value, onChange, placeholder }) {
     handleInput();
   };
 
+  const increaseBreak = () => {
+    editorRef.current?.focus();
+    document.execCommand("insertHTML", false, "<br>");
+    handleInput();
+  };
+
+  const decreaseBreak = () => {
+    const editor = editorRef.current;
+    if (!editor) return;
+    editor.focus();
+
+    const sel = window.getSelection();
+    if (!sel || sel.rangeCount === 0) return;
+
+    // Walk backward from the caret over empty text to find an adjacent <br>
+    // and remove exactly that, instead of deleting real characters.
+    let node = sel.getRangeAt(0).startContainer;
+    let offset = sel.getRangeAt(0).startOffset;
+    let candidate =
+      node.nodeType === Node.TEXT_NODE
+        ? offset === 0
+          ? node.previousSibling
+          : null
+        : node.childNodes[offset - 1] || null;
+
+    while (candidate && candidate.nodeType === Node.TEXT_NODE && candidate.textContent === "") {
+      candidate = candidate.previousSibling;
+    }
+
+    if (candidate && candidate.nodeType === Node.ELEMENT_NODE && candidate.tagName === "BR") {
+      candidate.remove();
+    } else {
+      document.execCommand("delete", false);
+    }
+    handleInput();
+  };
+
   return (
     <div className="w-full border border-slate-300 rounded-lg overflow-hidden">
       <div className="flex flex-wrap items-center gap-1 bg-slate-50 border-b border-slate-200 p-2">
@@ -91,6 +128,18 @@ export default function RichTextEditor({ value, onChange, placeholder }) {
         <ToolbarButton onClick={() => exec("removeFormat")} title="Clear formatting">
           <Eraser className="w-4 h-4" />
         </ToolbarButton>
+
+        <div className="w-px h-5 bg-slate-300 mx-1" />
+
+        <span className="flex items-center gap-0.5 pr-1" title="Click where you want to add/remove space between lines">
+          <CornerDownLeft className="w-4 h-4 text-slate-400" />
+          <ToolbarButton onClick={decreaseBreak} title="Decrease break (remove space)">
+            <Minus className="w-4 h-4" />
+          </ToolbarButton>
+          <ToolbarButton onClick={increaseBreak} title="Increase break (add space)">
+            <Plus className="w-4 h-4" />
+          </ToolbarButton>
+        </span>
       </div>
 
       <div
