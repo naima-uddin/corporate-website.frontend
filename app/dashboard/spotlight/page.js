@@ -152,11 +152,9 @@ export default function SpotlightPage() {
             placeholder="The wars that we have to fight today are often invisible..."
           />
           <p className="mt-2 text-xs text-slate-500">
-            Select (highlight) text and use the toolbar to make it bold,
-            italic, underlined, a different color, or resize it with the
-            number box. Click where you want a line break and use +/- to add
-            or remove space between lines. It will appear exactly like this
-            on the homepage.
+            Select text and use the toolbar to make it bold, italic,
+            underlined, or a different color. It will appear exactly like
+            this on the homepage.
           </p>
         </div>
 

@@ -163,11 +163,11 @@ const WhoRWe = () => {
                 className="relative bg-[var(--color-surface)] p-6 shadow-md ring-1 ring-[var(--color-border)] md:p-10"
                 style={{ borderRadius: "48px / 32px" }}
               >
-                <MessageSquareQuote
+                {/* <MessageSquareQuote
                   className="mb-0 h-8 w-8 text-[var(--color-primary)]/40"
                   strokeWidth={1.5}
                   aria-hidden="true"
-                />
+                /> */}
                 <p className="relative text-md md:text-xl-[2px] leading-relaxed text-[var(--color-heading)]">
                   <span dangerouslySetInnerHTML={{ __html: visibleQuoteHtml }} />
                   {!typingDone && (
