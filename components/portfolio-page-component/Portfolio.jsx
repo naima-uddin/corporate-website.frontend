@@ -152,7 +152,7 @@ const Portfolio = () => {
               <p className="text-center uppercase tracking-widest text-xs font-bold text-[var(--color-primary)] mb-8">
                 Government Clients
               </p>
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-8">
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-7 gap-5">
                 {clients.map((item, idx) => (
                   <div
                     key={item.name || idx}
