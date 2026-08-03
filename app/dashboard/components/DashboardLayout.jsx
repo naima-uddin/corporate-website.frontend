@@ -24,6 +24,7 @@ import {
   Quote,
   Users2,
   Info,
+  Landmark,
 } from "lucide-react";
 import Link from "next/link";
 
@@ -46,6 +47,7 @@ const NAV_SECTIONS = [
       { id: "spotlight", label: "Leadership Spotlight", icon: Quote, href: "/dashboard/spotlight" },
       { id: "join-us", label: "Join Us Section", icon: Users2, href: "/dashboard/join-us" },
       { id: "about", label: "About Page", icon: Info, href: "/dashboard/about" },
+      { id: "government-enlistment", label: "Government Enlistment", icon: Landmark, href: "/dashboard/government-enlistment" },
       { id: "services", label: "Manage Services", icon: ShoppingCart, href: "/dashboard/services" },
       { id: "portfolio", label: "Manage Portfolio", icon: Briefcase, href: "/dashboard/portfolio" },
       { id: "blog", label: "Manage Blog", icon: FileText, href: "/dashboard/blog" },
