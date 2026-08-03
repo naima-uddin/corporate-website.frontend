@@ -1,7 +1,21 @@
 "use client";
 
-import React, { useEffect, useRef } from "react";
-import { Bold, Italic, Underline, Eraser, CornerDownLeft, Plus, Minus } from "lucide-react";
+import React, { useEffect, useRef, useState } from "react";
+import {
+  Bold,
+  Italic,
+  Underline,
+  Eraser,
+  CornerDownLeft,
+  Plus,
+  Minus,
+  ChevronUp,
+  ChevronDown,
+} from "lucide-react";
+
+const DEFAULT_FONT_SIZE = 16;
+const MIN_FONT_SIZE = 8;
+const MAX_FONT_SIZE = 96;
 
 const COLORS = [
   "#0f172a",
@@ -29,6 +43,28 @@ const ToolbarButton = ({ onClick, title, children }) => (
 
 export default function RichTextEditor({ value, onChange, placeholder }) {
   const editorRef = useRef(null);
+  const lastRangeRef = useRef(null);
+  const [fontSize, setFontSize] = useState(DEFAULT_FONT_SIZE);
+
+  const saveSelection = () => {
+    const sel = window.getSelection();
+    if (
+      sel &&
+      sel.rangeCount > 0 &&
+      editorRef.current &&
+      editorRef.current.contains(sel.anchorNode)
+    ) {
+      lastRangeRef.current = sel.getRangeAt(0).cloneRange();
+    }
+  };
+
+  const restoreSelection = () => {
+    const sel = window.getSelection();
+    if (lastRangeRef.current && sel) {
+      sel.removeAllRanges();
+      sel.addRange(lastRangeRef.current);
+    }
+  };
 
   useEffect(() => {
     document.execCommand("styleWithCSS", false, true);
@@ -85,6 +121,25 @@ export default function RichTextEditor({ value, onChange, placeholder }) {
     handleInput();
   };
 
+  const applyFontSize = (size) => {
+    const clamped = Math.min(MAX_FONT_SIZE, Math.max(MIN_FONT_SIZE, size));
+    setFontSize(clamped);
+
+    const editor = editorRef.current;
+    if (!editor) return;
+    editor.focus();
+    restoreSelection();
+
+    document.execCommand("fontSize", false, "7");
+    editor.querySelectorAll('font[size="7"]').forEach((el) => {
+      el.removeAttribute("size");
+      el.style.fontSize = `${clamped}px`;
+    });
+    handleInput();
+  };
+
+  const stepFontSize = (delta) => applyFontSize(fontSize + delta);
+
   return (
     <div className="w-full border border-slate-300 rounded-lg overflow-hidden">
       <div className="flex flex-wrap items-center gap-1 bg-slate-50 border-b border-slate-200 p-2">
@@ -140,6 +195,39 @@ export default function RichTextEditor({ value, onChange, placeholder }) {
             <Plus className="w-4 h-4" />
           </ToolbarButton>
         </span>
+
+        <div className="w-px h-5 bg-slate-300 mx-1" />
+
+        <div className="flex items-center gap-0.5" title="Font size">
+          <input
+            type="number"
+            value={fontSize}
+            min={MIN_FONT_SIZE}
+            max={MAX_FONT_SIZE}
+            onChange={(e) => applyFontSize(Number(e.target.value) || DEFAULT_FONT_SIZE)}
+            className="w-12 px-1.5 py-1 text-sm border border-slate-300 rounded text-slate-700"
+          />
+          <div className="flex flex-col">
+            <button
+              type="button"
+              title="Increase font size"
+              onMouseDown={(e) => e.preventDefault()}
+              onClick={() => stepFontSize(1)}
+              className="hover:bg-slate-200 rounded-sm text-slate-700"
+            >
+              <ChevronUp className="w-3.5 h-3.5" />
+            </button>
+            <button
+              type="button"
+              title="Decrease font size"
+              onMouseDown={(e) => e.preventDefault()}
+              onClick={() => stepFontSize(-1)}
+              className="hover:bg-slate-200 rounded-sm text-slate-700"
+            >
+              <ChevronDown className="w-3.5 h-3.5" />
+            </button>
+          </div>
+        </div>
       </div>
 
       <div
@@ -148,6 +236,8 @@ export default function RichTextEditor({ value, onChange, placeholder }) {
         suppressContentEditableWarning
         onInput={handleInput}
         onBlur={handleInput}
+        onMouseUp={saveSelection}
+        onKeyUp={saveSelection}
         data-placeholder={placeholder}
         className="w-full px-4 py-3 min-h-[120px] bg-white text-slate-900 focus:outline-none empty:before:content-[attr(data-placeholder)] empty:before:text-slate-400"
       />

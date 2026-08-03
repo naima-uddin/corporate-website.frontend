@@ -127,7 +127,7 @@ const Newsroom = () => {
             </div>
           )}
 
-          <div className="lg:col-span-6 lg:px-8">
+          <div className="lg:col-span-6 lg:pr-8 ">
             <Link href={`/news/${featured.slug}`} className="group block">
               <div className="relative h-64 sm:h-80 w-full overflow-hidden rounded-lg bg-[var(--color-surface)]">
                 {getImageUrl(featured.featuredImage) && (
@@ -158,7 +158,7 @@ const Newsroom = () => {
           </div>
 
           {rightPosts.length > 0 && (
-            <div className="lg:col-span-3 divide-y divide-[var(--color-border)] lg:pl-8">
+            <div className="lg:col-span-3 divide-y divide-[var(--color-border)]">
               {rightPosts.map((post) => (
                 <NewsListItem key={post._id || post.slug} post={post} />
               ))}
