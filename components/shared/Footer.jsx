@@ -162,7 +162,7 @@ const Footer = () => {
           <div className="col-span-2 md:col-span-1">
             <div className="flex items-center gap-2 mb-4">
               {footer.logoImage ? (
-                <img src={footer.logoImage} alt="Logo" className="h-9 w-auto" />
+                <img src={footer.logoImage} alt="Logo" className="h-16 w-auto" />
               ) : (
                 <Logo variant="light" />
               )}

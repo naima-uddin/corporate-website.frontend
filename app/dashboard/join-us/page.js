@@ -226,7 +226,7 @@ export default function JoinUsPage() {
           {joinUs.cards.map((card, index) => (
             <div
               key={index}
-              className="border border-slate-200 rounded-lg p-4 space-y-3"
+              className="border border-slate-200 rounded-lg p-4 space-y-2"
             >
               <p className="text-sm font-semibold text-slate-700">
                 Card {index + 1}{" "}

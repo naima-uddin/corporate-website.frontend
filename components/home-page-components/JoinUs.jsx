@@ -40,7 +40,7 @@ const JoinUs = () => {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
-          className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-10 md:mb-12"
+          className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-4 md:mb-6"
         >
           <div className="max-w-2xl">
             <span className="eyebrow mb-3">Careers</span>
@@ -48,7 +48,7 @@ const JoinUs = () => {
               {joinUs.title}
             </h2>
             {joinUs.description && (
-              <p className="mt-3 text-base md:text-lg leading-relaxed text-[var(--color-body,#555)]">
+              <p className=" text-base md:text-lg leading-relaxed text-[var(--color-body,#555)]">
                 {joinUs.description}
               </p>
             )}
@@ -65,7 +65,7 @@ const JoinUs = () => {
           )}
         </motion.div>
 
-        <div className="flex flex-col md:flex-row gap-5 md:h-[560px]">
+        <div className="flex flex-col md:flex-row gap-5 md:h-[500px]">
           {cards.map((card, index) => {
             const isFeatured = index === 0;
             return (
@@ -76,7 +76,7 @@ const JoinUs = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: index * 0.08 }}
-                className={`group relative block overflow-hidden rounded-2xl bg-[var(--color-ink,#1a1a1a)] shadow-md ring-1 ring-black/5 transition-all duration-500 hover:-translate-y-1.5 hover:shadow-2xl h-72 sm:h-80 md:h-full ${
+                className={`group relative block overflow-hidden rounded-sm bg-[var(--color-ink,#1a1a1a)] shadow-md ring-1 ring-black/5 transition-all duration-500 hover:-translate-y-1.5 hover:shadow-2xl h-72 sm:h-80 md:h-full ${
                   isFeatured ? "md:flex-[1.6]" : "md:flex-1"
                 } ${card.link ? "cursor-pointer" : "cursor-default"}`}
               >

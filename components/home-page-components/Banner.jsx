@@ -148,7 +148,7 @@ const Banner = () => {
                     key={s._id}
                     onClick={() => goToSlide(index)}
                     aria-label={`Show slide: ${s.title}`}
-                    className={`relative shrink-0 w-36 h-52 rounded-sm overflow-hidden border-2 transition-all duration-300 ${
+                    className={`relative shrink-0 w-20 h-32 rounded-sm overflow-hidden border-2 transition-all duration-300 ${
                       currentSlide === index
                         ? "border-white opacity-100 scale-105"
                         : "border-white/30 opacity-55 hover:opacity-85"
