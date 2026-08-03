@@ -101,10 +101,12 @@ export default function CompanyGallery() {
 
   // Slider functions
   const nextSlide = useCallback(() => {
+    if (totalSlides === 0) return;
     setCurrentSlide((prev) => (prev + 1) % totalSlides);
   }, [totalSlides]);
 
   const prevSlide = useCallback(() => {
+    if (totalSlides === 0) return;
     setCurrentSlide((prev) => (prev - 1 + totalSlides) % totalSlides);
   }, [totalSlides]);
 
@@ -186,69 +188,76 @@ export default function CompanyGallery() {
           </p>
         </div>
 
-        {/* Category Tabs */}
-        <div className="flex flex-wrap items-center justify-center gap-2 md:gap-3 mb-8 md:mb-10">
-          {categories.map((category) => {
-            const Icon = CATEGORY_ICONS[category] || LayoutGrid;
-            const isActive = activeCategory === category;
-            return (
-              <button
-                key={category}
-                onClick={() => setActiveCategory(category)}
-                className={`flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium border transition-colors duration-200 ${
-                  isActive
-                    ? "bg-[#0a1e3f] border-[#0a1e3f] text-white"
-                    : "bg-white border-gray-200 text-gray-700 hover:border-[#006dff]/50 hover:text-[#006dff]"
-                }`}
+        {companyImages.length === 0 ? (
+          <p className="text-center text-slate-500 py-12">
+            No gallery images yet.
+          </p>
+        ) : (
+          <>
+            {/* Category Tabs */}
+            <div className="flex flex-wrap items-center justify-center gap-2 md:gap-3 mb-8 md:mb-10">
+              {categories.map((category) => {
+                const Icon = CATEGORY_ICONS[category] || LayoutGrid;
+                const isActive = activeCategory === category;
+                return (
+                  <button
+                    key={category}
+                    onClick={() => setActiveCategory(category)}
+                    className={`flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium border transition-colors duration-200 ${
+                      isActive
+                        ? "bg-[#0a1e3f] border-[#0a1e3f] text-white"
+                        : "bg-white border-gray-200 text-gray-700 hover:border-[#006dff]/50 hover:text-[#006dff]"
+                    }`}
+                  >
+                    <Icon className="w-4 h-4" />
+                    {category}
+                  </button>
+                );
+              })}
+            </div>
+
+            {/* Desktop Grid Layout */}
+            <div className="hidden md:grid grid-cols-3 gap-4">
+              {filteredImages.map((image, index) => (
+                <DesktopImageCard key={image.id} image={image} index={index} />
+              ))}
+            </div>
+
+            {/* Mobile Slider */}
+            <div className="md:hidden relative w-full">
+              <div
+                ref={sliderRef}
+                className="flex transition-transform duration-500 ease-in-out"
+                style={{ transform: `translateX(-${currentSlide * 100}%)` }}
               >
-                <Icon className="w-4 h-4" />
-                {category}
-              </button>
-            );
-          })}
-        </div>
-
-        {/* Desktop Grid Layout */}
-        <div className="hidden md:grid grid-cols-3 gap-4">
-          {filteredImages.map((image, index) => (
-            <DesktopImageCard key={image.id} image={image} index={index} />
-          ))}
-        </div>
-
-        {/* Mobile Slider */}
-        <div className="md:hidden relative w-full">
-          <div
-            ref={sliderRef}
-            className="flex transition-transform duration-500 ease-in-out"
-            style={{ transform: `translateX(-${currentSlide * 100}%)` }}
-          >
-            {filteredImages.map((image, index) => (
-              <div key={image.id} className="flex-shrink-0 w-full px-2">
-                <MobileImageCard image={image} index={index} />
+                {filteredImages.map((image, index) => (
+                  <div key={image.id} className="flex-shrink-0 w-full px-2">
+                    <MobileImageCard image={image} index={index} />
+                  </div>
+                ))}
               </div>
-            ))}
-          </div>
 
-          {/* Navigation Buttons */}
-          <button
-            onClick={prevSlide}
-            className="absolute left-2 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white text-[#0a0a12] shadow-lg rounded-full w-8 h-8 border flex items-center justify-center z-10"
-          >
-            <ChevronLeft className="w-4 h-4" />
-          </button>
-          <button
-            onClick={nextSlide}
-            className="absolute right-2 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white text-[#0a0a12] shadow-lg rounded-full w-8 h-8 border flex items-center justify-center z-10"
-          >
-            <ChevronRight className="w-4 h-4" />
-          </button>
+              {/* Navigation Buttons */}
+              <button
+                onClick={prevSlide}
+                className="absolute left-2 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white text-[#0a0a12] shadow-lg rounded-full w-8 h-8 border flex items-center justify-center z-10"
+              >
+                <ChevronLeft className="w-4 h-4" />
+              </button>
+              <button
+                onClick={nextSlide}
+                className="absolute right-2 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white text-[#0a0a12] shadow-lg rounded-full w-8 h-8 border flex items-center justify-center z-10"
+              >
+                <ChevronRight className="w-4 h-4" />
+              </button>
 
-          {/* Slide Counter */}
-          <div className="text-center mt-2 text-[#b0b0ff] text-sm">
-            {currentSlide + 1} / {filteredImages.length}
-          </div>
-        </div>
-
+              {/* Slide Counter */}
+              <div className="text-center mt-2 text-[#b0b0ff] text-sm">
+                {currentSlide + 1} / {filteredImages.length}
+              </div>
+            </div>
+          </>
+        )}
       </div>
 
       {/* Fullscreen Modal with responsive fixes */}

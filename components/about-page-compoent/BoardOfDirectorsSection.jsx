@@ -27,8 +27,8 @@ const initials = (name = "") =>
     .join("");
 
 export const MemberCard = ({ member }) => (
-  <div className="flex-1 min-w-[160px] px-2 py-2 md:px-4 md:py-4">
-    <div className="relative h-40 sm:h-48 w-full overflow-hidden  bg-slate-100 mb-4">
+  <div className="flex-1 min-w-[160px] px-0.5  md:px-1">
+    <div className="relative h-44 md:h-62 w-full overflow-hidden   mb-2">
       {member.image ? (
         <Image
           src={member.image}
@@ -62,7 +62,7 @@ const BoardOfDirectorsSection = ({ members }) => {
   const preview = members.slice(0, 4);
 
   return (
-    <section className="py-16 px-4 md:px-16 bg-white">
+    <section className="py-16 px-4 md:px-6 bg-white">
       <div className="max-w-6xl mx-auto">
         <MotionDiv
           initial={{ opacity: 0, y: 30 }}
