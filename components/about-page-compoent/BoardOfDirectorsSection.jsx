@@ -27,8 +27,8 @@ const initials = (name = "") =>
     .join("");
 
 export const MemberCard = ({ member }) => (
-  <div className="flex-1 min-w-[160px] px-5 py-5 sm:px-6 sm:py-6">
-    <div className="relative h-40 sm:h-48 w-full overflow-hidden rounded-md bg-slate-100 mb-4">
+  <div className="flex-1 min-w-[160px] px-2 py-2 md:px-4 md:py-4">
+    <div className="relative h-40 sm:h-48 w-full overflow-hidden  bg-slate-100 mb-4">
       {member.image ? (
         <Image
           src={member.image}
