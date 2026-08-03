@@ -177,7 +177,7 @@ export default function JoinUsPage() {
               setJoinUs((prev) => ({ ...prev, description: e.target.value }))
             }
             placeholder="We foster a culture where people with a can-do attitude can be a part of our growing team."
-            className="w-full px-4 py-3 bg-white border border-slate-300 rounded-lg text-slate-900"
+            className="w-full px-4 py-3 bg-white border border-slate-300 rounded-lg text-slate-900 "
           />
         </div>
 
