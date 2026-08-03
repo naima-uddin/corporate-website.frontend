@@ -411,30 +411,22 @@ export default function CompanyGallery() {
           {/* Main Image Content */}
           <div className="relative w-full h-full max-w-6xl max-h-[60vh] md:max-h-[70vh]">
             <img
-              src={companyImages[selectedImageIndex].src}
-              alt={companyImages[selectedImageIndex].alt}
+              src={filteredImages[selectedImageIndex].src}
+              alt={filteredImages[selectedImageIndex].alt}
               className="w-full h-full object-contain rounded-md"
             />
 
             {/* Image Info */}
             <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-[#0a0a12]/95 to-transparent p-3 md:p-4 rounded-b-md">
-              <div className="flex items-center gap-2 mb-1">
-                <span className="bg-[#00f0ff] text-[#0a0a12] px-2 py-0.5 rounded-full text-xs font-semibold">
-                  {companyImages[selectedImageIndex].category}
-                </span>
-              </div>
-              <h3 className="text-[#e0e0ff] text-sm md:text-md font-bold mb-0.5 md:mb-1 line-clamp-1">
-                {companyImages[selectedImageIndex].title}
+              <h3 className="text-[#e0e0ff] text-sm md:text-md font-bold line-clamp-1">
+                {filteredImages[selectedImageIndex].title}
               </h3>
-              <p className="text-[#b0b0ff] text-xs line-clamp-2 md:line-clamp-3">
-                {companyImages[selectedImageIndex].description}
-              </p>
             </div>
           </div>
 
           {/* Thumbnail Strip - Mobile: smaller and scrollable */}
           <div className="absolute bottom-20 md:bottom-16 left-1/2 -translate-x-1/2 flex gap-1 max-w-[90vw] md:max-w-full overflow-x-auto px-2 py-1 md:py-1">
-            {companyImages.map((image, index) => (
+            {filteredImages.map((image, index) => (
               <button
                 key={image.id}
                 onClick={() => setSelectedImageIndex(index)}

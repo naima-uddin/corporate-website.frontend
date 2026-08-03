@@ -16,7 +16,7 @@ const MotionDiv =
   }) => <div {...props}>{children}</div>);
 
 const AwardCard = ({ award, featured }) => (
-  <div className="relative h-full flex flex-col rounded-lg overflow-hidden border border-slate-200 shadow-sm hover:shadow-lg transition-all duration-300 bg-white">
+  <div className="relative h-full flex flex-col rounded-lg overflow-hidden border border-slate-200 shadow-sm hover:shadow-lg transition-all duration-300 bg-transparent">
     <div
       className={`relative bg-slate-50 ${featured ? "flex-1 min-h-[220px]" : "flex-1 min-h-[140px]"}`}
     >
@@ -37,7 +37,7 @@ const AwardCard = ({ award, featured }) => (
     </div>
 
     {(award.title || award.description) && (
-      <div className={`px-4 py-3 ${featured ? "md:px-6 md:py-4" : ""}`}>
+      <div className={`bg-transparent px-4 py-3 ${featured ? "md:px-6 md:py-4" : ""}`}>
         {award.title && (
           <h3
             className={`font-semibold text-black ${featured ? "text-lg md:text-xl" : "text-sm md:text-base"}`}
