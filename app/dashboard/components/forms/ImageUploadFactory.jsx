@@ -3,29 +3,12 @@ import { useState, useEffect, useMemo } from "react";
 import { Upload, X, Loader, Images, Search } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 
-// Mirrors CLOUDINARY_FOLDERS in Rakib-project-backend/controllers/uploadController.js
-const CLOUDINARY_FOLDERS = {
-  blogs: "a2it/blog/images",
-  portfolio: "a2it/portfolio",
-  services: "a2it/services",
-  users: "a2it/users",
-  clients: "a2it/clients",
-  banners: "a2it/banners",
-  "footer-logo": "a2it/footer/logo",
-  "footer-top-band": "a2it/footer/top-band",
-  news: "a2it/news",
-  general: "a2it/general",
-  "site-logo": "a2it/site/logo",
-  spotlight: "a2it/spotlight",
-  "join-us": "a2it/join-us",
-};
-
-function MediaLibraryModal({ type, onSelect, onClose }) {
+function MediaLibraryModal({ onSelect, onClose }) {
   const { token } = useAuth();
   const [resources, setResources] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
-  const [folder, setFolder] = useState(CLOUDINARY_FOLDERS[type] || "all");
+  const [folder, setFolder] = useState("all");
 
   useEffect(() => {
     let cancelled = false;
@@ -321,7 +304,6 @@ export default function ImageUploadFactory({
 
       {showLibrary && (
         <MediaLibraryModal
-          type={type}
           onSelect={handleLibrarySelect}
           onClose={() => setShowLibrary(false)}
         />

@@ -75,7 +75,7 @@ const Newsroom = () => {
 
     const fetchLatest = async () => {
       try {
-        const res = await fetch(`${API}/api/news?limit=7`);
+        const res = await fetch(`${API}/api/news?limit=9`);
         if (!res.ok) return;
         const data = await res.json();
         if (isMounted) {
@@ -95,9 +95,9 @@ const Newsroom = () => {
   if (posts.length === 0) return null;
 
   const featured = posts.find((post) => post.isFeatured) || posts[0];
-  const rest = posts.filter((post) => post._id !== featured._id).slice(0, 6);
-  const leftPosts = rest.slice(0, 3);
-  const rightPosts = rest.slice(3, 6);
+  const rest = posts.filter((post) => post._id !== featured._id).slice(0, 8);
+  const leftPosts = rest.slice(0, 4);
+  const rightPosts = rest.slice(4, 8);
 
   return (
     <section className="py-16 md:py-20 bg-white">

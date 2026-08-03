@@ -5,6 +5,7 @@ import { useAuth } from "@/context/AuthContext";
 import { motion } from "framer-motion";
 import { Save } from "lucide-react";
 import ImageUploadFactory from "../components/forms/ImageUploadFactory";
+import RichTextEditor from "../components/forms/RichTextEditor";
 
 const emptySpotlight = {
   image: "",
@@ -143,18 +144,17 @@ export default function SpotlightPage() {
           <label className="block text-sm font-semibold text-slate-700 mb-2">
             Quote
           </label>
-          <textarea
-            rows={5}
+          <RichTextEditor
             value={spotlight.quote}
-            onChange={(e) =>
-              setSpotlight((prev) => ({ ...prev, quote: e.target.value }))
+            onChange={(html) =>
+              setSpotlight((prev) => ({ ...prev, quote: html }))
             }
             placeholder="The wars that we have to fight today are often invisible..."
-            className="w-full px-4 py-3 bg-white border border-slate-300 rounded-lg text-slate-900"
           />
           <p className="mt-2 text-xs text-slate-500">
-            Wrap a word or phrase in **double asterisks** to make it bold,
-            e.g. The **wars** we fight today.
+            Select text and use the toolbar to make it bold, italic,
+            underlined, or a different color. It will appear exactly like
+            this on the homepage.
           </p>
         </div>
 

@@ -4,16 +4,6 @@ import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { MessageSquareQuote } from "lucide-react";
 
-const renderQuote = (text) => {
-  const parts = String(text || "").split(/(\*\*[^*]+\*\*)/g);
-  return parts.map((part, index) => {
-    if (part.startsWith("**") && part.endsWith("**")) {
-      return <strong key={index}>{part.slice(2, -2)}</strong>;
-    }
-    return <React.Fragment key={index}>{part}</React.Fragment>;
-  });
-};
-
 const WhoRWe = () => {
   const [spotlight, setSpotlight] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -82,9 +72,10 @@ const WhoRWe = () => {
                   strokeWidth={1.5}
                   aria-hidden="true"
                 />
-                <p className="relative text-xl md:text-2xl-[2px] leading-relaxed text-[var(--color-heading)]">
-                  {renderQuote(spotlight.quote)}
-                </p>
+                <p
+                  className="relative text-md md:text-xl-[2px] leading-relaxed text-[var(--color-heading)]"
+                  dangerouslySetInnerHTML={{ __html: spotlight.quote }}
+                />
 
                 {/* curled teardrop tail, like a chat-bubble icon */}
                 <svg
