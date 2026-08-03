@@ -43,10 +43,10 @@ const WhoWeAreSection = ({ data }) => {
     Array.isArray(stats) && stats.length > 0 ? stats : DEFAULT_STATS;
 
   return (
-    <section className="relative px-6 md:px-20 py-16 bg-white text-black overflow-hidden">
+    <section className="relative  px-6 md:px-20 py-16 bg-white text-black overflow-hidden ">
       <div className="absolute left-0 w-1/2 h-full bg-gradient-to-r from-[#00f0ff]/10 to-transparent opacity-30"></div>
 
-      <div className="relative grid md:grid-cols-[0.9fr_1.1fr] gap-8 md:gap-12 items-stretch">
+      <div className="relative grid md:grid-cols-[0.9fr_1.1fr] gap-8 md:gap-12 items-stretch max-w-7xl mx-auto">
         {/* Left: big image with a stats bar below it, matching the right column's height */}
         <div className="relative flex flex-col order-1 md:order-1">
           <div className="relative flex-1 min-h-[280px] rounded-t-2xl overflow-hidden shadow-xl group">
@@ -77,13 +77,13 @@ const WhoWeAreSection = ({ data }) => {
 
         {/* Right: text content, defines the row height that the left column matches */}
         <div className="relative z-10 order-2 md:order-2 flex flex-col justify-center">
-          <div className="flex items-center gap-2 text-[#0066ff] mb-4">
+          <div className="flex items-center gap-2 text-[#0066ff] mb-2">
             <FaRegLightbulb className="text-2xl" />
             <span className="uppercase tracking-widest text-sm font-medium">
               {label || "Who We Are"}
             </span>
           </div>
-          <h2 className="text-3xl md:text-4xl font-semibold leading-tight mb-4">
+          <h2 className="text-3xl md:text-4xl font-semibold leading-tight mb-2">
             {heading}
           </h2>
           {body

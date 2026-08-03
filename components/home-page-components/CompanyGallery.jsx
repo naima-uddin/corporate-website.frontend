@@ -20,12 +20,36 @@ const CATEGORY_ICONS = {
   Consulting: Handshake,
 };
 
+// Repeating 4-row layout: row of 3 singles, big-left/small-right,
+// small-left/big-right (mirrored), row of 3 singles — then repeats.
+const ROW_PATTERN = [1, 1, 1, 2, 1, 1, 2, 1, 1, 1];
+const getColSpan = (index) => ROW_PATTERN[index % ROW_PATTERN.length];
+
 export default function CompanyGallery() {
   const [selectedImageIndex, setSelectedImageIndex] = useState(null);
   const [currentSlide, setCurrentSlide] = useState(0);
   const [activeCategory, setActiveCategory] = useState("All");
+  const [companyImages, setCompanyImages] = useState([]);
   const sliderRef = useRef(null);
   const [isMobile, setIsMobile] = useState(false);
+
+  // Fetch gallery images from the dashboard-managed API
+  useEffect(() => {
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/gallery-images`)
+      .then((res) => res.json())
+      .then((data) =>
+        setCompanyImages(
+          (data.images || []).map((img) => ({
+            id: img._id,
+            src: img.image,
+            alt: img.title,
+            title: img.title,
+            category: img.category || "General",
+          }))
+        )
+      )
+      .catch((err) => console.error("Error fetching gallery images:", err));
+  }, []);
 
   // Check if mobile on mount and resize
   useEffect(() => {
@@ -51,148 +75,10 @@ export default function CompanyGallery() {
     return () => clearInterval(interval);
   }, [isMobile, currentSlide]);
 
-  // IT Company showcase images
-  const companyImages = [
-    {
-      id: 1,
-      src: "/assets/gallery/gallery7.jpg",
-      alt: "A2it Office",
-      title: "A2it Office",
-      description:
-        "A2it Office is a modern, innovative, and collaborative work environment where skilled professionals in web development, digital marketing, design, and IT services work together.",
-      category: "A2it",
-      rowSpan: 1,
-      colSpan: 1,
-    },
-    {
-      id: 2,
-      src: "/assets/gallery/gallery8.jpg",
-      alt: "A2it Office",
-      title: "A2it Office",
-      description:
-        "At A2IT Office, we focus on understanding our clients' needs and delivering customized IT solutions that help their businesses grow with confidence.",
-      category: "A2it",
-      rowSpan: 1,
-      colSpan: 1,
-    },
-    {
-      id: 3,
-      src: "/assets/gallery/gallery3.jpg",
-      alt: "A2it Office",
-      title: "A2it Office",
-      description: "A2IT Office is a forward-thinking IT agency specializing in web development, software solutions, and digital innovation. We help brands grow through smart technology.",
-      category: "A2it",
-      rowSpan: 1,
-      colSpan: 1,
-    },
-    {
-      id: 4,
-      src: "/assets/gallery/gallery9.jpg",
-      alt: "A2it Office",
-      title: "A2it Office",
-      description: "A2IT Office is a modern and professional IT solutions company delivering high-quality web development, software solutions, and digital services. Our experienced team is committed to timely delivery, innovation, and complete client satisfaction.",
-      category: "A2it",
-      rowSpan: 1,
-      colSpan: 2,
-      featured: true,
-    },
-    {
-      id: 5,
-      src: "/assets/gallery/gallery5.jpg",
-      alt: "A2it Office",
-      title: "A2it Office",
-      description: "A2IT Office is a trusted IT service provider offering reliable and modern digital solutions.",
-      category: "A2it",
-      rowSpan: 1,
-      colSpan: 2,
-      featured: true,
-    },
-    {
-      id: 6,
-      src: "/assets/gallery/gallary6.jpg",
-      alt: "Team Collaboration",
-      title: "Our Development Team",
-      description: "Collaborative workspace where innovation meets expertise",
-      category: "Team",
-      rowSpan: 1,
-      colSpan: 2,
-    },
-    {
-      id: 7,
-      src: "/assets/gallery/gallery1.jpg",
-      alt: "Mobile App Design",
-      title: "Our Team",
-      description: "A dedicated team of skilled professionals working together to deliver quality, innovation, and exceptional results.",
-      category: "Team",
-      rowSpan: 1,
-      colSpan: 2,
-    },
-    {
-      id: 8,
-      src: "/assets/gallery/gallery2.jpg",
-      alt: "Client Consultation",
-      title: "Client Consultation",
-      description: "Working closely with clients to deliver solutions",
-      category: "Consulting",
-      rowSpan: 1,
-      colSpan: 1,
-    },
-    {
-      id: 9,
-      src: "/assets/gallery/gallary4.jpg",
-      alt: "UI/UX Design",
-      title: "Our Team",
-      description: "A dedicated team of skilled professionals working together to deliver quality, innovation, and exceptional results.",
-      category: "Team",
-      rowSpan: 1,
-      colSpan: 1,
-    },
-    {
-      id: 10,
-      src: "/assets/gallery/gallery10.jpeg",
-      alt: "Cloud Services",
-      title: "Team",
-      description: "A dedicated team of skilled professionals working together to deliver quality, innovation, and exceptional results.",
-      category: "Team",
-      rowSpan: 1,
-      colSpan: 1,
-    },
-    {
-      id: 11,
-      src: "/assets/gallery/newYear.jpeg",
-      alt: "New Year Celebration",
-      title: "Team",
-      description: "A dedicated team of skilled professionals working together to deliver quality, innovation, and exceptional results.",
-      category: "Team",
-      rowSpan: 1,
-      colSpan: 1,
-    },
-    {
-      id: 12,
-      src: "/assets/gallery/newYear2.jpeg",
-      alt: "Cloud Services",
-      title: "A2it",
-      description: "A2IT Office is a trusted IT service provider offering reliable and modern digital solutions.",
-      category: "A2it",
-      rowSpan: 1,
-      colSpan: 1,
-    },
-    {
-      id: 13,
-      src: "/assets/gallery/newYear3.jpeg",
-      alt: "Cloud Services",
-      title: "Team",
-      description: "A dedicated team of skilled professionals working together to deliver quality, innovation, and exceptional results.",
-      category: "Team",
-      rowSpan: 1,
-      colSpan: 1,
-    },
-  ];
-
   // Category tabs: "All" plus every unique category found in the data
   const categories = useMemo(
     () => ["All", ...new Set(companyImages.map((img) => img.category))],
-    []
+    [companyImages]
   );
 
   // Images to display for the currently selected tab
@@ -201,7 +87,7 @@ export default function CompanyGallery() {
       activeCategory === "All"
         ? companyImages
         : companyImages.filter((img) => img.category === activeCategory),
-    [activeCategory]
+    [companyImages, activeCategory]
   );
 
   // Reset slider/modal state whenever the selected category changes
@@ -257,12 +143,13 @@ export default function CompanyGallery() {
 
   const DesktopImageCard = ({ image, index }) => {
     if (!image) return null;
+    const colSpan = getColSpan(index);
 
     return (
       <div
         onClick={() => openModal(index)}
         className={`group relative overflow-hidden rounded-lg shadow-md hover:shadow-lg transition-all duration-300 bg-[#12121a] h-full border border-[#00f0ff]/20 cursor-pointer ${
-          image.colSpan === 2 ? "md:col-span-2" : ""
+          colSpan === 2 ? "md:col-span-2" : ""
         }`}
       >
         <div className="relative overflow-hidden h-full">
@@ -270,7 +157,7 @@ export default function CompanyGallery() {
             src={image.src}
             alt={image.alt}
             className={`w-full ${
-              image.featured ? "h-72" : "h-56"
+              colSpan === 2 ? "h-72" : "h-56"
             } object-cover transition-all duration-300 group-hover:scale-105 group-hover:brightness-75`}
           />
 
@@ -322,7 +209,7 @@ export default function CompanyGallery() {
         </div>
 
         {/* Desktop Grid Layout */}
-        <div className="hidden md:grid grid-cols-3 gap-4 grid-flow-row-dense">
+        <div className="hidden md:grid grid-cols-3 gap-4">
           {filteredImages.map((image, index) => (
             <DesktopImageCard key={image.id} image={image} index={index} />
           ))}

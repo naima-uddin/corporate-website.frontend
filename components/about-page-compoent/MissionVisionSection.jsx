@@ -5,7 +5,7 @@ import { FiEye } from "react-icons/fi";
 import Image from "next/image";
 
 const Card = ({ data, Icon, fallbackLabel }) => (
-  <div className="group relative rounded-xl overflow-hidden shadow-xl min-h-[22rem] md:min-h-[26rem]">
+  <div className="group relative rounded-xl overflow-hidden shadow-xl min-h-[18rem] md:min-h-[20rem]">
     {data.image ? (
       <Image
         src={data.image}
@@ -17,7 +17,7 @@ const Card = ({ data, Icon, fallbackLabel }) => (
     ) : (
       <div className="absolute inset-0 bg-gradient-to-br from-[#0a0a12] to-[#0066ff]"></div>
     )}
-    <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/50 to-black/10"></div>
+    <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/60 to-black/20"></div>
 
     <div className="relative h-full flex flex-col justify-end p-8">
       <div className="flex items-center gap-2 text-[#00f0ff] mb-4">
@@ -26,10 +26,10 @@ const Card = ({ data, Icon, fallbackLabel }) => (
           {data.label || fallbackLabel}
         </span>
       </div>
-      <h2 className="text-2xl md:text-3xl font-semibold leading-tight mb-4 text-white">
+      <h2 className="text-xl md:text-2xl font-semibold leading-tight mb-4 text-gray-100">
         {data.heading}
       </h2>
-      <p className="text-white/85 text-base md:text-lg leading-relaxed">
+      <p className="text-white/75 text-md md:text-xl-[2px] leading-relaxed">
         {data.body}
       </p>
     </div>
