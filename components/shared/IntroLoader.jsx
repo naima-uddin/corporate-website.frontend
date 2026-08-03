@@ -21,8 +21,8 @@ export default function IntroLoader() {
         }}
       >
         <Image
-          src="/A2ITLogo.png"
-          alt="A2IT"
+          src="/Rakibhasan.png"
+          alt="Rakibhasan"
           width={150}
           height={150}
         />

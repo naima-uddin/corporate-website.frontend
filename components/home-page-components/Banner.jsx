@@ -46,7 +46,7 @@ const Banner = () => {
     if (slides.length < 2) return;
     const id = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % slides.length);
-    }, 10000);
+    }, 6000);
     return () => clearInterval(id);
   }, [slides.length, currentSlide]);
 
