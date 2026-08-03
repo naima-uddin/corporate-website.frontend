@@ -2,6 +2,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import RouteAwareChrome from "@/components/shared/RouteAwareChrome";
 import { AuthProvider } from "@/context/AuthContext";
+import LoadingProvider from "@/components/shared/LoadingProvider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -56,7 +57,10 @@ export default function RootLayout({ children }) {
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <AuthProvider>
+           <LoadingProvider>
+
           <RouteAwareChrome>{children}</RouteAwareChrome>
+           </LoadingProvider>
         </AuthProvider>
         {/* 🔹 JSON-LD structured data for organization */}
         <script
