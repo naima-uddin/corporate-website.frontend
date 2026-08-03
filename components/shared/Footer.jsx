@@ -28,7 +28,7 @@ const FALLBACK_FOOTER = {
     "Tell us about your project and our team will get back to you within one business day.",
   topBandButtons: [
     { text: "Get In Touch", link: "/contact" },
-    { text: "View Our Work", link: "/portfolio" },
+    { text: "View Our Work", link: "/projects" },
   ],
   logoImage: "",
   tagline: "Transforming ideas into digital reality.",
@@ -37,9 +37,10 @@ const FALLBACK_FOOTER = {
       title: "Quick Links",
       links: [
         { label: "Home", url: "/" },
-        { label: "Portfolio", url: "/portfolio" },
         { label: "About Us", url: "/about" },
-        { label: "Blogs", url: "/blog" },
+        { label: "Government Enlistment", url: "/government-enlistment" },
+        { label: "Projects", url: "/projects" },
+        { label: "Gallery", url: "/gallery" },
         { label: "Contact", url: "/contact" },
       ],
     },

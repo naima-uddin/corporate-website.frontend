@@ -23,6 +23,7 @@ import {
   Palette,
   Quote,
   Users2,
+  Info,
 } from "lucide-react";
 import Link from "next/link";
 
@@ -44,6 +45,7 @@ const NAV_SECTIONS = [
       { id: "banner", label: "Manage Banner", icon: ImageIcon, href: "/dashboard/banner" },
       { id: "spotlight", label: "Leadership Spotlight", icon: Quote, href: "/dashboard/spotlight" },
       { id: "join-us", label: "Join Us Section", icon: Users2, href: "/dashboard/join-us" },
+      { id: "about", label: "About Page", icon: Info, href: "/dashboard/about" },
       { id: "services", label: "Manage Services", icon: ShoppingCart, href: "/dashboard/services" },
       { id: "portfolio", label: "Manage Portfolio", icon: Briefcase, href: "/dashboard/portfolio" },
       { id: "blog", label: "Manage Blog", icon: FileText, href: "/dashboard/blog" },

@@ -1,24 +1,47 @@
-import React from "react";
-import MissionAndTeam from "./MissionAndTeam";
+"use client";
+import React, { useEffect, useState } from "react";
+import WhoWeAreSection from "./WhoWeAreSection";
+import MissionVisionSection from "./MissionVisionSection";
+import TeamSection from "./TeamSection";
+import OurStorySection from "./OurStorySection";
 import ValuesSection from "./ValuesSection";
-import StatsSection from "./StatsSection";
 import CapabilitiesSection from "./CapabilitiesSection";
-import LeadershipSection from "./LeadershipSection";
-import ContactBanner from "./ContactBanner";
 import CompanyGallery from "@/components/home-page-components/CompanyGallery";
+
 const About = () => {
+  const [about, setAbout] = useState(null);
+
+  useEffect(() => {
+    const fetchAbout = async () => {
+      try {
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/api/about`,
+        );
+        if (!response.ok) return;
+        const data = await response.json();
+        setAbout(data.about || null);
+      } catch (error) {
+        console.error("Error fetching about page:", error);
+      }
+    };
+
+    fetchAbout();
+  }, []);
+
   return (
     <div className="bg-white text-black">
       {/* Hero Section */}
       <section className="relative overflow-hidden">
         <div className="container mx-auto px-6 py-6 text-center relative z-10">
           <h1 className="text-5xl md:text-7xl font-bold mb-6 leading-tight">
-            About <span className="text-[#0066ff]">A2IT </span>
+            About <span className="text-[#0066ff]">Us</span>
           </h1>
           <div className="max-w-3xl mx-auto">
             <p className="text-xl md:text-2xl text-black mb-8 leading-relaxed">
-              Pioneering technology solutions with a human touch. We bridge the
-              gap between cutting-edge innovation and real-world business needs.
+              M/S. MD. RAKIB HASAN — a 1st Class Government Contractor,
+              Supplier, General Merchant &amp; Auctioneer, proudly serving
+              government departments and institutions across Bangladesh since
+              2012.
             </p>
             <div className="h-1 bg-gradient-to-r from-[#00f0ff] via-[#0066ff] to-transparent rounded-full w-48 mx-auto mb-12"></div>
           </div>
@@ -36,12 +59,21 @@ const About = () => {
         </div>
       </section>
 
-      <MissionAndTeam />
+      {/* 1. Who We Are */}
+      <WhoWeAreSection data={about?.whoWeAre} />
+
+      {/* 2. Mission & Vision */}
+      <MissionVisionSection mission={about?.mission} vision={about?.vision} />
+
+      {/* 3. Meet Our Team */}
+      <TeamSection members={about?.team} />
+
+      {/* 4. Our Story */}
+      <OurStorySection data={about?.ourStory} />
+
       <ValuesSection />
       <CapabilitiesSection />
-      <LeadershipSection />
       <CompanyGallery />
-      {/* <ContactBanner /> */}
     </div>
   );
 };

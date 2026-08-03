@@ -312,7 +312,7 @@ const Navbar = () => {
                       See our project experience & offerings in detail.
                     </p>
                     <a
-                      href="/A2it Portfolio.pdf"
+                      href="/RakibHasanPortfolio.pdf"
                       download="A2IT-Portfolio"
                       className="inline-flex items-center gap-2 px-4 py-2.5 bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)] rounded-md text-sm font-semibold text-white transition-colors"
                       onClick={handleServiceClick}
@@ -338,11 +338,11 @@ const Navbar = () => {
 
           <li>
             <Link
-              href="/portfolio"
-              className={linkColorClasses(isActive("/portfolio"))}
+              href="/government-enlistment"
+              className={linkColorClasses(isActive("/government-enlistment"))}
             >
-              Portfolio
-              {isActive("/portfolio") && (
+              Government Enlistment
+              {isActive("/government-enlistment") && (
                 <span
                   className={`absolute -bottom-1 left-0 w-full h-0.5 rounded-full ${underlineClasses}`}
                 />
@@ -351,9 +351,40 @@ const Navbar = () => {
           </li>
 
           <li>
-            <Link href="/blog" className={linkColorClasses(isActive("/blog"))}>
-              Blog
-              {isActive("/blog") && (
+            <Link
+              href="/projects"
+              className={linkColorClasses(isActive("/projects"))}
+            >
+              Projects
+              {isActive("/projects") && (
+                <span
+                  className={`absolute -bottom-1 left-0 w-full h-0.5 rounded-full ${underlineClasses}`}
+                />
+              )}
+            </Link>
+          </li>
+
+          <li>
+            <Link
+              href="/gallery"
+              className={linkColorClasses(isActive("/gallery"))}
+            >
+              Gallery
+              {isActive("/gallery") && (
+                <span
+                  className={`absolute -bottom-1 left-0 w-full h-0.5 rounded-full ${underlineClasses}`}
+                />
+              )}
+            </Link>
+          </li>
+
+          <li>
+            <Link
+              href="/contact"
+              className={linkColorClasses(isActive("/contact"))}
+            >
+              Contact
+              {isActive("/contact") && (
                 <span
                   className={`absolute -bottom-1 left-0 w-full h-0.5 rounded-full ${underlineClasses}`}
                 />
@@ -464,27 +495,51 @@ const Navbar = () => {
           </Link>
 
           <Link
-            href="/portfolio"
+            href="/government-enlistment"
             className={`block py-2.5 hover:text-[var(--color-primary)] transition-colors duration-200 ${
-              isActive("/portfolio")
+              isActive("/government-enlistment")
                 ? "text-[var(--color-primary)] font-semibold border-l-4 border-[var(--color-primary)] pl-3"
                 : "pl-4"
             }`}
             onClick={handleServiceClick}
           >
-            Portfolio
+            Government Enlistment
           </Link>
 
           <Link
-            href="/blog"
+            href="/projects"
             className={`block py-2.5 hover:text-[var(--color-primary)] transition-colors duration-200 ${
-              isActive("/blog")
+              isActive("/projects")
                 ? "text-[var(--color-primary)] font-semibold border-l-4 border-[var(--color-primary)] pl-3"
                 : "pl-4"
             }`}
             onClick={handleServiceClick}
           >
-            Blog
+            Projects
+          </Link>
+
+          <Link
+            href="/gallery"
+            className={`block py-2.5 hover:text-[var(--color-primary)] transition-colors duration-200 ${
+              isActive("/gallery")
+                ? "text-[var(--color-primary)] font-semibold border-l-4 border-[var(--color-primary)] pl-3"
+                : "pl-4"
+            }`}
+            onClick={handleServiceClick}
+          >
+            Gallery
+          </Link>
+
+          <Link
+            href="/contact"
+            className={`block py-2.5 hover:text-[var(--color-primary)] transition-colors duration-200 ${
+              isActive("/contact")
+                ? "text-[var(--color-primary)] font-semibold border-l-4 border-[var(--color-primary)] pl-3"
+                : "pl-4"
+            }`}
+            onClick={handleServiceClick}
+          >
+            Contact
           </Link>
 
           <div className="pt-2 pl-4">
