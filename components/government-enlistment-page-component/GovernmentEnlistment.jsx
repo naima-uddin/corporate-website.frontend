@@ -11,8 +11,11 @@ import {
   FaTimesCircle,
   FaArrowRight,
   FaCertificate,
+  FaTimes,
 } from "react-icons/fa";
 import { GiBridge, GiWheat, GiFarmTractor } from "react-icons/gi";
+
+const isPdfFile = (url) => (url || "").toLowerCase().endsWith(".pdf");
 
 const FALLBACK_ICONS = [
   { match: /education/i, icon: FaSchool },
@@ -29,7 +32,7 @@ const getFallbackIcon = (name = "") => {
   return match ? match.icon : FaCertificate;
 };
 
-const EnlistmentCard = ({ item }) => {
+const EnlistmentCard = ({ item, onViewCertificates }) => {
   const Icon = getFallbackIcon(item.name);
 
   return (
@@ -59,20 +62,13 @@ const EnlistmentCard = ({ item }) => {
         {item.enlisted ? "ENLISTED" : "NOT ENLISTED"}
       </span>
       {Array.isArray(item.certificateFiles) && item.certificateFiles.length > 0 ? (
-        <div className="flex flex-wrap items-center justify-center gap-2">
-          {item.certificateFiles.map((file, index) => (
-            <a
-              key={file + index}
-              href={file}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 border border-[var(--color-primary)] text-[var(--color-primary)] font-semibold text-sm px-5 py-2 rounded-md hover:bg-[var(--color-primary)] hover:text-white transition-colors duration-200"
-            >
-              View Certificate{item.certificateFiles.length > 1 ? ` ${index + 1}` : ""}{" "}
-              <FaArrowRight className="text-xs" />
-            </a>
-          ))}
-        </div>
+        <button
+          type="button"
+          onClick={() => onViewCertificates(item)}
+          className="inline-flex items-center gap-2 border border-[var(--color-primary)] text-[var(--color-primary)] font-semibold text-sm px-5 py-2 rounded-md hover:bg-[var(--color-primary)] hover:text-white transition-colors duration-200"
+        >
+          View Certificates <FaArrowRight className="text-xs" />
+        </button>
       ) : (
         <span className="inline-flex items-center gap-2 border border-[var(--color-border)] text-[var(--color-body)] font-semibold text-sm px-5 py-2 rounded-md opacity-60 cursor-not-allowed">
           Certificate coming soon
@@ -82,8 +78,56 @@ const EnlistmentCard = ({ item }) => {
   );
 };
 
+const CertificatesModal = ({ item, onClose }) => {
+  if (!item) return null;
+
+  return (
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4"
+      onClick={onClose}
+    >
+      <div
+        className="flex w-full max-w-3xl max-h-[85vh] flex-col overflow-hidden rounded-xl bg-white"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="flex items-center justify-between border-b border-[var(--color-border)] p-4">
+          <h3 className="text-lg font-bold text-[#0a1a3c]">{item.name}</h3>
+          <button
+            type="button"
+            onClick={onClose}
+            className="p-2 text-slate-400 hover:text-slate-700"
+          >
+            <FaTimes className="w-5 h-5" />
+          </button>
+        </div>
+
+        <div className="flex-1 overflow-y-auto p-4 space-y-6">
+          {item.certificateFiles.map((file, index) =>
+            isPdfFile(file) ? (
+              <iframe
+                key={file + index}
+                src={file}
+                title={`${item.name} certificate ${index + 1}`}
+                className="w-full h-[70vh] rounded-lg border border-[var(--color-border)]"
+              />
+            ) : (
+              <img
+                key={file + index}
+                src={file}
+                alt={`${item.name} certificate ${index + 1}`}
+                className="w-full rounded-lg border border-[var(--color-border)]"
+              />
+            ),
+          )}
+        </div>
+      </div>
+    </div>
+  );
+};
+
 const GovernmentEnlistment = () => {
   const [data, setData] = useState(null);
+  const [activeItem, setActiveItem] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -128,11 +172,17 @@ const GovernmentEnlistment = () => {
         <section className="container mx-auto px-6 pb-20">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
             {items.map((item, index) => (
-              <EnlistmentCard key={item.name || index} item={item} />
+              <EnlistmentCard
+                key={item.name || index}
+                item={item}
+                onViewCertificates={setActiveItem}
+              />
             ))}
           </div>
         </section>
       )}
+
+      <CertificatesModal item={activeItem} onClose={() => setActiveItem(null)} />
     </div>
   );
 };

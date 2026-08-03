@@ -8,7 +8,7 @@ const WhoWeAreSection = ({ data }) => {
   const { label, heading, body, image } = data;
 
   return (
-    <section className="relative grid md:grid-cols-2 gap-8 items-center px-6 md:px-20 py-16 bg-white text-black overflow-hidden">
+    <section className="relative grid md:grid-cols-2 gap-8  items-center px-6 md:px-20 py-16 bg-white text-black overflow-hidden">
       <div className="absolute left-0 w-1/2 h-full bg-gradient-to-r from-[#00f0ff]/10 to-transparent opacity-30"></div>
 
       <div className="relative flex justify-center order-1 md:order-1">
