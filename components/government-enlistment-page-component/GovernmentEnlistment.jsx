@@ -50,7 +50,7 @@ const EnlistmentCard = ({ item, onViewCertificates }) => {
           <Icon className="text-3xl text-[#0a2a6b]" />
         )}
       </div>
-      <h3 className="text-lg font-bold text-[#0a1a3c] mb-4 min-h-[3.5rem] flex items-center">
+      <h3 className="text-lg font-bold text-[#0a1a3c] mb-4 h-[3.5rem] flex items-center justify-center line-clamp-2">
         {item.name}
       </h3>
       <span
