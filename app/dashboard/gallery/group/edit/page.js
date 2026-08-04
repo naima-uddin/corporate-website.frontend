@@ -1,7 +1,8 @@
 "use client";
 
-import React, { use, useEffect, useState } from "react";
+import React, { Suspense, useEffect, useState } from "react";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
 import { motion } from "framer-motion";
 import { ArrowLeft, Trash2, Power, Pencil } from "lucide-react";
@@ -10,14 +11,14 @@ import BulkImageUploader from "../../BulkImageUploader";
 const groupKeyOf = (item) =>
   item.batchId && item.batchId.trim() ? item.batchId : item._id;
 
-export default function GalleryGroupPage({ params }) {
-  const { batchId } = use(params);
+function GalleryGroupContent() {
+  const batchId = useSearchParams().get("batchId");
   const { token, isAdmin, isModerator } = useAuth();
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (!token) return;
+    if (!token || !batchId) return;
     fetchGroup();
   }, [token, batchId]);
 
@@ -144,7 +145,7 @@ export default function GalleryGroupPage({ params }) {
                   </p>
                   <div className="flex gap-2">
                     <Link
-                      href={`/dashboard/gallery/${item._id}`}
+                      href={`/dashboard/gallery/edit?id=${item._id}`}
                       title="Edit"
                       className="p-2 rounded bg-blue-500/10 text-blue-600 hover:bg-blue-500/20"
                     >
@@ -199,5 +200,15 @@ export default function GalleryGroupPage({ params }) {
         </motion.div>
       )}
     </div>
+  );
+}
+
+export default function GalleryGroupPage() {
+  return (
+    <Suspense
+      fallback={<div className="py-12 text-center text-slate-500">Loading...</div>}
+    >
+      <GalleryGroupContent />
+    </Suspense>
   );
 }

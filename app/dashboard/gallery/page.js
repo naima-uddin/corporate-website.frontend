@@ -428,7 +428,7 @@ export default function GalleryPage() {
                     }`}
                   >
                     <Link
-                      href={`/dashboard/gallery/group/${group.key}`}
+                      href={`/dashboard/gallery/group/edit?batchId=${group.key}`}
                       className="w-full relative"
                     >
                       <img
@@ -469,7 +469,7 @@ export default function GalleryPage() {
                         <ChevronRight className="w-4 h-4" />
                       </button>
                       <Link
-                        href={`/dashboard/gallery/group/${group.key}`}
+                        href={`/dashboard/gallery/group/edit?batchId=${group.key}`}
                         title="Open"
                         className="p-2 rounded bg-blue-500/10 text-blue-600 hover:bg-blue-500/20"
                       >

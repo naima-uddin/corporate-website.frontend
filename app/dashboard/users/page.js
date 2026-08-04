@@ -148,7 +148,7 @@ export default function UsersPage() {
                     </td>
                     <td className="px-6 py-4 flex gap-2">
                       <Link
-                        href={`/dashboard/users/${user._id}`}
+                        href={`/dashboard/users/edit?id=${user._id}`}
                         className="p-2 bg-[#00f0ff]/10 hover:bg-[#00f0ff]/20 text-[#00f0ff] rounded"
                       >
                         <Edit2 className="w-4 h-4" />

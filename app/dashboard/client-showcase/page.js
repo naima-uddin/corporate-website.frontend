@@ -140,7 +140,7 @@ export default function ClientShowcasePage() {
                   </p>
                   <div className="flex gap-2">
                     <Link
-                      href={`/dashboard/client-showcase/${logo._id}`}
+                      href={`/dashboard/client-showcase/edit?id=${logo._id}`}
                       title="Edit"
                       className="p-2 rounded bg-blue-500/10 text-blue-600 hover:bg-blue-500/20"
                     >

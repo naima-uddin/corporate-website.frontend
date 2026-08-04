@@ -141,7 +141,7 @@ export default function NewsPage() {
                   </div>
                   <div className="flex gap-2 p-3 pt-0">
                     <Link
-                      href={`/dashboard/news/${item._id}`}
+                      href={`/dashboard/news/edit?id=${item._id}`}
                       title="Edit"
                       className="p-2 rounded bg-blue-500/10 text-blue-600 hover:bg-blue-500/20"
                     >

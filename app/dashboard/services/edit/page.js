@@ -1,7 +1,7 @@
 "use client";
 
-import React, { use, useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import React, { Suspense, useEffect, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
 import ServiceForm from "../ServiceForm";
 
@@ -20,8 +20,8 @@ const emptyFormData = {
   stats: "",
 };
 
-export default function EditServicePage({ params }) {
-  const { id } = use(params);
+function EditServiceContent() {
+  const id = useSearchParams().get("id");
   const { token, isAdmin, isModerator } = useAuth();
   const router = useRouter();
   const [form, setForm] = useState(emptyFormData);
@@ -55,7 +55,7 @@ export default function EditServicePage({ params }) {
   }, []);
 
   useEffect(() => {
-    if (!token) return;
+    if (!token || !id) return;
 
     const fetchItem = async () => {
       try {
@@ -172,5 +172,15 @@ export default function EditServicePage({ params }) {
       categories={categories}
       categoriesLoading={categoriesLoading}
     />
+  );
+}
+
+export default function EditServicePage() {
+  return (
+    <Suspense
+      fallback={<div className="py-12 text-center text-slate-500">Loading...</div>}
+    >
+      <EditServiceContent />
+    </Suspense>
   );
 }

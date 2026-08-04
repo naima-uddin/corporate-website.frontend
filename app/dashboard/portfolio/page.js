@@ -362,7 +362,7 @@ export default function PortfolioPage() {
                 </p>
                 <div className="flex gap-2 justify-end">
                   <Link
-                    href={`/dashboard/portfolio/${item._id}`}
+                    href={`/dashboard/portfolio/edit?id=${item._id}`}
                     className="p-2 bg-[#00f0ff]/10 hover:bg-[#00f0ff]/20 text-[#00f0ff] rounded"
                   >
                     <Edit2 className="w-4 h-4" />

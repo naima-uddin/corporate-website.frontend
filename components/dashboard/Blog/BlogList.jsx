@@ -43,7 +43,7 @@ export default function BlogList() {
 
   const router = useRouter();
   const handleNew = () => router.push("/dashboard/blog/new");
-  const handleEdit = (post) => router.push(`/dashboard/blog/${post._id}`);
+  const handleEdit = (post) => router.push(`/dashboard/blog/edit?id=${post._id}`);
   const handleSaved = () => {
     load();
   };

@@ -1,16 +1,16 @@
 "use client";
 
-import React, { use, useEffect, useState } from "react";
+import React, { Suspense, useEffect, useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
 import { Images } from "lucide-react";
 import GalleryImageForm from "../GalleryImageForm";
 
 const emptyForm = { image: "", title: "", category: "", order: 0 };
 
-export default function EditGalleryImagePage({ params }) {
-  const { id } = use(params);
+function EditGalleryImageContent() {
+  const id = useSearchParams().get("id");
   const { token, isAdmin, isModerator } = useAuth();
   const router = useRouter();
   const [form, setForm] = useState(emptyForm);
@@ -21,7 +21,7 @@ export default function EditGalleryImagePage({ params }) {
   const [notFound, setNotFound] = useState(false);
 
   useEffect(() => {
-    if (!token) return;
+    if (!token || !id) return;
 
     const fetchItem = async () => {
       try {
@@ -140,7 +140,7 @@ export default function EditGalleryImagePage({ params }) {
 
       <div className="max-w-xl bg-white border border-slate-200 rounded-xl p-6 shadow-sm">
         <Link
-          href={`/dashboard/gallery/group/${groupKey}`}
+          href={`/dashboard/gallery/group/edit?batchId=${groupKey}`}
           className="inline-flex items-center gap-2 text-sm font-semibold text-blue-600 hover:text-blue-700"
         >
           <Images className="w-4 h-4" />
@@ -148,5 +148,15 @@ export default function EditGalleryImagePage({ params }) {
         </Link>
       </div>
     </div>
+  );
+}
+
+export default function EditGalleryImagePage() {
+  return (
+    <Suspense
+      fallback={<div className="py-12 text-center text-slate-500">Loading...</div>}
+    >
+      <EditGalleryImageContent />
+    </Suspense>
   );
 }

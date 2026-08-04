@@ -1,14 +1,14 @@
 "use client";
 
-import React, { use, useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import React, { Suspense, useEffect, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
 import ClientLogoForm from "../ClientLogoForm";
 
 const emptyForm = { image: "", name: "" };
 
-export default function EditClientLogoPage({ params }) {
-  const { id } = use(params);
+function EditClientLogoContent() {
+  const id = useSearchParams().get("id");
   const { token, isAdmin, isModerator } = useAuth();
   const router = useRouter();
   const [form, setForm] = useState(emptyForm);
@@ -18,7 +18,7 @@ export default function EditClientLogoPage({ params }) {
   const [notFound, setNotFound] = useState(false);
 
   useEffect(() => {
-    if (!token) return;
+    if (!token || !id) return;
 
     const fetchItem = async () => {
       try {
@@ -120,5 +120,15 @@ export default function EditClientLogoPage({ params }) {
       heading="Edit Logo"
       submitLabel="Update Logo"
     />
+  );
+}
+
+export default function EditClientLogoPage() {
+  return (
+    <Suspense
+      fallback={<div className="py-12 text-center text-slate-500">Loading...</div>}
+    >
+      <EditClientLogoContent />
+    </Suspense>
   );
 }

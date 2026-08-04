@@ -22,6 +22,18 @@ async function getServicesForCategory(categoryName) {
   return Array.isArray(data.services) ? data.services : [];
 }
 
+export async function generateStaticParams() {
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}/api/service-categories`,
+  );
+  if (!res.ok) return [];
+  const data = await res.json();
+  const categories = Array.isArray(data.categories) ? data.categories : [];
+  return categories
+    .filter((category) => category.name)
+    .map((category) => ({ category: category.name }));
+}
+
 export async function generateMetadata({ params }) {
   const { category: categoryName } = await params;
   const category = await getCategory(categoryName);

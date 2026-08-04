@@ -1,14 +1,14 @@
 "use client";
 
-import React, { use, useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import React, { Suspense, useEffect, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
 import UserForm from "../UserForm";
 
 const emptyForm = { name: "", email: "", password: "", role: "moderator" };
 
-export default function EditUserPage({ params }) {
-  const { id } = use(params);
+function EditUserContent() {
+  const id = useSearchParams().get("id");
   const { token, isAdmin } = useAuth();
   const router = useRouter();
   const [form, setForm] = useState(emptyForm);
@@ -18,7 +18,7 @@ export default function EditUserPage({ params }) {
   const [notFound, setNotFound] = useState(false);
 
   useEffect(() => {
-    if (!token) return;
+    if (!token || !id) return;
 
     const fetchUser = async () => {
       try {
@@ -120,5 +120,15 @@ export default function EditUserPage({ params }) {
       submitLabel="Update"
       isEditing
     />
+  );
+}
+
+export default function EditUserPage() {
+  return (
+    <Suspense
+      fallback={<div className="py-12 text-center text-slate-500">Loading...</div>}
+    >
+      <EditUserContent />
+    </Suspense>
   );
 }

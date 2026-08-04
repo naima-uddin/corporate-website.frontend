@@ -1,7 +1,7 @@
 "use client";
 
-import React, { use, useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import React, { Suspense, useEffect, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
 import PortfolioForm from "../PortfolioForm";
 
@@ -30,8 +30,8 @@ const emptyForm = {
   metrics: "",
 };
 
-export default function EditPortfolioPage({ params }) {
-  const { id } = use(params);
+function EditPortfolioContent() {
+  const id = useSearchParams().get("id");
   const { token, isAdmin, isModerator } = useAuth();
   const router = useRouter();
   const [form, setForm] = useState(emptyForm);
@@ -41,7 +41,7 @@ export default function EditPortfolioPage({ params }) {
   const [notFound, setNotFound] = useState(false);
 
   useEffect(() => {
-    if (!token) return;
+    if (!token || !id) return;
 
     const fetchItem = async () => {
       try {
@@ -185,5 +185,15 @@ export default function EditPortfolioPage({ params }) {
       heading="Edit Project"
       submitLabel="Update Project"
     />
+  );
+}
+
+export default function EditPortfolioPage() {
+  return (
+    <Suspense
+      fallback={<div className="py-12 text-center text-slate-500">Loading...</div>}
+    >
+      <EditPortfolioContent />
+    </Suspense>
   );
 }

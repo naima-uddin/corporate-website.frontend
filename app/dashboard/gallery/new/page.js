@@ -48,7 +48,7 @@ export default function NewGalleryImagePage() {
           onComplete={(batchId) =>
             router.push(
               batchId
-                ? `/dashboard/gallery/group/${batchId}`
+                ? `/dashboard/gallery/group/edit?batchId=${batchId}`
                 : "/dashboard/gallery",
             )
           }

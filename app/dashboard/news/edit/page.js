@@ -1,21 +1,30 @@
 "use client";
 
-import React, { use, useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import React, { Suspense, useEffect, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
-import BannerForm from "../BannerForm";
+import NewsForm from "../NewsForm";
 
 const emptyForm = {
-  image: "",
   title: "",
-  subtitle: "",
-  buttonText: "",
-  buttonLink: "",
-  order: 0,
+  excerpt: "",
+  content: "",
+  featuredImage: "",
+  category: "",
+  isFeatured: false,
+  status: "draft",
+  publishDate: "",
 };
 
-export default function EditBannerPage({ params }) {
-  const { id } = use(params);
+const toDateInputValue = (value) => {
+  if (!value) return "";
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return "";
+  return date.toISOString().slice(0, 10);
+};
+
+function EditNewsContent() {
+  const id = useSearchParams().get("id");
   const { token, isAdmin, isModerator } = useAuth();
   const router = useRouter();
   const [form, setForm] = useState(emptyForm);
@@ -25,36 +34,38 @@ export default function EditBannerPage({ params }) {
   const [notFound, setNotFound] = useState(false);
 
   useEffect(() => {
-    if (!token) return;
+    if (!token || !id) return;
 
     const fetchItem = async () => {
       try {
         setLoading(true);
         const response = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/api/banners/admin/all`,
+          `${process.env.NEXT_PUBLIC_API_URL}/api/news/admin/${id}`,
           { headers: { Authorization: `Bearer ${token}` } },
         );
 
         if (response.ok) {
           const data = await response.json();
-          const item = (data.banners || []).find((b) => b._id === id);
+          const item = data.news;
           if (!item) {
             setNotFound(true);
             return;
           }
           setForm({
-            image: item.image || "",
             title: item.title || "",
-            subtitle: item.subtitle || "",
-            buttonText: item.buttonText || "",
-            buttonLink: item.buttonLink || "",
-            order: item.order ?? 0,
+            excerpt: item.excerpt || "",
+            content: item.content || "",
+            featuredImage: item.featuredImage || "",
+            category: item.category || "",
+            isFeatured: Boolean(item.isFeatured),
+            status: item.status || "draft",
+            publishDate: toDateInputValue(item.publishDate),
           });
         } else {
           setNotFound(true);
         }
       } catch (err) {
-        console.error("Error fetching banner:", err);
+        console.error("Error fetching news item:", err);
         setNotFound(true);
       } finally {
         setLoading(false);
@@ -77,12 +88,8 @@ export default function EditBannerPage({ params }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!form.image) {
-      setError("Please upload a banner image first");
-      return;
-    }
     if (!form.title.trim()) {
-      setError("Please provide a banner title");
+      setError("Please provide a title");
       return;
     }
 
@@ -91,7 +98,7 @@ export default function EditBannerPage({ params }) {
 
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/banners/${id}`,
+        `${process.env.NEXT_PUBLIC_API_URL}/api/news/${id}`,
         {
           method: "PUT",
           headers: {
@@ -100,20 +107,20 @@ export default function EditBannerPage({ params }) {
           },
           body: JSON.stringify({
             ...form,
-            order: Number(form.order) || 0,
+            publishDate: form.publishDate || undefined,
           }),
         },
       );
 
       if (response.ok) {
-        router.push("/dashboard/banner");
+        router.push("/dashboard/news");
       } else {
         const data = await response.json();
-        setError(data.message || "Failed to save banner");
+        setError(data.message || "Failed to save news item");
       }
     } catch (err) {
-      console.error("Error saving banner:", err);
-      setError("Failed to save banner");
+      console.error("Error saving news item:", err);
+      setError("Failed to save news item");
     } finally {
       setSaving(false);
     }
@@ -126,20 +133,30 @@ export default function EditBannerPage({ params }) {
   if (notFound) {
     return (
       <div className="py-12 text-center text-slate-500">
-        Banner slide not found.
+        News item not found.
       </div>
     );
   }
 
   return (
-    <BannerForm
+    <NewsForm
       form={form}
       setForm={setForm}
       onSubmit={handleSubmit}
       saving={saving}
       error={error}
-      heading="Edit Slide"
-      submitLabel="Update Slide"
+      heading="Edit News Item"
+      submitLabel="Update News Item"
     />
+  );
+}
+
+export default function EditNewsPage() {
+  return (
+    <Suspense
+      fallback={<div className="py-12 text-center text-slate-500">Loading...</div>}
+    >
+      <EditNewsContent />
+    </Suspense>
   );
 }

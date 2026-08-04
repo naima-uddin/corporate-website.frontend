@@ -150,7 +150,7 @@ export default function BannerPage() {
                   </div>
                   <div className="flex gap-2 p-3 pt-0">
                     <Link
-                      href={`/dashboard/banner/${banner._id}`}
+                      href={`/dashboard/banner/edit?id=${banner._id}`}
                       title="Edit slide"
                       className="p-2 rounded bg-blue-500/10 text-blue-600 hover:bg-blue-500/20"
                     >

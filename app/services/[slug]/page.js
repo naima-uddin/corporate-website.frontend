@@ -28,6 +28,16 @@ async function getCategoryDisplayName(categoryName) {
   return categories.find((category) => category.name === categoryName)?.displayName || null;
 }
 
+export async function generateStaticParams() {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/services`);
+  if (!res.ok) return [];
+  const data = await res.json();
+  const services = Array.isArray(data.services) ? data.services : [];
+  return services
+    .filter((service) => service.path)
+    .map((service) => ({ slug: normalizeSlug(service.path) }));
+}
+
 export async function generateMetadata({ params }) {
   const { slug } = await params;
   const service = await getServiceBySlug(slug);
