@@ -117,7 +117,7 @@ const ClientSideMap = ({ position, setPosition, officeAddress }) => {
     <div className="h-full min-h-[320px] w-full relative">
       <div ref={mapRef} className="h-full w-full" />
 
-      <div className="absolute top-2 right-2 sm:top-4 sm:right-4">
+      <div className="absolute top-2 right-2 sm:top-4 sm:right-4 z-[1000]">
         <div className="p-1.5 sm:p-2 bg-white rounded-lg shadow-lg border border-[var(--color-border)]">
           <form onSubmit={handleSearch} className="flex items-center">
             <input
