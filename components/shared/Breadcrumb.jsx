@@ -48,7 +48,7 @@ export default function Breadcrumb({ items, className = "" }) {
   return (
     <nav
       aria-label="Breadcrumb"
-      className={`border-b border-[var(--color-border)] bg-[var(--color-primary-tint)]/40 ${className}`}
+      className={`border-b border-[var(--color-border)] bg-[var(--color-primary-tint)]/60 ${className}`}
     >
       <ol className="mx-auto flex max-w-7xl flex-wrap items-center gap-1.5 px-4 py-3 text-sm sm:px-6 lg:px-8">
         <li className="flex items-center">
