@@ -51,7 +51,7 @@ const ClientShowcase = () => {
     return (
       <section className="py-16 md:py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <SectionHeading eyebrow="Trusted By" title="Our Clients" />
+          <SectionHeading eyebrow="Trusted By" title="Our Clients" align="left" />
           <div className="flex items-center gap-8 md:gap-10 overflow-hidden">
             {[1, 2, 3, 4, 5, 6].map((item) => (
               <div
@@ -74,6 +74,7 @@ const ClientShowcase = () => {
           eyebrow="Trusted By"
           title="Our Clients"
           subtitle={description || undefined}
+          align="left"
         />
 
         <div className="overflow-hidden pt-20">
@@ -99,7 +100,7 @@ const ClientShowcase = () => {
                     alt={logo.name || "Client logo"}
                     width={120}
                     height={64}
-                    className="inline-block h-14 md:h-16 w-auto grayscale opacity-60 group-hover:grayscale-0 group-hover:opacity-100 transition duration-300 cursor-pointer"
+                    className="inline-block h-14 md:h-16 w-auto object-contain transition duration-300 cursor-pointer group-hover:scale-105"
                     unoptimized
                   />
 
