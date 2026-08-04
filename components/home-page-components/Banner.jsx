@@ -117,7 +117,7 @@ const Banner = () => {
               transition={{ duration: 0.6, ease: "easeOut" }}
               className="max-w-xl ml-4 mb-6 lg:mb-26"
             >
-              <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight text-white leading-tight mb-4 text-balance ">
+              <h1 className="main-title text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight text-white leading-tight mb-4 text-balance ">
                 {slide.title}
               </h1>
               {slide.subtitle && (

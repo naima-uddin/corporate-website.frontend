@@ -38,7 +38,7 @@ const PrivacyPolicy = () => {
         <div className="text-center mb-12">
           <div className="flex items-center justify-center gap-3 ">
             <FaShieldAlt className="text-4xl text-[#00f0ff] -mt-6" />
-            <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-[#0298fc] to-[#0066ff] text-transparent bg-clip-text drop-shadow-md mb-6">
+            <h1 className="main-title text-2xl md:text-3xl lg:text-4xl font-bold bg-gradient-to-r from-[#0298fc] to-[#0066ff] text-transparent bg-clip-text drop-shadow-md mb-6">
               Privacy Policy
             </h1>
           </div>

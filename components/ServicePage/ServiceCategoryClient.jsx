@@ -23,7 +23,7 @@ const ServiceCategoryClient = ({ category, services }) => {
         )}
 
         <div className="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-20 sm:py-28 text-center">
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-white tracking-tight">
+          <h1 className="main-title text-2xl md:text-3xl lg:text-4xl font-extrabold text-white tracking-tight">
             {category.displayName}
           </h1>
           {category.description && (

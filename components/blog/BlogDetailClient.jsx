@@ -260,7 +260,7 @@ export default function BlogDetailClient({ slug }) {
         {/* Enhanced Header */}
         <header className="mb-1">
           <div className="text-center mb-2">
-            <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2 leading-tight">
+            <h1 className="main-title text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900 mb-2 leading-tight">
               <span className="bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 bg-clip-text text-transparent">
                 {blog.title}
               </span>

@@ -48,7 +48,7 @@ const TermsOfService = () => {
             <div className="relative">
               <FaFileContract className="text-5xl text-[#19878f] relative z-10" />
             </div>
-            <h1 className="text-4xl md:text-5xl font-extrabold bg-gradient-to-r from-[#034c52] via-[#0066ff] to-[#0066ff] bg-clip-text text-transparent drop-shadow-md">
+            <h1 className="main-title text-2xl md:text-3xl lg:text-4xl font-extrabold bg-gradient-to-r from-[#034c52] via-[#0066ff] to-[#0066ff] bg-clip-text text-transparent drop-shadow-md">
               Terms of Service
             </h1>
           </div>

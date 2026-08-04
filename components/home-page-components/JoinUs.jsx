@@ -72,7 +72,7 @@ const JoinUs = () => {
         >
           <div className="max-w-2xl min-w-0">
             <span className="eyebrow mb-3">Careers</span>
-            <h2 className="text-2xl md:text-3xl lg:text-4xl font-extrabold tracking-tight text-[var(--color-heading,#111)] uppercase">
+            <h2 className="main-title text-2xl md:text-3xl lg:text-4xl font-extrabold tracking-tight text-[var(--color-heading,#111)] uppercase">
               {joinUs.title}
             </h2>
             {joinUs.description && (

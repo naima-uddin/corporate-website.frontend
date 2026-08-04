@@ -127,7 +127,7 @@ const Footer = () => {
               </span>
             )}
             {footer.topBandHeading && (
-              <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight text-white">
+              <h2 className="main-title text-2xl md:text-3xl lg:text-4xl font-extrabold tracking-tight text-white">
                 {footer.topBandHeading}
               </h2>
             )}

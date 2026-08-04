@@ -30,7 +30,7 @@ const OurStorySection = ({ data }) => {
               {label || "Our Story"}
             </span>
           </div>
-          <h2 className="text-3xl md:text-4xl font-semibold leading-tight">
+          <h2 className="main-title text-2xl md:text-3xl lg:text-4xl font-semibold leading-tight">
             {heading}
           </h2>
         </div>

@@ -236,7 +236,7 @@ export default function BlogListClient() {
         {/* Content */}
         <div className="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <div className="max-w-2xl mx-auto">
-            <h1 className="text-xl sm:text-2xl md:text-4xl lg:text-5xl font-bold mb-3 sm:mb-4 leading-tight">
+            <h1 className="main-title text-2xl md:text-3xl lg:text-4xl font-bold mb-3 sm:mb-4 leading-tight">
               Explore.{" "}
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-400">
                 Learn.

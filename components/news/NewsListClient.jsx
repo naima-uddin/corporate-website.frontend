@@ -44,7 +44,7 @@ const NewsListClient = () => {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-20">
-      <h1 className="text-3xl md:text-4xl font-extrabold text-[var(--color-heading)] mb-10">
+      <h1 className="main-title text-2xl md:text-3xl lg:text-4xl font-extrabold text-[var(--color-heading)] mb-10">
         News &amp; Media
       </h1>
 

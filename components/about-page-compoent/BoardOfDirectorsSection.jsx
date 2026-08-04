@@ -70,7 +70,7 @@ const BoardOfDirectorsSection = ({ members }) => {
           transition={{ duration: 0.6 }}
           className="flex items-center justify-between gap-4 mb-8 md:mb-10"
         >
-          <h2 className="text-2xl md:text-4xl font-bold tracking-tight">
+          <h2 className="main-title text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight">
             Meet Our <span className="text-[#0066ff]">Board of Directors</span>
           </h2>
 

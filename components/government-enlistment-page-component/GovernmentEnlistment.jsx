@@ -166,7 +166,7 @@ const GovernmentEnlistment = () => {
         <span className="uppercase tracking-widest text-sm font-bold text-[var(--color-primary)]">
           {data?.label || "Our Credentials"}
         </span>
-        <h1 className="text-4xl md:text-6xl font-bold mt-3 mb-6 leading-tight text-[#0a1a3c]">
+        <h1 className="main-title text-2xl md:text-3xl lg:text-4xl font-bold mt-3 mb-6 leading-tight text-[#0a1a3c]">
           {data?.heading || "Government Enlistment"}
         </h1>
         <div className="flex items-center justify-center gap-3 max-w-md mx-auto mb-8">

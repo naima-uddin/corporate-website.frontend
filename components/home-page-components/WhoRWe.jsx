@@ -276,7 +276,7 @@ const WhoRWe = () => {
 
               <div className="relative mt-8 mb-10">
                 <div className="relative bg-[var(--color-surface)] p-10 shadow-md ring-1 ring-[var(--color-border)] rounded-[48px/32px]">
-                  <p className="relative text-xl leading-relaxed text-[var(--color-heading)]">
+                  <p className="relative text-xl-0.5px leading-relaxed text-[var(--color-heading)]">
                     <span dangerouslySetInnerHTML={{ __html: visibleQuoteHtml }} />
                     {!typingDone && (
                       <span

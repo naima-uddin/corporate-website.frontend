@@ -156,7 +156,7 @@ const Portfolio = () => {
               {hero.label}
             </span>
           )}
-          <h1 className="text-4xl md:text-5xl font-bold mt-3 mb-4 text-white">
+          <h1 className="main-title text-2xl md:text-3xl lg:text-4xl font-bold mt-3 mb-4 text-white">
             {hero.heading || "Our Projects"}{" "}
             {hero.highlight && (
               <span className="text-[#7fb3ff]">{hero.highlight}</span>
@@ -487,7 +487,7 @@ const Portfolio = () => {
       {/* CTA */}
       <section className=" py-14 mt-6">
         <div className="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl sm:text-4xl font-bold text-black mb-4">
+          <h2 className="main-title text-2xl md:text-3xl lg:text-4xl font-bold text-black mb-4">
             {cta.heading || "Let's Build a Better Tomorrow Together"}
           </h2>
           <p className="text-gray-600 mb-8 max-w-2xl mx-auto">

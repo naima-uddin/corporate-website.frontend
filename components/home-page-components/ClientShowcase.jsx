@@ -54,7 +54,7 @@ const ClientShowcase = () => {
       <section className="py-16 md:py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <SectionHeading eyebrow="Trusted By" title="Our Clients" align="left" />
-          <div className="flex items-center gap-8 md:gap-10 overflow-hidden">
+          <div className="flex items-center gap-6 md:gap-8 overflow-hidden">
             {[1, 2, 3, 4, 5, 6].map((item) => (
               <div
                 key={item}
@@ -70,7 +70,7 @@ const ClientShowcase = () => {
   if (logos.length === 0) return null;
 
   return (
-    <section className="py-16 md:py-20 bg-white">
+    <section className="py-16 md:py-20 ">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <SectionHeading
           eyebrow="Trusted By"

@@ -83,7 +83,7 @@ const WhoWeAreSection = ({ data }) => {
               {label || "Who We Are"}
             </span>
           </div>
-          <h2 className="text-3xl md:text-4xl font-semibold leading-tight mb-2">
+          <h2 className="main-title text-2xl md:text-3xl lg:text-4xl font-semibold leading-tight mb-2">
             {heading}
           </h2>
           {body

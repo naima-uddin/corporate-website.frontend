@@ -45,7 +45,7 @@ const BoardOfDirectorsFull = () => {
           transition={{ duration: 0.6 }}
           className="mb-10"
         >
-          <h1 className="text-3xl md:text-5xl font-bold tracking-tight">
+          <h1 className="main-title text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight">
             Meet Our <span className="text-[#0066ff]">Board of Directors</span>
           </h1>
         </MotionDiv>

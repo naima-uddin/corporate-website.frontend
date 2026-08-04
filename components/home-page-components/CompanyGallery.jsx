@@ -180,7 +180,7 @@ export default function CompanyGallery() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="text-center mb-8 md:mb-12 pt-10">
-          <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-black mb-2 md:mb-3">
+          <h2 className="main-title text-2xl md:text-3xl lg:text-4xl font-bold text-black mb-2 md:mb-3">
             Our <span className="text-[#006dff]">Company Gallery</span>
           </h2>
           <div className="w-16 md:w-20 h-1 bg-gradient-to-r from-[#00f0ff] to-[#0066ff] mx-auto mb-3 md:mb-4"></div>

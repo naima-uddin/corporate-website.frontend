@@ -184,7 +184,7 @@ const ContactUs = () => {
               transition={{ duration: 0.6 }}
             >
               <span className="eyebrow">{contact.eyebrow}</span>
-              <h1 className="mt-3 text-4xl font-extrabold leading-tight text-[var(--color-heading)] sm:text-5xl">
+              <h1 className="main-title mt-3 text-2xl md:text-3xl lg:text-4xl font-extrabold leading-tight text-[var(--color-heading)]">
                 {contact.heading}{" "}
                 <span className="text-[var(--color-primary)]">
                   {siteName}

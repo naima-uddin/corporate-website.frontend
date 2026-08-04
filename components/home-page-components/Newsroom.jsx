@@ -82,7 +82,7 @@ const MobileNewsCard = ({ post, big = false }) => (
 const NewsListItem = ({ post }) => (
   <Link
     href={`/news/${post.slug}`}
-    className="group flex items-start justify-between gap-3 py-4 first:pt-0"
+    className="group flex items-start justify-between gap-1 py-4 first:pt-0"
   >
     <div className="min-w-0 flex-1">
       <h3 className="text-sm font-semibold leading-snug text-[var(--color-heading)] line-clamp-2 group-hover:text-[var(--color-primary)] transition-colors">
@@ -92,7 +92,7 @@ const NewsListItem = ({ post }) => (
         {formatTimeAgo(post.publishDate || post.createdAt)}
       </span>
     </div>
-    <div className="h-16 w-16 shrink-0 overflow-hidden rounded-md bg-[var(--color-surface)]">
+    <div className="h-18 w-18 shrink-0 overflow-hidden rounded-sm bg-[var(--color-surface)]">
       {getImageUrl(post.featuredImage) && (
         <img
           src={getImageUrl(post.featuredImage)}
@@ -200,7 +200,7 @@ const Newsroom = () => {
   return (
     <section className="py-10 sm:py-14 md:py-20 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-end justify-between mb-6 md:mb-10">
+        <div className="flex items-end justify-between mb-1 md:mb-2">
           <SectionHeading
             eyebrow="Newsroom"
             title="News & Media"
@@ -209,7 +209,7 @@ const Newsroom = () => {
           />
           <Link
             href="/news"
-            className="mb-2 inline-flex shrink-0 items-center gap-1.5 rounded-full border border-[var(--color-primary)]/30 bg-[var(--color-primary)]/5 px-3 py-1.5 text-xs sm:text-sm font-semibold text-[var(--color-primary)] transition-all duration-200 hover:gap-2.5 hover:bg-[var(--color-primary)]/10"
+            className="mb-10 inline-flex shrink-0 items-center gap-1.5 rounded-full border border-[var(--color-primary)]/30 bg-[var(--color-primary)]/5 px-3 py-1.5 text-xs sm:text-sm font-semibold text-[var(--color-primary)] transition-all duration-200 hover:gap-2.5 hover:bg-[var(--color-primary)]/10"
           >
             View All News
             <FiArrowRight />

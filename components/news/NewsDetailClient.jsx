@@ -106,7 +106,7 @@ const NewsDetailClient = ({ slug }) => {
               {news.category}
             </span>
           )}
-          <h1 className="mt-4 text-2xl sm:text-4xl font-extrabold leading-tight text-white text-balance">
+          <h1 className="main-title mt-4 text-2xl md:text-3xl lg:text-4xl font-extrabold leading-tight text-white text-balance">
             {news.title}
           </h1>
           <p className="mt-3 text-sm text-white/80">

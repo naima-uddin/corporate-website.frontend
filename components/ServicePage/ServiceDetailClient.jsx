@@ -81,7 +81,7 @@ const ServiceDetailClient = ({ service, categoryLabel, categorySlug }) => {
               <Icon className="w-5 h-5 text-white" />
             </div>
           </div>
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-white tracking-tight max-w-3xl">
+          <h1 className="main-title text-2xl md:text-3xl lg:text-4xl font-extrabold text-white tracking-tight max-w-3xl">
             {service.title}
           </h1>
           <p className="mt-4 text-lg text-white/85 max-w-2xl leading-relaxed">
