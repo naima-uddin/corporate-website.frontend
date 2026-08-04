@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
 import ClientLogoForm from "../ClientLogoForm";
 
-const emptyForm = { image: "", name: "" };
+const emptyForm = { image: "", name: "", description: "" };
 
 export default function NewClientLogoPage() {
   const { token, isAdmin, isModerator } = useAuth();

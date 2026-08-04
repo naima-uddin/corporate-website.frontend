@@ -135,9 +135,14 @@ export default function ClientShowcasePage() {
                     alt={logo.name || "Client logo"}
                     className="w-full h-16 object-contain"
                   />
-                  <p className="text-xs text-slate-600 truncate w-full text-center">
+                  <p className="text-xs font-medium text-slate-600 truncate w-full text-center">
                     {logo.name || "—"}
                   </p>
+                  {logo.description && (
+                    <p className="text-[11px] text-slate-400 line-clamp-2 w-full text-center">
+                      {logo.description}
+                    </p>
+                  )}
                   <div className="flex gap-2">
                     <Link
                       href={`/dashboard/client-showcase/edit?id=${logo._id}`}

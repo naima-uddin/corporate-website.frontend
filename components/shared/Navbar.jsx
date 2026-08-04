@@ -1,19 +1,15 @@
 "use client";
 import React, { useState, useRef, useEffect } from "react";
 import {
-  FaShopify,
-  FaEbay,
-  FaAmazon,
   FaSearch,
-  FaVectorSquare,
   FaDownload,
   FaLaptopCode,
   FaBars,
   FaTimes,
-  FaBullhorn,
-  FaServer,
+  FaBuilding,
+  FaIndustry,
+  FaTruck,
 } from "react-icons/fa";
-import { FaCartShopping } from "react-icons/fa6";
 import { IoIosArrowDown } from "react-icons/io";
 import Logo from "./Logo";
 import Link from "next/link";
@@ -21,14 +17,9 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 
 const CATEGORY_ICONS = {
-  shopify: <FaShopify />,
-  ebay: <FaEbay />,
-  amazon: <FaAmazon />,
-  erp: <FaVectorSquare />,
-  hosting: <FaServer />,
-  "digital-marketing": <FaBullhorn />,
-  "design-development": <FaLaptopCode />,
-  "ecommerce-dev": <FaCartShopping />,
+  construction: <FaBuilding />,
+  infrastructure: <FaIndustry />,
+  supply: <FaTruck />,
 };
 
 const getCategoryIcon = (name) =>
@@ -77,7 +68,7 @@ const Navbar = () => {
     const fetchCategories = async () => {
       try {
         const res = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/api/service-categories`,
+          `${process.env.NEXT_PUBLIC_API_URL}/api/navbar-categories`,
         );
         if (!res.ok) return;
         const data = await res.json();
@@ -90,14 +81,14 @@ const Navbar = () => {
             const desc = String(category.description || "").trim();
             return [
               category.displayName,
-              `/services/category/${category.name}`,
-              getCategoryIcon(category.name),
+              category.link || `/services/category/${category.name}`,
+              getCategoryIcon(category.icon || category.name),
               desc.length > 90 ? `${desc.slice(0, 90)}...` : desc,
             ];
           }),
         );
       } catch (error) {
-        console.error("Error fetching service categories:", error);
+        console.error("Error fetching navbar categories:", error);
       }
     };
 

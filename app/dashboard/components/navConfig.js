@@ -18,6 +18,7 @@ import {
   Landmark,
   FolderKanban,
   Phone,
+  Menu,
 } from "lucide-react";
 
 export const NAV_SECTIONS = [
@@ -70,6 +71,7 @@ export const NAV_SECTIONS = [
     label: "Site-wide",
     items: [
       { id: "site-branding", label: "Site Branding", icon: Palette, href: "/dashboard/site-branding" },
+      { id: "navbar-menu", label: "Navbar Menu", icon: Menu, href: "/dashboard/navbar-menu" },
       { id: "footer", label: "Manage Footer", icon: PanelBottom, href: "/dashboard/footer" },
       { id: "media", label: "All Media", icon: Images, href: "/dashboard/media" },
     ],
