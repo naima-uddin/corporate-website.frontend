@@ -4,6 +4,8 @@ import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import SectionHeading from "@/components/ui/SectionHeading";
 
+const MARQUEE_REPEAT = 6;
+
 const ClientShowcase = () => {
   const [logos, setLogos] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -56,7 +58,7 @@ const ClientShowcase = () => {
             {[1, 2, 3, 4, 5, 6].map((item) => (
               <div
                 key={item}
-                className="h-14 md:h-16 w-24 md:w-28 shrink-0 rounded-lg bg-gray-200 animate-pulse"
+                className="h-20 md:h-24 w-28 md:w-32 shrink-0 rounded-lg bg-gray-200 animate-pulse"
               />
             ))}
           </div>
@@ -79,10 +81,12 @@ const ClientShowcase = () => {
 
         <div className="overflow-hidden pt-20">
           <div
-            className="flex items-center w-max -mt-20"
+            className="flex items-center w-max -mt-20 hover:[animation-play-state:paused]"
             style={{ animation: "scroll 30s linear infinite" }}
           >
-            {[...logos, ...logos].map((logo, idx) => {
+            {Array.from({ length: MARQUEE_REPEAT }, () => logos)
+              .flat()
+              .map((logo, idx) => {
               const hasDetails = logo.name || logo.description;
               const isActive = activeId === `${logo._id}-${idx}`;
 
@@ -100,7 +104,7 @@ const ClientShowcase = () => {
                     alt={logo.name || "Client logo"}
                     width={120}
                     height={64}
-                    className="inline-block h-14 md:h-16 w-auto object-contain transition duration-300 cursor-pointer group-hover:scale-105"
+                    className="inline-block h-20 md:h-24 w-auto object-contain transition duration-300 cursor-pointer group-hover:scale-105"
                     unoptimized
                   />
 
@@ -133,7 +137,7 @@ const ClientShowcase = () => {
         <style>{`
           @keyframes scroll {
             0% { transform: translateX(0); }
-            100% { transform: translateX(-50%); }
+            100% { transform: translateX(-${100 / MARQUEE_REPEAT}%); }
           }
         `}</style>
       </div>
