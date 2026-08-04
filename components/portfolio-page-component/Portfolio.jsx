@@ -206,8 +206,34 @@ const Portfolio = () => {
         )}
 
         {loading && (
-          <div className="text-center py-16 text-[var(--color-body)]">
-            Loading projects...
+          <div className="py-10 space-y-10">
+            <div className="h-7 bg-gray-200 rounded-lg w-72 animate-pulse" />
+            <div className="rounded-xl border border-[var(--color-border)] overflow-hidden">
+              <div className="h-10 bg-gray-200 animate-pulse" />
+              {[1, 2, 3, 4].map((row) => (
+                <div
+                  key={row}
+                  className="h-12 border-t border-[var(--color-border)] bg-white flex items-center px-4"
+                >
+                  <div className="h-4 bg-gray-200 rounded-lg w-full animate-pulse" />
+                </div>
+              ))}
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {[1, 2, 3].map((item) => (
+                <div
+                  key={item}
+                  className="rounded-2xl border border-[var(--color-border)] overflow-hidden"
+                >
+                  <div className="h-48 bg-gray-200 animate-pulse" />
+                  <div className="p-5 space-y-2">
+                    <div className="h-5 bg-gray-200 rounded-lg w-2/3 animate-pulse" />
+                    <div className="h-4 bg-gray-200 rounded-lg w-full animate-pulse" />
+                    <div className="h-4 bg-gray-200 rounded-lg w-1/2 animate-pulse" />
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         )}
 

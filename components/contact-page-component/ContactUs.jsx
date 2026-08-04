@@ -20,7 +20,7 @@ import { redirectToThankYou } from "../shared/contactSuccessRedirect";
 const ClientSideMap = dynamic(() => import("./ClientSideMap"), {
   ssr: false,
   loading: () => (
-    <div className="h-full min-h-[420px] w-full bg-[var(--color-surface)] flex items-center justify-center rounded-2xl">
+    <div className="h-full min-h-[320px] w-full bg-[var(--color-surface)] flex items-center justify-center rounded-2xl">
       <p className="text-[var(--color-body)]">Loading map...</p>
     </div>
   ),
@@ -233,7 +233,7 @@ const ContactUs = () => {
       />
 
       {/* Form + Map Section */}
-      <section className="mx-auto max-w-7xl px-6 pb-20 sm:px-10">
+      <section className="mx-auto max-w-7xl px-6 pb-16 sm:px-10 sm:pb-20">
         <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
           {/* Contact Form */}
           <motion.div
@@ -242,7 +242,7 @@ const ContactUs = () => {
             variants={fadeIn}
             viewport={{ once: true }}
             transition={{ duration: 0.7 }}
-            className="-mt-16 rounded-2xl bg-white p-8 shadow-xl sm:-mt-20 sm:p-10"
+            className="relative z-0 rounded-2xl bg-white p-6 shadow-xl sm:p-8 lg:-mt-20 lg:p-10"
           >
             <form onSubmit={handleSubmit} className="space-y-6">
               <FormField
@@ -343,7 +343,7 @@ const ContactUs = () => {
             variants={fadeIn}
             viewport={{ once: true }}
             transition={{ duration: 0.7, delay: 0.15 }}
-            className="-mt-16 overflow-hidden rounded-2xl shadow-xl sm:-mt-20"
+            className="relative isolate z-0 h-[320px] overflow-hidden rounded-2xl shadow-xl sm:h-[380px] lg:-mt-20 lg:h-auto"
           >
             <ClientSideMap
               position={position}

@@ -6,6 +6,7 @@ import SectionHeading from "@/components/ui/SectionHeading";
 
 const ClientShowcase = () => {
   const [logos, setLogos] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchLogos = async () => {
@@ -20,11 +21,31 @@ const ClientShowcase = () => {
         setLogos((data.logos || []).map((logo) => logo.image));
       } catch (error) {
         console.error("Error fetching client logos:", error);
+      } finally {
+        setLoading(false);
       }
     };
 
     fetchLogos();
   }, []);
+
+  if (loading) {
+    return (
+      <section className="py-16 md:py-20 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <SectionHeading eyebrow="Trusted By" title="Our Clients" />
+          <div className="flex items-center gap-8 md:gap-10 overflow-hidden">
+            {[1, 2, 3, 4, 5, 6].map((item) => (
+              <div
+                key={item}
+                className="h-14 md:h-16 w-24 md:w-28 shrink-0 rounded-lg bg-gray-200 animate-pulse"
+              />
+            ))}
+          </div>
+        </div>
+      </section>
+    );
+  }
 
   if (logos.length === 0) return null;
 

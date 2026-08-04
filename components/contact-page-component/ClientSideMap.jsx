@@ -107,27 +107,27 @@ const ClientSideMap = ({ position, setPosition, officeAddress }) => {
 
   if (!isClient) {
     return (
-      <div className="h-full min-h-[420px] w-full bg-[var(--color-surface)] flex items-center justify-center">
+      <div className="h-full min-h-[320px] w-full bg-[var(--color-surface)] flex items-center justify-center">
         <p className="text-[var(--color-body)]">Loading map...</p>
       </div>
     );
   }
 
   return (
-    <div className="h-full min-h-[420px] w-full relative">
+    <div className="h-full min-h-[320px] w-full relative">
       <div ref={mapRef} className="h-full w-full" />
 
-      <div className="absolute top-4 right-4">
-        <div className="p-2 bg-white rounded-lg shadow-lg border border-[var(--color-border)]">
+      <div className="absolute top-2 right-2 sm:top-4 sm:right-4">
+        <div className="p-1.5 sm:p-2 bg-white rounded-lg shadow-lg border border-[var(--color-border)]">
           <form onSubmit={handleSearch} className="flex items-center">
             <input
               type="text"
               placeholder="Search location..."
-              className="px-3 py-1 w-48 bg-white border border-[var(--color-border)] text-[var(--color-heading)] rounded-l focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] placeholder-[var(--color-body)]/60"
+              className="px-2 sm:px-3 py-1 w-28 sm:w-48 text-sm bg-white border border-[var(--color-border)] text-[var(--color-heading)] rounded-l focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] placeholder-[var(--color-body)]/60"
             />
             <button
               type="submit"
-              className="bg-[var(--color-primary)] text-white px-4 py-2 rounded-r hover:bg-[var(--color-primary-dark)] transition-colors"
+              className="bg-[var(--color-primary)] text-white px-3 sm:px-4 py-2 rounded-r hover:bg-[var(--color-primary-dark)] transition-colors"
             >
               <FiSearch />
             </button>

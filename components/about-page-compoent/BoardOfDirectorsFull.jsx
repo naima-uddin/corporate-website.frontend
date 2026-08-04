@@ -51,7 +51,15 @@ const BoardOfDirectorsFull = () => {
         </MotionDiv>
 
         {members === null ? (
-          <p className="text-slate-500 text-sm">Loading...</p>
+          <div className="flex flex-wrap divide-x divide-slate-200 bg-white border border-slate-200">
+            {[1, 2, 3, 4].map((item) => (
+              <div key={item} className="w-full sm:w-1/2 lg:w-1/4 p-6 space-y-3">
+                <div className="h-32 w-32 mx-auto rounded-full bg-gray-200 animate-pulse" />
+                <div className="h-4 bg-gray-200 rounded-lg w-2/3 mx-auto animate-pulse" />
+                <div className="h-3 bg-gray-200 rounded-lg w-1/2 mx-auto animate-pulse" />
+              </div>
+            ))}
+          </div>
         ) : members.length === 0 ? (
           <p className="text-slate-500 text-sm">No board members yet.</p>
         ) : (

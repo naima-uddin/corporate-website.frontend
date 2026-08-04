@@ -13,7 +13,6 @@ import {
   ShoppingBag,
   Palette,
   Server,
-  Loader2,
   ArrowRight,
 } from "lucide-react";
 import Link from "next/link";
@@ -186,9 +185,16 @@ const WhatWeOffer = () => {
         />
 
         {isLoading && categoryTiles.length === 0 && (
-          <div className="flex items-center justify-center py-12 text-[var(--color-body)]">
-            <Loader2 className="w-5 h-5 mr-2 animate-spin" />
-            Loading services...
+          <div className="flex flex-col lg:flex-row items-stretch gap-3 lg:gap-4">
+            <div className="grid grid-cols-2 gap-3 lg:w-[34%]">
+              {[1, 2, 3, 4].map((item) => (
+                <div
+                  key={item}
+                  className="h-28 sm:h-32 rounded-md bg-gray-200 animate-pulse"
+                />
+              ))}
+            </div>
+            <div className="min-h-[280px] flex-1 rounded-md bg-gray-200 animate-pulse" />
           </div>
         )}
 

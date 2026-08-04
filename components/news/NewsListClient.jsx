@@ -2,7 +2,6 @@
 
 import React, { useEffect, useState } from "react";
 import NewsCard from "@/components/ui/NewsCard";
-import { FiLoader } from "react-icons/fi";
 
 const API = process.env.NEXT_PUBLIC_API_URL;
 
@@ -50,8 +49,21 @@ const NewsListClient = () => {
       </h1>
 
       {loading && (
-        <div className="flex items-center justify-center py-20">
-          <FiLoader className="h-6 w-6 animate-spin text-[var(--color-primary)]" />
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {[1, 2, 3, 4, 5, 6].map((item) => (
+            <div
+              key={item}
+              className="rounded-xl overflow-hidden border border-[var(--color-border)] shadow-sm"
+            >
+              <div className="h-48 bg-gray-200 animate-pulse" />
+              <div className="p-4 space-y-3">
+                <div className="h-4 bg-gray-200 rounded-lg w-1/3 animate-pulse" />
+                <div className="h-5 bg-gray-200 rounded-lg w-2/3 animate-pulse" />
+                <div className="h-4 bg-gray-200 rounded-lg w-full animate-pulse" />
+                <div className="h-4 bg-gray-200 rounded-lg w-1/2 animate-pulse" />
+              </div>
+            </div>
+          ))}
         </div>
       )}
 

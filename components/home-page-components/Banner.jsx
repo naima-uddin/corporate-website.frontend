@@ -59,7 +59,7 @@ const Banner = () => {
   if (loading) {
     return (
       <div
-        className={`relative w-full h-screen bg-[var(--color-ink)] animate-pulse ${NAVBAR_HEIGHT_CLASS}`}
+        className={`relative w-full h-[70vh] sm:h-[80vh] lg:h-screen bg-[var(--color-ink)] animate-pulse ${NAVBAR_HEIGHT_CLASS}`}
       />
     );
   }
@@ -77,22 +77,21 @@ const Banner = () => {
 
   return (
     <div
-      className={`relative w-full h-screen overflow-hidden bg-[var(--color-ink)] ${NAVBAR_HEIGHT_CLASS}`}
+      className={`relative w-full h-[70vh] sm:h-[80vh] lg:h-screen overflow-hidden bg-[var(--color-ink)] ${NAVBAR_HEIGHT_CLASS}`}
     >
       <div className="absolute inset-0 z-0">
         {/* Previous slide stays fully visible underneath until the
-            incoming slide has completely grown over it — no black gap. */}
+            incoming slide has completely faded in over it — no black gap. */}
         <img src={base.image} alt="" className="w-full h-full object-cover" />
         <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/35 to-black/20" />
 
         {currentSlide !== baseSlide && (
           <motion.div
             key={slide._id}
-            initial={{ scale: 0.15 }}
-            animate={{ scale: 1 }}
-            transition={{ duration: 1.8, ease: [0.16, 1, 0.3, 1] }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 1.2, ease: "easeInOut" }}
             onAnimationComplete={() => setBaseSlide(currentSlide)}
-            style={{ transformOrigin: "100% 100%" }}
             className="absolute inset-0"
           >
             <img
@@ -108,7 +107,7 @@ const Banner = () => {
       <div
         className={`${poppins.className} relative z-20 h-full flex flex-col justify-end pb-4 md:pb-6 lg:pb-10 px-4 sm:px-6 lg:px-12`}
       >
-        <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6 lg:gap-10 ">
+        <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-4 lg:gap-10 ">
           <AnimatePresence mode="wait">
             <motion.div
               key={slide._id}
@@ -116,7 +115,7 @@ const Banner = () => {
               animate={{ y: 0, opacity: 1 }}
               exit={{ y: -12, opacity: 0 }}
               transition={{ duration: 0.6, ease: "easeOut" }}
-              className="max-w-xl ml-4 mb-26"
+              className="max-w-xl ml-4 mb-6 lg:mb-26"
             >
               <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight text-white leading-tight mb-4 text-balance ">
                 {slide.title}
@@ -142,13 +141,13 @@ const Banner = () => {
 
           {slides.length > 1 && (
             <div className="w-full lg:w-[39rem] shrink-0">
-              <div className="no-scrollbar hidden lg:flex gap-3 justify-end mb-4 overflow-x-auto">
+              <div className="no-scrollbar flex gap-2 sm:gap-3 justify-end mb-4 overflow-x-auto">
                 {slides.map((s, index) => (
                   <button
                     key={s._id}
                     onClick={() => goToSlide(index)}
                     aria-label={`Show slide: ${s.title}`}
-                    className={`relative shrink-0 w-20 h-32 rounded-sm overflow-hidden border-2 transition-all duration-300 ${
+                    className={`relative shrink-0 w-12 h-20 sm:w-16 sm:h-24 lg:w-20 lg:h-32 rounded-sm overflow-hidden border-2 transition-all duration-300 ${
                       currentSlide === index
                         ? "border-white opacity-100 scale-105"
                         : "border-white/30 opacity-55 hover:opacity-85"

@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect, useCallback, useRef, useMemo } from "react";
+import { useState, useEffect, useMemo } from "react";
 import {
   X,
   ChevronLeft,
@@ -34,11 +34,9 @@ const groupKeyOf = (image) =>
 export default function CompanyGallery() {
   const [selectedImageIndex, setSelectedImageIndex] = useState(null);
   const [activeGroupImages, setActiveGroupImages] = useState([]);
-  const [currentSlide, setCurrentSlide] = useState(0);
   const [activeCategory, setActiveCategory] = useState("All");
   const [companyImages, setCompanyImages] = useState([]);
-  const sliderRef = useRef(null);
-  const [isMobile, setIsMobile] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   // Fetch gallery images from the dashboard-managed API
   useEffect(() => {
@@ -56,32 +54,9 @@ export default function CompanyGallery() {
           }))
         )
       )
-      .catch((err) => console.error("Error fetching gallery images:", err));
+      .catch((err) => console.error("Error fetching gallery images:", err))
+      .finally(() => setLoading(false));
   }, []);
-
-  // Check if mobile on mount and resize
-  useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768);
-    };
-
-    // Initially set to true for SSR
-    setIsMobile(window.innerWidth < 768);
-    window.addEventListener('resize', checkMobile);
-
-    return () => window.removeEventListener('resize', checkMobile);
-  }, []);
-
-  // Auto slide on mobile
-  useEffect(() => {
-    if (!isMobile) return;
-
-    const interval = setInterval(() => {
-      nextSlide();
-    }, 5000);
-
-    return () => clearInterval(interval);
-  }, [isMobile, currentSlide]);
 
   // Category tabs: "All" plus every unique category found in the data
   const categories = useMemo(
@@ -110,26 +85,11 @@ export default function CompanyGallery() {
     return Array.from(map.values());
   }, [filteredImages]);
 
-  // Reset slider/modal state whenever the selected category changes
+  // Reset modal state whenever the selected category changes
   useEffect(() => {
-    setCurrentSlide(0);
     setSelectedImageIndex(null);
     setActiveGroupImages([]);
   }, [activeCategory]);
-
-  // Calculate total slides for mobile
-  const totalSlides = displayGroups.length;
-
-  // Slider functions
-  const nextSlide = useCallback(() => {
-    if (totalSlides === 0) return;
-    setCurrentSlide((prev) => (prev + 1) % totalSlides);
-  }, [totalSlides]);
-
-  const prevSlide = useCallback(() => {
-    if (totalSlides === 0) return;
-    setCurrentSlide((prev) => (prev - 1 + totalSlides) % totalSlides);
-  }, [totalSlides]);
 
   const openGroup = (group, index = 0) => {
     setActiveGroupImages(group);
@@ -229,32 +189,54 @@ export default function CompanyGallery() {
           </p>
         </div>
 
-        {companyImages.length === 0 ? (
+        {loading ? (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {[1, 2, 3, 4, 5, 6].map((item) => (
+              <div
+                key={item}
+                className={`h-56 rounded-lg bg-gray-200 animate-pulse ${
+                  item === 2 ? "md:col-span-2 md:h-72" : ""
+                }`}
+              />
+            ))}
+          </div>
+        ) : companyImages.length === 0 ? (
           <p className="text-center text-slate-500 py-12">
             No gallery images yet.
           </p>
         ) : (
           <>
-            {/* Category Tabs */}
-            <div className="flex flex-wrap items-center justify-center gap-2 md:gap-3 mb-8 md:mb-10">
-              {categories.map((category) => {
-                const Icon = CATEGORY_ICONS[category] || LayoutGrid;
-                const isActive = activeCategory === category;
-                return (
-                  <button
-                    key={category}
-                    onClick={() => setActiveCategory(category)}
-                    className={`flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium border transition-colors duration-200 ${
-                      isActive
-                        ? "bg-[#0a1e3f] border-[#0a1e3f] text-white"
-                        : "bg-white border-gray-200 text-gray-700 hover:border-[#006dff]/50 hover:text-[#006dff]"
-                    }`}
-                  >
-                    <Icon className="w-4 h-4" />
-                    {category}
-                  </button>
-                );
-              })}
+            {/* Category Tabs: single scrollable row + sticky on mobile, wraps centered on desktop */}
+            <style jsx>{`
+              .gallery-cat-scroll::-webkit-scrollbar {
+                display: none;
+              }
+              .gallery-cat-scroll {
+                -ms-overflow-style: none;
+                scrollbar-width: none;
+              }
+            `}</style>
+            <div className="sticky top-14 z-30 -mx-4 sm:mx-0 bg-white/95 backdrop-blur-sm py-3 mb-8 md:static md:z-auto md:bg-transparent md:backdrop-blur-none md:mb-10">
+              <div className="gallery-cat-scroll flex flex-nowrap overflow-x-auto md:flex-wrap md:overflow-visible items-center justify-start md:justify-center gap-2 md:gap-3 px-4 sm:px-0">
+                {categories.map((category) => {
+                  const Icon = CATEGORY_ICONS[category] || LayoutGrid;
+                  const isActive = activeCategory === category;
+                  return (
+                    <button
+                      key={category}
+                      onClick={() => setActiveCategory(category)}
+                      className={`flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium border transition-colors duration-200 whitespace-nowrap flex-shrink-0 ${
+                        isActive
+                          ? "bg-[#0a1e3f] border-[#0a1e3f] text-white"
+                          : "bg-white border-gray-200 text-gray-700 hover:border-[#006dff]/50 hover:text-[#006dff]"
+                      }`}
+                    >
+                      <Icon className="w-4 h-4" />
+                      {category}
+                    </button>
+                  );
+                })}
+              </div>
             </div>
 
             {/* Desktop Grid Layout */}
@@ -268,41 +250,11 @@ export default function CompanyGallery() {
               ))}
             </div>
 
-            {/* Mobile Slider */}
-            <div className="md:hidden relative w-full">
-              <div
-                ref={sliderRef}
-                className="flex transition-transform duration-500 ease-in-out"
-                style={{ transform: `translateX(-${currentSlide * 100}%)` }}
-              >
-                {displayGroups.map((group) => (
-                  <div
-                    key={groupKeyOf(group[0])}
-                    className="flex-shrink-0 w-full px-2"
-                  >
-                    <MobileImageCard group={group} />
-                  </div>
-                ))}
-              </div>
-
-              {/* Navigation Buttons */}
-              <button
-                onClick={prevSlide}
-                className="absolute left-2 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white text-[#0a0a12] shadow-lg rounded-full w-8 h-8 border flex items-center justify-center z-10"
-              >
-                <ChevronLeft className="w-4 h-4" />
-              </button>
-              <button
-                onClick={nextSlide}
-                className="absolute right-2 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white text-[#0a0a12] shadow-lg rounded-full w-8 h-8 border flex items-center justify-center z-10"
-              >
-                <ChevronRight className="w-4 h-4" />
-              </button>
-
-              {/* Slide Counter */}
-              <div className="text-center mt-2 text-[#b0b0ff] text-sm">
-                {currentSlide + 1} / {totalSlides}
-              </div>
+            {/* Mobile: images stacked one below another */}
+            <div className="md:hidden grid grid-cols-1 gap-4">
+              {displayGroups.map((group) => (
+                <MobileImageCard key={groupKeyOf(group[0])} group={group} />
+              ))}
             </div>
           </>
         )}

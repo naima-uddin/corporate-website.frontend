@@ -51,9 +51,22 @@ const NewsDetailClient = ({ slug }) => {
 
   if (loading) {
     return (
-      <div className="flex min-h-[50vh] items-center justify-center">
-        <FiLoader className="h-6 w-6 animate-spin text-[var(--color-primary)]" />
-      </div>
+      <article className="pb-20">
+        <div className="h-72 sm:h-96 w-full bg-gray-200 animate-pulse" />
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pt-10">
+          <div className="h-4 bg-gray-200 rounded-lg w-24 mb-6 animate-pulse" />
+          <div className="h-10 bg-gray-200 rounded-xl w-full mb-3 animate-pulse" />
+          <div className="h-10 bg-gray-200 rounded-xl w-2/3 mb-8 animate-pulse" />
+          <div className="space-y-3">
+            {[1, 2, 3, 4, 5, 6].map((item) => (
+              <div
+                key={item}
+                className="h-4 bg-gray-200 rounded-lg w-full animate-pulse"
+              />
+            ))}
+          </div>
+        </div>
+      </article>
     );
   }
 

@@ -125,8 +125,18 @@ const CertificatesModal = ({ item, onClose }) => {
   );
 };
 
+const EnlistmentCardSkeleton = () => (
+  <div className="flex flex-col items-center text-center bg-white rounded-2xl border border-[var(--color-border)] shadow-sm p-8">
+    <div className="w-20 h-20 rounded-full bg-gray-200 mb-5 animate-pulse" />
+    <div className="h-5 bg-gray-200 rounded-lg w-3/4 mb-4 animate-pulse" />
+    <div className="h-6 bg-gray-200 rounded-full w-24 mb-5 animate-pulse" />
+    <div className="h-9 bg-gray-200 rounded-md w-32 animate-pulse" />
+  </div>
+);
+
 const GovernmentEnlistment = () => {
   const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(true);
   const [activeItem, setActiveItem] = useState(null);
 
   useEffect(() => {
@@ -140,6 +150,8 @@ const GovernmentEnlistment = () => {
         setData(result.governmentEnlistment || null);
       } catch (error) {
         console.error("Error fetching government enlistment page:", error);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -168,18 +180,28 @@ const GovernmentEnlistment = () => {
         </p>
       </section>
 
-      {items.length > 0 && (
+      {loading ? (
         <section className="container mx-auto px-6 pb-20">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
-            {items.map((item, index) => (
-              <EnlistmentCard
-                key={item.name || index}
-                item={item}
-                onViewCertificates={setActiveItem}
-              />
+            {[1, 2, 3, 4].map((item) => (
+              <EnlistmentCardSkeleton key={item} />
             ))}
           </div>
         </section>
+      ) : (
+        items.length > 0 && (
+          <section className="container mx-auto px-6 pb-20">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
+              {items.map((item, index) => (
+                <EnlistmentCard
+                  key={item.name || index}
+                  item={item}
+                  onViewCertificates={setActiveItem}
+                />
+              ))}
+            </div>
+          </section>
+        )
       )}
 
       <CertificatesModal item={activeItem} onClose={() => setActiveItem(null)} />
