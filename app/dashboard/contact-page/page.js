@@ -4,7 +4,6 @@ import React, { useState, useEffect } from "react";
 import { useAuth } from "@/context/AuthContext";
 import { motion } from "framer-motion";
 import { Save } from "lucide-react";
-import ImageUploadFactory from "../components/forms/ImageUploadFactory";
 
 const emptySettings = {
   eyebrow: "",
@@ -15,7 +14,6 @@ const emptySettings = {
   workingHours: "",
   mapLat: "",
   mapLng: "",
-  backgroundImage: "",
 };
 
 const SectionCard = ({ title, children }) => (
@@ -192,17 +190,6 @@ export default function ContactPageSettingsPage() {
           value={settings.workingHours}
           onChange={update("workingHours")}
           placeholder="Saturday - Friday: 10AM - 7PM"
-        />
-      </SectionCard>
-
-      <SectionCard title="Section Background">
-        <ImageUploadFactory
-          type="contact-page"
-          label="Background Image (behind the contact form and map)"
-          currentImage={settings.backgroundImage}
-          onImageUploaded={(url) =>
-            setSettings((prev) => ({ ...prev, backgroundImage: url || "" }))
-          }
         />
       </SectionCard>
 
