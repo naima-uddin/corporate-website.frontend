@@ -66,9 +66,9 @@ export default async function Home() {
       <Banner />
       <WhoRWe />
       <WhatWeOffer />
+      <ClientShowcase />
       <Newsroom />
       <JoinUs />
-      <ClientShowcase />
 
       {/* 🔹 Schema Markup for Home Page */}
       <script
