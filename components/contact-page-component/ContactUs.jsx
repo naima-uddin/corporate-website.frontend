@@ -1,5 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
+import Link from "next/link";
 import { motion } from "framer-motion";
 import {
   FiMail,
@@ -8,7 +9,8 @@ import {
   FiUser,
   FiMessageSquare,
   FiSend,
-  FiClock,
+  FiInfo,
+  FiEdit3,
 } from "react-icons/fi";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
@@ -18,52 +20,120 @@ import { redirectToThankYou } from "../shared/contactSuccessRedirect";
 const ClientSideMap = dynamic(() => import("./ClientSideMap"), {
   ssr: false,
   loading: () => (
-    <div className="h-96 w-full bg-[#0066ff] flex items-center justify-center rounded-lg">
-      <p className="text-[#b0b0ff]">Loading map...</p>
+    <div className="h-full min-h-[420px] w-full bg-[var(--color-surface)] flex items-center justify-center rounded-2xl">
+      <p className="text-[var(--color-body)]">Loading map...</p>
     </div>
   ),
 });
 
-const officePosition = [23.836236, 90.358672];
-const officeAddress =
-  "Plot No 470, Road No 06 (Old 29), DOHS Mirpur, Dhaka Division, Bangladesh";
+const FALLBACK_CONTACT = {
+  eyebrow: "Contact Us",
+  heading: "Connect with",
+  address:
+    "Plot No 470, Road No 06 (Old 29), DOHS Mirpur, Dhaka Division, Bangladesh",
+  phone: "+880 1846-937397",
+  email: "info@a2itltd.com",
+  mapLat: 23.836236,
+  mapLng: 90.358672,
+};
 
-const SectionHeader = ({ icon, title }) => (
-  <div className="relative group">
-    <div className="absolute inset-0 bg-gradient-to-r from-[#00f0ff] to-[#0066ff] rounded-t-xl border-b border-[#00f0ff]/30"></div>
-    <div className="relative z-10 py-5 px-8 flex items-center gap-3">
-      <div className="text-black text-xl group-hover:text-black transition-colors">
-        {icon}
-      </div>
-      <h2 className="text-xl font-bold tracking-wide group-hover:text-white transition-colors">
-        {title}
-      </h2>
+const fadeIn = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { opacity: 1, y: 0 },
+};
+
+const InfoBlock = ({ icon, title, children }) => (
+  <div className="flex items-start gap-4">
+    <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full border border-[var(--color-border)] bg-white text-[var(--color-primary)] shadow-sm">
+      <span className="text-xl">{icon}</span>
     </div>
-    <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-[#00f0ff] to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+    <div>
+      <h3 className="text-lg font-bold text-[var(--color-heading)]">
+        {title}
+      </h3>
+      <div className="mt-1 text-[var(--color-body)]">{children}</div>
+    </div>
   </div>
 );
 
+const FormField = ({
+  icon,
+  as = "input",
+  rows,
+  ...props
+}) => {
+  const Tag = as;
+  return (
+    <div className="relative border-b border-[var(--color-border)] focus-within:border-[var(--color-primary)] transition-colors">
+      <div className="absolute left-0 top-3 text-[var(--color-body)]">
+        {icon}
+      </div>
+      <Tag
+        {...props}
+        rows={rows}
+        className="w-full resize-none bg-transparent py-3 pl-8 pr-2 text-[var(--color-heading)] placeholder-[var(--color-body)] outline-none"
+      />
+    </div>
+  );
+};
+
 const ContactUs = () => {
   const router = useRouter();
-  const [position, setPosition] = useState(officePosition);
+  const [contact, setContact] = useState(FALLBACK_CONTACT);
+  const [position, setPosition] = useState([
+    FALLBACK_CONTACT.mapLat,
+    FALLBACK_CONTACT.mapLng,
+  ]);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     phone: "",
+    subject: "",
     message: "",
   });
+  const [agreed, setAgreed] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isClient, setIsClient] = useState(false);
+  const [siteName, setSiteName] = useState("A2IT Ltd");
 
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [message, setMessage] = useState("");
+  useEffect(() => {
+    setIsClient(true);
+    let isMounted = true;
+
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/site-settings`)
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => {
+        if (isMounted && data?.settings?.siteName) {
+          setSiteName(data.settings.siteName);
+        }
+      })
+      .catch(() => {});
+
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/contact-settings`)
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => {
+        if (isMounted && data?.settings) {
+          const merged = { ...FALLBACK_CONTACT, ...data.settings };
+          setContact(merged);
+          setPosition([merged.mapLat, merged.mapLng]);
+        }
+      })
+      .catch(() => {});
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!agreed) return;
     setIsSubmitting(true);
-
-    const payload = { name, email, message, phone: formData.phone };
 
     try {
       const res = await fetch(
@@ -71,7 +141,7 @@ const ContactUs = () => {
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(payload),
+          body: JSON.stringify(formData),
         },
       );
 
@@ -90,300 +160,199 @@ const ContactUs = () => {
     }
   };
 
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const fadeIn = {
-    hidden: { opacity: 0, y: 20 },
-    visible: { opacity: 1, y: 0 },
-  };
-
   if (!isClient) {
     return (
-      <div className="bg-gradient-to-r from-[#00f0ff] to-[#0066ff] text-[#e0e0ff] min-h-screen flex items-center justify-center">
+      <div className="flex min-h-screen items-center justify-center bg-white">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#00f0ff] mx-auto mb-4"></div>
-          <p className="text-[#b0b0ff]">Loading contact form...</p>
+          <div className="mx-auto mb-4 h-12 w-12 animate-spin rounded-full border-b-2 border-[var(--color-primary)]"></div>
+          <p className="text-[var(--color-body)]">Loading contact form...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="bg-white text-black min-h-screen">
-      {/* Animated Background Elements */}
-      <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-20 left-20 w-64 h-64 bg-[#00f0ff] rounded-full mix-blend-multiply filter blur-3xl opacity-10 animate-blob"></div>
-        <div className="absolute top-60 right-32 w-64 h-64 bg-[#0066ff] rounded-full mix-blend-multiply filter blur-3xl opacity-10 animate-blob animation-delay-2000"></div>
-      </div>
+    <div className="bg-white">
+      {/* Top Info Section */}
+      <section className="bg-[var(--color-surface)]">
+        <div className="mx-auto max-w-7xl px-6 py-16 sm:px-10">
+          <div className="grid grid-cols-1 gap-12 lg:grid-cols-2 lg:items-center">
+            <motion.div
+              initial="hidden"
+              whileInView="visible"
+              variants={fadeIn}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+            >
+              <span className="eyebrow">{contact.eyebrow}</span>
+              <h1 className="mt-3 text-4xl font-extrabold leading-tight text-[var(--color-heading)] sm:text-5xl">
+                {contact.heading}{" "}
+                <span className="text-[var(--color-primary)]">
+                  {siteName}
+                </span>
+              </h1>
+            </motion.div>
 
-      {/* Main Content */}
-      <div className="relative max-w-7xl mx-auto px-6 sm:px-12 py-6">
-        {/* Header */}
-        <motion.div
-          initial="hidden"
-          animate="visible"
-          variants={fadeIn}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-16"
-        >
-          <h1 className="text-4xl md:text-5xl font-bold mb-6 leading-tight">
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#155257] to-[#0066ff]">
-              Get in Touch
-            </span>
-          </h1>
-          <p className="text-xl text-[#000] max-w-2xl mx-auto">
-            Have questions or want to discuss a project? We'd love to hear from
-            you.
-          </p>
-        </motion.div>
+            <motion.div
+              initial="hidden"
+              whileInView="visible"
+              variants={fadeIn}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.15 }}
+              className="grid grid-cols-1 gap-8 sm:grid-cols-2"
+            >
+              <InfoBlock icon={<FiMapPin />} title="Address">
+                <p>{contact.address}</p>
+              </InfoBlock>
 
-        {/* Contact Content */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-16">
-          {/* Contact Information */}
-          <motion.div
-            initial="hidden"
-            whileInView="visible"
-            variants={fadeIn}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            className="bg-white rounded-xl shadow-xl overflow-hidden border border-[#00f0ff]/20 hover:border-[#00f0ff]/50 transition-colors text-white"
-          >
-            <SectionHeader icon={<FiMapPin />} title="Contact Information" />
+              <InfoBlock icon={<FiPhone />} title="Contact Details">
+                <a
+                  href={`mailto:${contact.email}`}
+                  className="block text-[var(--color-primary)] underline decoration-[var(--color-border)] underline-offset-4 hover:decoration-[var(--color-primary)]"
+                >
+                  {contact.email}
+                </a>
+                <a
+                  href={`tel:${contact.phone.replace(/\s+/g, "")}`}
+                  className="mt-1 block"
+                >
+                  {contact.phone}
+                </a>
+              </InfoBlock>
+            </motion.div>
+          </div>
+        </div>
+      </section>
 
-            <div className="p-8 space-y-8">
-              <div className="flex items-start gap-5">
-                <div className="bg-[#12121a]/10 p-3 rounded-xl text-[#006dff] flex-shrink-0">
-                  <FiMapPin className="text-xl" />
-                </div>
-                <div>
-                  <h3 className="font-bold text-lg mb-1 text-black">
-                    Our Address
-                  </h3>
-                  <p className="text-[#006dff]">{officeAddress}</p>
-                </div>
-              </div>
+      {/* Decorative Divider */}
+      <div
+        className="h-24 w-full sm:h-32"
+        style={{
+          background: `repeating-linear-gradient(135deg, var(--color-ink), var(--color-ink) 2px, var(--color-ink-2) 2px, var(--color-ink-2) 24px)`,
+        }}
+      />
 
-              <div className="flex items-start gap-5">
-                <div className="bg-[#12121a]/10 p-3 rounded-xl text-[#006dff] flex-shrink-0">
-                  <FiPhone className="text-xl" />
-                </div>
-                <div>
-                  <h3 className="font-bold text-lg mb-1 text-black">
-                    Phone Number
-                  </h3>
-                  <p className="text-[#006dff]">+880 1846-937397</p>
-                </div>
-              </div>
-
-              <div className="flex items-start gap-5">
-                <div className="bg-[#12121a]/10 p-3 rounded-xl text-[#006dff] flex-shrink-0">
-                  <FiMail className="text-xl" />
-                </div>
-                <div>
-                  <h3 className="font-bold text-lg mb-1 text-black">
-                    Email Address
-                  </h3>
-                  <p className="text-[#006dff]">info@a2itltd.com</p>
-                </div>
-              </div>
-
-              <div className="flex items-start gap-5">
-                <div className="bg-[#12121a]/10 p-3 rounded-xl text-[#006dff] flex-shrink-0">
-                  <FiClock className="text-xl" />
-                </div>
-                <div>
-                  <h3 className="font-bold text-lg mb-1 text-black">
-                    Working Hours
-                  </h3>
-                  <p className="text-[#006dff]">
-                    Saturday - Friday: 10AM - 7PM
-                  </p>
-                </div>
-              </div>
-            </div>
-          </motion.div>
-
+      {/* Form + Map Section */}
+      <section className="mx-auto max-w-7xl px-6 pb-20 sm:px-10">
+        <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
           {/* Contact Form */}
           <motion.div
             initial="hidden"
             whileInView="visible"
             variants={fadeIn}
             viewport={{ once: true }}
-            transition={{ duration: 0.8, delay: 0.4 }}
-            className="bg-white rounded-xl shadow-xl overflow-hidden border border-[#00f0ff]/20 hover:border-[#00f0ff]/50 transition-colors text-white"
+            transition={{ duration: 0.7 }}
+            className="-mt-16 rounded-2xl bg-white p-8 shadow-xl sm:-mt-20 sm:p-10"
           >
-            <SectionHeader icon={<FiSend />} title="Send Us a Message" />
+            <form onSubmit={handleSubmit} className="space-y-6">
+              <FormField
+                icon={<FiUser />}
+                type="text"
+                id="name"
+                name="name"
+                value={formData.name}
+                onChange={handleChange}
+                placeholder="Name"
+                required
+              />
 
-            <form onSubmit={handleSubmit} className="p-8">
-              <div className="space-y-6">
-                {/* Name Field */}
-                <div className="space-y-1">
-                  <label
-                    htmlFor="name"
-                    className="block text-black font-medium"
+              <FormField
+                icon={<FiPhone />}
+                type="tel"
+                id="phone"
+                name="phone"
+                value={formData.phone}
+                onChange={handleChange}
+                placeholder="Phone"
+              />
+
+              <FormField
+                icon={<FiMail />}
+                type="email"
+                id="email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                placeholder="Email Address"
+                required
+              />
+
+              <FormField
+                icon={<FiInfo />}
+                type="text"
+                id="subject"
+                name="subject"
+                value={formData.subject}
+                onChange={handleChange}
+                placeholder="Subject"
+              />
+
+              <FormField
+                icon={<FiEdit3 />}
+                as="textarea"
+                rows={3}
+                id="message"
+                name="message"
+                value={formData.message}
+                onChange={handleChange}
+                placeholder="How can we help you? Feel free to get in touch!"
+                required
+              />
+
+              <label className="flex items-start gap-3 text-sm text-[var(--color-body)]">
+                <input
+                  type="checkbox"
+                  checked={agreed}
+                  onChange={(e) => setAgreed(e.target.checked)}
+                  className="mt-0.5 h-4 w-4 flex-shrink-0 accent-[var(--color-primary)]"
+                  required
+                />
+                <span>
+                  I agree that my submitted data is being{" "}
+                  <Link
+                    href="/privacy-policy"
+                    className="text-[var(--color-heading)] underline underline-offset-2 hover:text-[var(--color-primary)]"
                   >
-                    Full Name
-                  </label>
-                  <div className="relative">
-                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-[#00f0ff]">
-                      <FiUser />
-                    </div>
-                    <input
-                      type="text"
-                      id="name"
-                      name="name"
-                      value={name}
-                      onChange={(e) => setName(e.target.value)}
-                      placeholder="John Doe"
-                      className="pl-10 w-full px-4 py-3 bg-[#12121a]/10 border border-[#00f0ff]/20 text-black rounded-lg focus:ring-2 focus:ring-[#00f0ff] focus:border-[#00f0ff] outline-none transition-all placeholder-[#b0b0ff] "
-                      required
-                    />
-                  </div>
-                </div>
+                    collected and stored
+                  </Link>
+                  .
+                </span>
+              </label>
 
-                {/* Email Field */}
-                <div className="space-y-1">
-                  <label
-                    htmlFor="email"
-                    className="block text-black font-medium"
-                  >
-                    Email Address
-                  </label>
-                  <div className="relative">
-                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-[#00f0ff]">
-                      <FiMail />
-                    </div>
-                    <input
-                      type="email"
-                      id="email"
-                      name="email"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      placeholder="john@example.com"
-                      className="pl-10 w-full px-4 py-3 bg-[#12121a]/10 border border-[#00f0ff]/20 text-black rounded-lg focus:ring-2 focus:ring-[#00f0ff] focus:border-[#00f0ff] outline-none transition-all placeholder-[#b0b0ff] "
-                      required
-                    />
-                  </div>
-                </div>
-
-                {/* Phone Field */}
-                <div className="space-y-1">
-                  <label
-                    htmlFor="phone"
-                    className="block text-black font-medium"
-                  >
-                    Phone Number
-                  </label>
-                  <div className="relative">
-                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-[#00f0ff]">
-                      <FiPhone />
-                    </div>
-                    <input
-                      type="tel"
-                      id="phone"
-                      name="phone"
-                      value={formData.phone}
-                      onChange={handleChange}
-                      placeholder="+880 1234 567890"
-                      className="pl-10 w-full px-4 py-3 bg-[#12121a]/10 border border-[#00f0ff]/20 text-black rounded-lg focus:ring-2 focus:ring-[#00f0ff] focus:border-[#00f0ff] outline-none transition-all placeholder-[#b0b0ff] "
-                    />
-                  </div>
-                </div>
-
-                {/* Message Field */}
-                <div className="space-y-1">
-                  <label
-                    htmlFor="message"
-                    className="block text-black font-medium"
-                  >
-                    Your Message
-                  </label>
-                  <div className="relative">
-                    <div className="absolute top-3 left-3 text-[#00f0ff]">
-                      <FiMessageSquare />
-                    </div>
-                    <textarea
-                      id="message"
-                      name="message"
-                      value={message}
-                      onChange={(e) => setMessage(e.target.value)}
-                      rows="5"
-                      placeholder="Write your message here..."
-                      className="pl-10 w-full px-4 py-3 bg-[#12121a]/10 border border-[#00f0ff]/20 text-black rounded-lg focus:ring-2 focus:ring-[#00f0ff] focus:border-[#00f0ff] outline-none transition-all placeholder-[#b0b0ff] "
-                      required
-                    ></textarea>
-                  </div>
-                </div>
-
-                {/* Submit Button */}
-                <button
-                  type="submit"
-                  disabled={isSubmitting}
-                  className={`w-full bg-gradient-to-r from-[#00f0ff] to-[#0066ff] text-white font-bold py-4 px-6 rounded-lg shadow-lg hover:shadow-[0_0_20px_-5px_rgba(0,240,255,0.5)] transition-all duration-300 transform hover:scale-[1.01] ${
-                    isSubmitting ? "opacity-80" : "hover:opacity-90"
-                  }`}
-                >
-                  {isSubmitting ? (
-                    "Sending..."
-                  ) : (
-                    <>
-                      <FiSend className="inline mr-2" />
-                      Send Message
-                    </>
-                  )}
-                </button>
-              </div>
+              <button
+                type="submit"
+                disabled={isSubmitting || !agreed}
+                className="flex w-full items-center justify-center gap-2 rounded-lg bg-[var(--color-primary)] px-6 py-4 font-bold text-white shadow-lg transition-all duration-300 hover:bg-[var(--color-primary-dark)] disabled:cursor-not-allowed disabled:opacity-60"
+              >
+                {isSubmitting ? (
+                  "Sending..."
+                ) : (
+                  <>
+                    <FiSend />
+                    Send Message
+                  </>
+                )}
+              </button>
             </form>
           </motion.div>
+
+          {/* Map */}
+          <motion.div
+            initial="hidden"
+            whileInView="visible"
+            variants={fadeIn}
+            viewport={{ once: true }}
+            transition={{ duration: 0.7, delay: 0.15 }}
+            className="-mt-16 overflow-hidden rounded-2xl shadow-xl sm:-mt-20"
+          >
+            <ClientSideMap
+              position={position}
+              setPosition={setPosition}
+              officeAddress={contact.address}
+            />
+          </motion.div>
         </div>
-
-        {/* Map Section */}
-        <motion.div
-          initial="hidden"
-          whileInView="visible"
-          variants={fadeIn}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8, delay: 0.6 }}
-          className="bg-[#12121a] rounded-xl shadow-xl overflow-hidden border border-[#00f0ff]/20 hover:border-[#00f0ff]/50 transition-colors text-white"
-        >
-          <SectionHeader icon={<FiMapPin />} title="Find Us on Map" />
-          <ClientSideMap
-            position={position}
-            setPosition={setPosition}
-            officeAddress={officeAddress}
-          />
-        </motion.div>
-      </div>
-
-      <style jsx>{`
-        @keyframes blob {
-          0% {
-            transform: translate(0px, 0px) scale(1);
-          }
-          33% {
-            transform: translate(30px, -50px) scale(1.1);
-          }
-          66% {
-            transform: translate(-20px, 20px) scale(0.9);
-          }
-          100% {
-            transform: translate(0px, 0px) scale(1);
-          }
-        }
-        .animate-blob {
-          animation: blob 7s infinite;
-        }
-        .animation-delay-2000 {
-          animation-delay: 2s;
-        }
-      `}</style>
+      </section>
     </div>
   );
 };

@@ -27,6 +27,7 @@ import {
   Info,
   Landmark,
   FolderKanban,
+  Phone,
 } from "lucide-react";
 import Link from "next/link";
 
@@ -59,6 +60,7 @@ const NAV_SECTIONS = [
       { id: "media", label: "All Media", icon: Images, href: "/dashboard/media" },
       { id: "client-showcase", label: "Client Showcase", icon: Building2, href: "/dashboard/client-showcase" },
       { id: "footer", label: "Manage Footer", icon: PanelBottom, href: "/dashboard/footer" },
+      { id: "contact-page", label: "Contact Page", icon: Phone, href: "/dashboard/contact-page" },
     ],
   },
 ];

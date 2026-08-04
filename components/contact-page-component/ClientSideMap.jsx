@@ -6,6 +6,7 @@ const ClientSideMap = ({ position, setPosition, officeAddress }) => {
   const [isClient, setIsClient] = useState(false);
   const mapRef = useRef(null);
   const leafletMapRef = useRef(null);
+  const markerRef = useRef(null);
 
   useEffect(() => {
     setIsClient(true);
@@ -53,10 +54,11 @@ const ClientSideMap = ({ position, setPosition, officeAddress }) => {
 
       marker = L.marker(position).addTo(map);
       marker.bindPopup(
-        `<div class="font-medium"><h3 style="color:#00f0ff;font-weight:700;margin-bottom:4px;">Our Office</h3><p style="color:#333">${officeAddress}</p></div>`,
+        `<div class="font-medium"><h3 style="color:#0b4f9e;font-weight:700;margin-bottom:4px;">Our Office</h3><p style="color:#333">${officeAddress}</p></div>`,
       );
 
       leafletMapRef.current = map;
+      markerRef.current = marker;
     };
 
     init();
@@ -65,9 +67,24 @@ const ClientSideMap = ({ position, setPosition, officeAddress }) => {
       if (leafletMapRef.current) {
         leafletMapRef.current.remove();
         leafletMapRef.current = null;
+        markerRef.current = null;
       }
     };
   }, [isClient]);
+
+  // Recenter the map and marker if the office position changes after
+  // the map has already been created (e.g. contact settings loaded from the API)
+  useEffect(() => {
+    const map = leafletMapRef.current;
+    const marker = markerRef.current;
+    if (!map || !marker) return;
+
+    marker.setLatLng(position);
+    marker.setPopupContent(
+      `<div class="font-medium"><h3 style="color:#0b4f9e;font-weight:700;margin-bottom:4px;">Our Office</h3><p style="color:#333">${officeAddress}</p></div>`,
+    );
+    map.setView(position, map.getZoom());
+  }, [position, officeAddress]);
 
   // handle search
   const handleSearch = async (e) => {
@@ -90,27 +107,27 @@ const ClientSideMap = ({ position, setPosition, officeAddress }) => {
 
   if (!isClient) {
     return (
-      <div className="h-96 w-full bg-[#0e0e15] flex items-center justify-center rounded-lg">
-        <p className="text-[#b0b0ff]">Loading map...</p>
+      <div className="h-full min-h-[420px] w-full bg-[var(--color-surface)] flex items-center justify-center">
+        <p className="text-[var(--color-body)]">Loading map...</p>
       </div>
     );
   }
 
   return (
-    <div className="h-96 w-full relative rounded-lg overflow-hidden">
+    <div className="h-full min-h-[420px] w-full relative">
       <div ref={mapRef} className="h-full w-full" />
 
       <div className="absolute top-4 right-4">
-        <div className="p-2 bg-white rounded-lg shadow-lg border border-[#00f0ff]/20">
+        <div className="p-2 bg-white rounded-lg shadow-lg border border-[var(--color-border)]">
           <form onSubmit={handleSearch} className="flex items-center">
             <input
               type="text"
               placeholder="Search location..."
-              className="px-3 py-1 w-48 bg-white border-1 text-black rounded-l focus:outline-none focus:ring-2 focus:ring-[#00f0ff] placeholder-[#b0b0ff]/50"
+              className="px-3 py-1 w-48 bg-white border border-[var(--color-border)] text-[var(--color-heading)] rounded-l focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] placeholder-[var(--color-body)]/60"
             />
             <button
               type="submit"
-              className="bg-gradient-to-r from-[#00f0ff] to-[#0066ff] text-white px-4 py-2 rounded-r hover:opacity-90 transition-all"
+              className="bg-[var(--color-primary)] text-white px-4 py-2 rounded-r hover:bg-[var(--color-primary-dark)] transition-colors"
             >
               <FiSearch />
             </button>
