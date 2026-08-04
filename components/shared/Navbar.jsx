@@ -9,12 +9,13 @@ import {
   FaBuilding,
   FaIndustry,
   FaTruck,
+  FaNewspaper,
 } from "react-icons/fa";
 import { IoIosArrowDown } from "react-icons/io";
 import Logo from "./Logo";
 import Link from "next/link";
 import Image from "next/image";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 const CATEGORY_ICONS = {
   construction: <FaBuilding />,
@@ -25,8 +26,18 @@ const CATEGORY_ICONS = {
 const getCategoryIcon = (name) =>
   CATEGORY_ICONS[String(name || "").toLowerCase()] || <FaLaptopCode />;
 
+const SEARCH_TYPE_META = {
+  services: { label: "Services", icon: <FaLaptopCode /> },
+  portfolio: { label: "Projects", icon: <FaBuilding /> },
+  news: { label: "News & Media", icon: <FaNewspaper /> },
+};
+
+const EMPTY_SEARCH_RESULTS = { services: [], portfolio: [], news: [] };
+const EMPTY_SEARCH_COUNTS = { services: 0, portfolio: 0, news: 0, total: 0 };
+
 const Navbar = () => {
   const pathname = usePathname();
+  const router = useRouter();
 
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [services, setServices] = useState([]);
@@ -34,6 +45,10 @@ const Navbar = () => {
   const [servicesOpen, setServicesOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [searchResults, setSearchResults] = useState(EMPTY_SEARCH_RESULTS);
+  const [searchCounts, setSearchCounts] = useState(EMPTY_SEARCH_COUNTS);
+  const [searchLoading, setSearchLoading] = useState(false);
   const timeoutRef = useRef(null);
   const mobileMenuRef = useRef(null);
   const dropdownRef = useRef(null);
@@ -94,6 +109,116 @@ const Navbar = () => {
 
     fetchCategories();
   }, []);
+
+  useEffect(() => {
+    const query = searchQuery.trim();
+    if (query.length < 2) {
+      setSearchResults(EMPTY_SEARCH_RESULTS);
+      setSearchCounts(EMPTY_SEARCH_COUNTS);
+      setSearchLoading(false);
+      return;
+    }
+
+    const controller = new AbortController();
+    setSearchLoading(true);
+
+    const debounce = setTimeout(async () => {
+      try {
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/api/search?q=${encodeURIComponent(query)}&limit=4`,
+          { signal: controller.signal },
+        );
+        if (!res.ok) return;
+        const data = await res.json();
+        setSearchResults(data.results || EMPTY_SEARCH_RESULTS);
+        setSearchCounts(data.counts || EMPTY_SEARCH_COUNTS);
+      } catch (error) {
+        if (error.name !== "AbortError") {
+          console.error("Search failed:", error);
+        }
+      } finally {
+        setSearchLoading(false);
+      }
+    }, 300);
+
+    return () => {
+      clearTimeout(debounce);
+      controller.abort();
+    };
+  }, [searchQuery]);
+
+  useEffect(() => {
+    setSearchOpen(false);
+    setSearchQuery("");
+  }, [pathname]);
+
+  const closeSearch = () => {
+    setSearchOpen(false);
+  };
+
+  const handleSearchSubmit = (e) => {
+    e.preventDefault();
+    const query = searchQuery.trim();
+    if (!query) return;
+    router.push(`/search?q=${encodeURIComponent(query)}`);
+    setSearchOpen(false);
+  };
+
+  const renderSearchSuggestions = () => {
+    if (searchQuery.trim().length < 2) return null;
+
+    return (
+      <div className="max-h-96 overflow-y-auto border-t border-[var(--color-border)]">
+        {searchLoading && (
+          <div className="px-4 py-3 text-xs text-[var(--color-body)]">
+            Searching...
+          </div>
+        )}
+
+        {!searchLoading && searchCounts.total === 0 && (
+          <div className="px-4 py-3 text-xs text-[var(--color-body)]">
+            No results found.
+          </div>
+        )}
+
+        {!searchLoading && searchCounts.total > 0 && (
+          <>
+            {["services", "portfolio", "news"].map((type) =>
+              searchResults[type]?.length > 0 ? (
+                <div key={type} className="py-2">
+                  <div className="px-4 pb-1 text-[10px] font-bold uppercase tracking-wide text-[var(--color-body)]">
+                    {SEARCH_TYPE_META[type].label}
+                  </div>
+                  {searchResults[type].map((item) => (
+                    <Link
+                      key={item.id}
+                      href={item.url}
+                      onClick={closeSearch}
+                      className="flex items-center gap-3 px-4 py-2 hover:bg-[var(--color-surface)] transition-colors"
+                    >
+                      <span className="text-[var(--color-primary)] shrink-0 text-sm">
+                        {SEARCH_TYPE_META[type].icon}
+                      </span>
+                      <span className="text-sm text-[var(--color-heading)] line-clamp-1">
+                        {item.title}
+                      </span>
+                    </Link>
+                  ))}
+                </div>
+              ) : null,
+            )}
+            <Link
+              href={`/search?q=${encodeURIComponent(searchQuery.trim())}`}
+              onClick={closeSearch}
+              className="block px-4 py-3 text-sm font-semibold text-[var(--color-primary)] border-t border-[var(--color-border)] hover:bg-[var(--color-surface)] transition-colors"
+            >
+              View all results for &ldquo;{searchQuery.trim()}&rdquo;
+            </Link>
+          </>
+        )}
+      </div>
+    );
+  };
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -393,7 +518,7 @@ const Navbar = () => {
 
         {searchOpen && (
           <form
-            onSubmit={(e) => e.preventDefault()}
+            onSubmit={handleSearchSubmit}
             className={`absolute right-0 top-full mt-3 w-96 shadow-lg overflow-hidden border z-20 ${
               overlay
                 ? "bg-white/95 border-white/40"
@@ -403,9 +528,12 @@ const Navbar = () => {
             <input
               type="text"
               autoFocus
-              placeholder="Search..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Search services, projects, news..."
               className="w-full px-4 py-2.5 text-sm text-[var(--color-heading)] outline-none"
             />
+            {renderSearchSuggestions()}
           </form>
         )}
       </div>
@@ -423,7 +551,7 @@ const Navbar = () => {
 
           {searchOpen && (
             <form
-              onSubmit={(e) => e.preventDefault()}
+              onSubmit={handleSearchSubmit}
               className={`absolute left-0 right-0 top-full border-t shadow-lg z-20 ${
                 overlay
                   ? "bg-white/95 border-white/40"
@@ -433,9 +561,12 @@ const Navbar = () => {
               <input
                 type="text"
                 autoFocus
-                placeholder="Search..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Search services, projects, news..."
                 className="w-full px-4 py-3 text-sm text-[var(--color-heading)] outline-none"
               />
+              {renderSearchSuggestions()}
             </form>
           )}
         </div>
