@@ -34,6 +34,7 @@ const FALLBACK_CONTACT = {
   email: "msmdrakibhasan1992@gmail.com",
   mapLat: 23.78286,
   mapLng: 90.395439,
+  backgroundImage: "",
 };
 
 const fadeIn = {
@@ -232,8 +233,26 @@ const ContactUs = () => {
       />
 
       {/* Form + Map Section */}
-      <section className="mx-auto max-w-7xl px-6 pb-16 sm:px-10 sm:pb-20">
-        <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
+      <section className="relative overflow-hidden">
+        {contact.backgroundImage && (
+          <>
+            <div
+              className="absolute inset-0"
+              style={{
+                backgroundImage: `url(${contact.backgroundImage})`,
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+                maskImage:
+                  "linear-gradient(to bottom, transparent, black 140px, black calc(100% - 140px), transparent)",
+                WebkitMaskImage:
+                  "linear-gradient(to bottom, transparent, black 140px, black calc(100% - 140px), transparent)",
+              }}
+            />
+            <div className="absolute inset-0 bg-white/75" />
+          </>
+        )}
+        <div className="relative mx-auto max-w-7xl px-6 pb-16 sm:px-10 sm:pb-20">
+          <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
           {/* Contact Form */}
           <motion.div
             initial="hidden"
@@ -350,6 +369,7 @@ const ContactUs = () => {
               officeAddress={contact.address}
             />
           </motion.div>
+        </div>
         </div>
       </section>
     </div>
