@@ -161,10 +161,14 @@ export default function ServiceForm({
           </div>
 
           <div className="md:col-span-2">
+            <label className="mb-2 block text-sm font-semibold text-slate-700">
+              Features <span className="text-red-500">*</span>
+            </label>
             <textarea
-              placeholder="Features (one per line)"
+              placeholder="Features (one per line) - at least one is required"
               value={form.features}
               onChange={(e) => setForm({ ...form, features: e.target.value })}
+              required
               rows="4"
               className="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-slate-900 font-mono text-sm shadow-sm focus:border-cyan-400 focus:ring-2 focus:ring-cyan-100 outline-none transition"
             />

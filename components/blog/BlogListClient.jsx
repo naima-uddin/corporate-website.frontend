@@ -31,9 +31,19 @@ export default function BlogListClient() {
   const [searchQuery, setSearchQuery] = useState("");
   const [categories, setCategories] = useState([]);
   const [currentFeaturedIndex, setCurrentFeaturedIndex] = useState(0);
+  const [siteName, setSiteName] = useState("MRH");
   const postsSectionRef = useRef(null);
 
   const BLOGS_PER_PAGE = 9;
+
+  useEffect(() => {
+    fetch(`${API}/api/site-settings`)
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => {
+        if (data?.settings?.siteName) setSiteName(data.settings.siteName);
+      })
+      .catch(() => {});
+  }, []);
 
   const getCategoryLabel = (category) => {
     if (!category) return "";
@@ -435,7 +445,7 @@ export default function BlogListClient() {
                                         d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
                                       />
                                     </svg>
-                                    A2IT Ltd
+                                    {siteName}
                                   </span>
                                 )}
                                 <span className="flex items-center gap-1 bg-white/10 backdrop-blur-sm px-2 sm:px-3 py-1 rounded-full">

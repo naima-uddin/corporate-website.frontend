@@ -64,6 +64,18 @@ export default function BlogDetailClient({ slug }) {
   const [error, setError] = useState(null);
   const [lightboxImage, setLightboxImage] = useState(null);
   const [lightboxOpen, setLightboxOpen] = useState(false);
+  const [siteName, setSiteName] = useState("MRH");
+  const [logoImage, setLogoImage] = useState("/A2ITLogo.png");
+
+  useEffect(() => {
+    fetch(`${API}/api/site-settings`)
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => {
+        if (data?.settings?.siteName) setSiteName(data.settings.siteName);
+        if (data?.settings?.logoImage) setLogoImage(data.settings.logoImage);
+      })
+      .catch(() => {});
+  }, []);
 
   useEffect(() => {
     if (!slug) return;
@@ -259,7 +271,7 @@ export default function BlogDetailClient({ slug }) {
               <div className="flex items-center gap-2 sm:gap-3">
                 <div className="relative w-10 h-10 md:w-12 md:h-12 xl:w-14 xl:h-14 rounded-full overflow-hidden  shadow-lg">
                   <Image
-                    src="/A2ITLogo.png"
+                    src={logoImage}
                     alt=""
                     fill
                     className="object-contain p-0.5"
@@ -267,7 +279,7 @@ export default function BlogDetailClient({ slug }) {
                 </div>
                 <div className="text-center sm:text-left min-w-0">
                   <div className="font-semibold text-gray-900 text-xs sm:text-sm">
-                    A2IT Ltd
+                    {siteName}
                   </div>
                   <div className="text-xs text-gray-500">Author</div>
                 </div>

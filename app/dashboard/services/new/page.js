@@ -70,6 +70,13 @@ export default function NewServicePage() {
     setSaving(true);
     setError("");
 
+    const features = form.features.split("\n").filter((f) => f.trim());
+    if (features.length === 0) {
+      setError("Please provide at least one feature.");
+      setSaving(false);
+      return;
+    }
+
     try {
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_API_URL}/api/services`,
@@ -81,7 +88,7 @@ export default function NewServicePage() {
           },
           body: JSON.stringify({
             ...form,
-            features: form.features.split("\n").filter((f) => f.trim()),
+            features,
             process: form.process.split("\n").filter((p) => p.trim()),
             stats: form.stats.split("\n").filter((s) => s.trim()),
           }),
@@ -92,7 +99,7 @@ export default function NewServicePage() {
         router.push("/dashboard/services");
       } else {
         const data = await response.json();
-        setError(data.message || "Failed to save service");
+        setError(data.error || data.message || "Failed to save service");
       }
     } catch (err) {
       console.error("Error saving service:", err);

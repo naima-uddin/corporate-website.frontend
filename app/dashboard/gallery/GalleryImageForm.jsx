@@ -84,7 +84,7 @@ export default function GalleryImageForm({
             onChange={(e) =>
               setForm((prev) => ({ ...prev, title: e.target.value }))
             }
-            placeholder="e.g. A2it Office"
+            placeholder="e.g. MRH Office"
             className="w-full px-4 py-3 bg-white border border-slate-300 rounded-lg text-slate-900"
           />
         </div>

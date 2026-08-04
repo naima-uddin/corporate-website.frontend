@@ -466,20 +466,20 @@ export default function FooterPage() {
               label="Address"
               value={footer.address}
               onChange={setField("address")}
-              placeholder="e.g. Plot No 470, Road No 06, DOHS Mirpur, Dhaka"
+              placeholder="e.g. House-320, Road-21, DOHS, Mohakhali, Dhaka, Bangladesh"
             />
           </div>
           <TextField
             label="Phone"
             value={footer.phone}
             onChange={setField("phone")}
-            placeholder="e.g. +8801846937397"
+            placeholder="e.g. +880 1711-270825"
           />
           <TextField
             label="Email"
             value={footer.email}
             onChange={setField("email")}
-            placeholder="e.g. info@a2itltd.com"
+            placeholder="e.g. msmdrakibhasan1992@gmail.com"
           />
         </div>
       </SectionCard>
@@ -530,7 +530,7 @@ export default function FooterPage() {
             type="text"
             value={footer.copyrightText}
             onChange={setField("copyrightText")}
-            placeholder="e.g. © {year} A2IT Ltd. All Rights Reserved"
+            placeholder="e.g. © {year} MRH. All Rights Reserved"
             className="w-full px-4 py-3 bg-white border border-slate-300 rounded-lg text-slate-900"
           />
           <p className="text-xs text-slate-500 mt-1">

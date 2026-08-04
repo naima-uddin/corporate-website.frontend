@@ -148,7 +148,7 @@ export default function SiteBrandingPage() {
             onChange={(e) =>
               setSettings((prev) => ({ ...prev, siteName: e.target.value }))
             }
-            placeholder="e.g. A2IT Ltd"
+            placeholder="e.g. MRH"
             className="w-full px-4 py-3 bg-white border border-slate-300 rounded-lg text-slate-900"
           />
           <p className="mt-2 text-xs text-slate-500">

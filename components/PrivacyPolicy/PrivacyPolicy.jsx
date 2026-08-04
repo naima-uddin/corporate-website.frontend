@@ -1,9 +1,36 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { FaShieldAlt, FaUserLock, FaDatabase, FaCookie } from "react-icons/fa";
 import Link from "next/link";
 
+const FALLBACK_CONTACT = {
+  address: "House-320, Road-21, DOHS, Mohakhali, Dhaka, Bangladesh",
+  phone: "+880 1711-270825 (Mobile) / +880 2-9833330 (Landline)",
+  email: "msmdrakibhasan1992@gmail.com",
+};
+
 const PrivacyPolicy = () => {
+  const [siteName, setSiteName] = useState("MRH");
+  const [contact, setContact] = useState(FALLBACK_CONTACT);
+
+  useEffect(() => {
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/site-settings`)
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => {
+        if (data?.settings?.siteName) setSiteName(data.settings.siteName);
+      })
+      .catch(() => {});
+
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/contact-settings`)
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => {
+        if (data?.settings) {
+          setContact((prev) => ({ ...prev, ...data.settings }));
+        }
+      })
+      .catch(() => {});
+  }, []);
+
   return (
     <div className="min-h-screen bg-white text-black pt-24 pb-16 px-6 md:px-16 relative overflow-hidden">
       <div className="max-w-4xl mx-auto relative z-10">
@@ -20,7 +47,7 @@ const PrivacyPolicy = () => {
         {/* Introduction */}
         <section className="mb-12">
           <p className="text-lg text-black leading-relaxed mb-6">
-            At A2It Ltd, we take your privacy seriously. This Privacy Policy
+            At {siteName}, we take your privacy seriously. This Privacy Policy
             describes how we collect, use, and share your personal information
             when you visit our website or use our services.
           </p>
@@ -233,8 +260,8 @@ const PrivacyPolicy = () => {
                 contact us:
               </p>
               <ul className="space-y-2">
-                <li>By email: info@a2itltd.com</li>
-                <li>By phone: +880 1846-937397</li>
+                <li>By email: {contact.email}</li>
+                <li>By phone: {contact.phone}</li>
                 <li>
                   By visiting this page on our website:{" "}
                   <Link
@@ -244,10 +271,7 @@ const PrivacyPolicy = () => {
                     Contact Us
                   </Link>
                 </li>
-                <li>
-                  By mail: Plot No 470, Road No 06 (Old 29), DOHS Mirpur, Dhaka
-                  Division, Bangladesh
-                </li>
+                <li>By mail: {contact.address}</li>
               </ul>
             </div>
           </section>

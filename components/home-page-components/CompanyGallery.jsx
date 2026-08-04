@@ -16,7 +16,7 @@ import {
 // Icon shown next to each category tab
 const CATEGORY_ICONS = {
   All: LayoutGrid,
-  A2it: Building2,
+  MRH: Building2,
   Team: Users,
   Consulting: Handshake,
 };

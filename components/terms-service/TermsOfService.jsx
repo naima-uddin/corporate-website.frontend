@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   FaFileContract,
   FaGavel,
@@ -13,7 +13,32 @@ import {
 } from "react-icons/fa";
 import Link from "next/link";
 
+const FALLBACK_CONTACT = {
+  email: "msmdrakibhasan1992@gmail.com",
+};
+
 const TermsOfService = () => {
+  const [siteName, setSiteName] = useState("MRH");
+  const [contact, setContact] = useState(FALLBACK_CONTACT);
+
+  useEffect(() => {
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/site-settings`)
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => {
+        if (data?.settings?.siteName) setSiteName(data.settings.siteName);
+      })
+      .catch(() => {});
+
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/contact-settings`)
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => {
+        if (data?.settings) {
+          setContact((prev) => ({ ...prev, ...data.settings }));
+        }
+      })
+      .catch(() => {});
+  }, []);
+
   return (
     <div className="min-h-screen bg-white text-black pt-24 pb-16 px-6 md:px-16 relative overflow-hidden">
       <div className="max-w-4xl mx-auto relative z-10">
@@ -35,7 +60,7 @@ const TermsOfService = () => {
           <div className="bg-white rounded-2xl p-8 border border-[#00f0ff]/30 shadow-lg shadow-[#00f0ff]/10">
             <p className="text-xl md:text-2xl text-black leading-relaxed font-light italic">
               "Welcome to{" "}
-              <span className="font-bold text-[#19878f]">A2It Ltd</span>. By
+              <span className="font-bold text-[#19878f]">{siteName}</span>. By
               accessing our website and using our services, you agree to comply
               with and be bound by the following terms and conditions."
             </p>
@@ -80,9 +105,9 @@ const TermsOfService = () => {
             <div className="text-black space-y-4 pl-4 border-l-2 border-[#0066ff]/30">
               <p>
                 All content on this website, including but not limited to text,
-                graphics, logos, images, and software, is the property of A2It
-                Ltd or its content suppliers and is protected by international
-                copyright laws.
+                graphics, logos, images, and software, is the property of{" "}
+                {siteName} or its content suppliers and is protected by
+                international copyright laws.
               </p>
               <p>
                 You may not reproduce, distribute, modify, or create derivative
@@ -179,7 +204,7 @@ const TermsOfService = () => {
             </div>
             <div className="text-black space-y-4 pl-4 border-l-2 border-[#00f0ff]/30">
               <p>
-                In no event shall A2It Ltd, nor its directors, employees,
+                In no event shall {siteName}, nor its directors, employees,
                 partners, agents, suppliers, or affiliates, be liable for any
                 indirect, incidental, special, consequential or punitive
                 damages, including without limitation, loss of profits, data,
@@ -249,7 +274,7 @@ const TermsOfService = () => {
                 Contact Us
               </Link>
               <a
-                href="mailto:info@a2itltd.com"
+                href={`mailto:${contact.email}`}
                 className="px-6 py-3 border border-[#00f0ff] text-[#006dff] font-semibold rounded-lg hover:bg-[#006dff] hover:text-white transition-all duration-300"
               >
                 Email Us
