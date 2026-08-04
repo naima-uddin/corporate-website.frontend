@@ -4,16 +4,65 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { useAuth } from "@/context/AuthContext";
 import { motion } from "framer-motion";
-import { Plus, Trash2, GripVertical, Power, Pencil } from "lucide-react";
+import { Plus, Trash2, GripVertical, Power, Pencil, Save } from "lucide-react";
 
 export default function ClientShowcasePage() {
   const { token, isAdmin, isModerator } = useAuth();
   const [logos, setLogos] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [description, setDescription] = useState("");
+  const [descSaving, setDescSaving] = useState(false);
+  const [descLoading, setDescLoading] = useState(true);
 
   useEffect(() => {
     fetchLogos();
+    fetchSettings();
   }, [token]);
+
+  const fetchSettings = async () => {
+    try {
+      setDescLoading(true);
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/client-showcase-settings`,
+      );
+
+      if (response.ok) {
+        const data = await response.json();
+        setDescription(data.settings?.description || "");
+      }
+    } catch (err) {
+      console.error("Error fetching client showcase settings:", err);
+    } finally {
+      setDescLoading(false);
+    }
+  };
+
+  const handleSaveDescription = async (e) => {
+    e.preventDefault();
+    try {
+      setDescSaving(true);
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/client-showcase-settings`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ description }),
+        },
+      );
+
+      if (response.ok) {
+        const data = await response.json();
+        setDescription(data.settings?.description || "");
+      }
+    } catch (err) {
+      console.error("Error saving client showcase settings:", err);
+    } finally {
+      setDescSaving(false);
+    }
+  };
 
   const fetchLogos = async () => {
     try {
@@ -105,6 +154,39 @@ export default function ClientShowcasePage() {
           Add Logo
         </Link>
       </motion.div>
+
+      {!descLoading && (
+        <motion.form
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          onSubmit={handleSaveDescription}
+          className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm space-y-3"
+        >
+          <label className="block text-sm font-semibold text-slate-700">
+            Section Description
+          </label>
+          <p className="text-xs text-slate-500 -mt-2">
+            Shown under the &quot;Our Clients&quot; heading on the homepage.
+          </p>
+          <textarea
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            placeholder="e.g. We are proud to work with organizations that share our commitment to excellence."
+            rows={3}
+            className="w-full px-4 py-3 bg-white border border-slate-300 rounded-lg text-slate-900 resize-none"
+          />
+          <div className="flex justify-end">
+            <button
+              type="submit"
+              disabled={descSaving}
+              className="bg-gradient-to-r from-[#00f0ff] to-[#0066ff] text-[#0a0a12] font-semibold px-6 py-2.5 rounded-lg flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              <Save className="w-4 h-4" />
+              {descSaving ? "Saving..." : "Save Description"}
+            </button>
+          </div>
+        </motion.form>
+      )}
 
       {!loading && (
         <motion.div
