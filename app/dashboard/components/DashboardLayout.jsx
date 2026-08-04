@@ -7,63 +7,18 @@ import {
   LogOut,
   Menu,
   X,
-  FileText,
-  Settings,
-  Users,
-  ShoppingCart,
-  Image as ImageIcon,
-  Images,
-  Briefcase,
-  Building2,
-  Camera,
-  PanelBottom,
-  Newspaper,
-  LayoutDashboard,
   ChevronsLeft,
   ChevronsRight,
-  Palette,
-  Quote,
-  Users2,
-  Info,
-  Landmark,
-  FolderKanban,
-  Phone,
 } from "lucide-react";
 import Link from "next/link";
+import {
+  NAV_SECTIONS,
+  ADMIN_NAV_SECTION,
+  ACCOUNT_NAV_SECTION,
+} from "./navConfig";
+import DashboardBreadcrumb from "./DashboardBreadcrumb";
 
 const SIDEBAR_COLLAPSE_KEY = "a2it-sidebar-collapsed";
-
-const NAV_SECTIONS = [
-  {
-    id: "overview",
-    label: null,
-    items: [
-      { id: "dashboard", label: "Overview", icon: LayoutDashboard, href: "/dashboard" },
-    ],
-  },
-  {
-    id: "content",
-    label: "Content",
-    items: [
-      { id: "site-branding", label: "Site Branding", icon: Palette, href: "/dashboard/site-branding" },
-      { id: "banner", label: "Manage Banner", icon: ImageIcon, href: "/dashboard/banner" },
-      { id: "spotlight", label: "Leadership Spotlight", icon: Quote, href: "/dashboard/spotlight" },
-      { id: "join-us", label: "Join Us Section", icon: Users2, href: "/dashboard/join-us" },
-      { id: "about", label: "About Page", icon: Info, href: "/dashboard/about" },
-      { id: "government-enlistment", label: "Government Enlistment", icon: Landmark, href: "/dashboard/government-enlistment" },
-      { id: "projects-page", label: "Projects Page Settings", icon: FolderKanban, href: "/dashboard/projects-page" },
-      { id: "services", label: "Manage Services", icon: ShoppingCart, href: "/dashboard/services" },
-      { id: "portfolio", label: "Manage Contracts/Projects", icon: Briefcase, href: "/dashboard/portfolio" },
-      { id: "gallery", label: "Manage Gallery", icon: Camera, href: "/dashboard/gallery" },
-      { id: "blog", label: "Manage Blog", icon: FileText, href: "/dashboard/blog" },
-      { id: "news", label: "Manage News", icon: Newspaper, href: "/dashboard/news" },
-      { id: "media", label: "All Media", icon: Images, href: "/dashboard/media" },
-      { id: "client-showcase", label: "Client Showcase", icon: Building2, href: "/dashboard/client-showcase" },
-      { id: "footer", label: "Manage Footer", icon: PanelBottom, href: "/dashboard/footer" },
-      { id: "contact-page", label: "Contact Page", icon: Phone, href: "/dashboard/contact-page" },
-    ],
-  },
-];
 
 const DashboardNavLink = ({ item, pathname, onClick, collapsed }) => {
   const Icon = item.icon;
@@ -105,24 +60,8 @@ const DashboardNav = ({ collapsed, onToggleCollapse }) => {
 
   const sections = [
     ...NAV_SECTIONS,
-    ...(user?.role === "admin"
-      ? [
-          {
-            id: "admin",
-            label: "Administration",
-            items: [
-              { id: "users", label: "Manage Users", icon: Users, href: "/dashboard/users" },
-            ],
-          },
-        ]
-      : []),
-    {
-      id: "account",
-      label: "Account",
-      items: [
-        { id: "settings", label: "Settings", icon: Settings, href: "/dashboard/settings" },
-      ],
-    },
+    ...(user?.role === "admin" ? [ADMIN_NAV_SECTION] : []),
+    ACCOUNT_NAV_SECTION,
   ];
 
   const handleLogout = () => {
@@ -300,7 +239,10 @@ export default function DashboardLayout({ children }) {
           collapsed ? "lg:ml-20" : "lg:ml-64"
         }`}
       >
-        <div className="p-4 lg:p-8">{children}</div>
+        <div className="p-4 lg:p-8">
+          <DashboardBreadcrumb />
+          {children}
+        </div>
       </div>
     </div>
   );

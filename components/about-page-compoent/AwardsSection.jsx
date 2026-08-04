@@ -18,7 +18,7 @@ const MotionDiv =
 const AwardCard = ({ award, featured }) => (
   <div className="relative h-full flex flex-col rounded-lg overflow-hidden border border-slate-200 shadow-sm hover:shadow-lg transition-all duration-300 bg-transparent">
     <div
-      className={`relative bg-slate-50 ${featured ? "flex-1 min-h-[220px]" : "flex-1 min-h-[140px]"}`}
+      className={`relative bg-slate-50 ${featured ? "flex-1 min-h-[280px] sm:min-h-[320px]" : "flex-1 min-h-[100px] sm:min-h-[120px]"}`}
     >
       {award.image ? (
         <Image

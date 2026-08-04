@@ -31,6 +31,7 @@ const Navbar = () => {
   const mobileMenuRef = useRef(null);
   const dropdownRef = useRef(null);
   const searchRef = useRef(null);
+  const mobileSearchRef = useRef(null);
 
   const isHome = pathname === "/";
   const overlay = isHome && !isScrolled;
@@ -79,8 +80,8 @@ const Navbar = () => {
 
       if (
         searchOpen &&
-        searchRef.current &&
-        !searchRef.current.contains(event.target)
+        !(searchRef.current && searchRef.current.contains(event.target)) &&
+        !(mobileSearchRef.current && mobileSearchRef.current.contains(event.target))
       ) {
         setSearchOpen(false);
       }
@@ -406,7 +407,7 @@ const Navbar = () => {
         {searchOpen && (
           <form
             onSubmit={(e) => e.preventDefault()}
-            className={`absolute right-0 top-full mt-3 w-64 rounded-lg shadow-lg overflow-hidden border z-20 ${
+            className={`absolute right-0 top-full mt-3 w-96 shadow-lg overflow-hidden border z-20 ${
               overlay
                 ? "bg-white/95 border-white/40"
                 : "bg-white border-[var(--color-border)]"
@@ -422,7 +423,36 @@ const Navbar = () => {
         )}
       </div>
 
-      <div className="md:hidden">
+      <div className="md:hidden flex items-center gap-3">
+        <div ref={mobileSearchRef}>
+          <button
+            type="button"
+            onClick={() => setSearchOpen((prev) => !prev)}
+            aria-label="Toggle search"
+            className={iconButtonClasses}
+          >
+            <FaSearch className="text-xs" />
+          </button>
+
+          {searchOpen && (
+            <form
+              onSubmit={(e) => e.preventDefault()}
+              className={`absolute left-0 right-0 top-full border-t shadow-lg z-20 ${
+                overlay
+                  ? "bg-white/95 border-white/40"
+                  : "bg-white border-[var(--color-border)]"
+              }`}
+            >
+              <input
+                type="text"
+                autoFocus
+                placeholder="Search..."
+                className="w-full px-4 py-3 text-sm text-[var(--color-heading)] outline-none"
+              />
+            </form>
+          )}
+        </div>
+
         <button onClick={toggleMobileMenu} aria-label="Toggle menu">
           {mobileMenuOpen ? <FaTimes size={22} /> : <FaBars size={22} />}
         </button>
@@ -541,29 +571,6 @@ const Navbar = () => {
           >
             Contact
           </Link>
-
-          <div className="pt-2 pl-4">
-            <button
-              type="button"
-              onClick={() => setSearchOpen((prev) => !prev)}
-              className="flex items-center gap-2 text-sm text-[var(--color-heading)]"
-            >
-              <FaSearch className="text-xs" /> Search
-            </button>
-            {searchOpen && (
-              <form
-                onSubmit={(e) => e.preventDefault()}
-                className="mt-2 rounded-lg border border-[var(--color-border)] overflow-hidden"
-              >
-                <input
-                  type="text"
-                  autoFocus
-                  placeholder="Search..."
-                  className="w-full px-4 py-2.5 text-sm text-[var(--color-heading)] outline-none"
-                />
-              </form>
-            )}
-          </div>
         </div>
       )}
     </nav>

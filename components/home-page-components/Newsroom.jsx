@@ -42,6 +42,43 @@ const formatTimeAgo = (value) => {
   });
 };
 
+const MobileNewsCard = ({ post, big = false }) => (
+  <Link
+    href={`/news/${post.slug}`}
+    className={`group relative block overflow-hidden rounded-2xl shadow-md shadow-black/10 ring-1 ring-black/5 ${
+      big ? "h-56 sm:h-72" : "h-32 sm:h-40"
+    }`}
+  >
+    {getImageUrl(post.featuredImage) ? (
+      <img
+        src={getImageUrl(post.featuredImage)}
+        alt={post.title}
+        className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
+      />
+    ) : (
+      <div className="absolute inset-0 bg-[var(--color-surface)]" />
+    )}
+    <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent" />
+    {big && getPrimaryCategory(post) && (
+      <span className="absolute left-3 top-3 rounded-full bg-[var(--color-primary)] px-3 py-1 text-[10px] font-bold uppercase tracking-wide text-white shadow">
+        {getPrimaryCategory(post)}
+      </span>
+    )}
+    <div className="absolute inset-x-0 bottom-0 p-3">
+      <h4
+        className={`font-bold text-white leading-snug line-clamp-2 ${
+          big ? "text-base sm:text-lg" : "text-xs"
+        }`}
+      >
+        {post.title}
+      </h4>
+      <span className={`mt-1 block text-white/75 ${big ? "text-xs" : "text-[10px]"}`}>
+        {formatTimeAgo(post.publishDate || post.createdAt)}
+      </span>
+    </div>
+  </Link>
+);
+
 const NewsListItem = ({ post }) => (
   <Link
     href={`/news/${post.slug}`}
@@ -129,15 +166,22 @@ const Newsroom = () => {
               ))}
             </div>
           </div>
-          <div className="lg:hidden">
-            <div className="h-44 sm:h-64 w-full rounded-lg bg-gray-200 mb-3 animate-pulse" />
-            <div className="h-5 bg-gray-200 rounded-lg w-3/4 mb-6 animate-pulse" />
-            <div className="grid grid-cols-2 gap-x-4 gap-y-5">
-              {[1, 2, 3, 4].map((item) => (
-                <div key={item}>
-                  <div className="h-20 sm:h-24 w-full rounded-md bg-gray-200 mb-2 animate-pulse" />
-                  <div className="h-3 bg-gray-200 rounded-lg w-full animate-pulse" />
-                </div>
+          <div className="lg:hidden space-y-4">
+            <div className="grid grid-cols-2 gap-3">
+              {[1, 2].map((item) => (
+                <div
+                  key={item}
+                  className="h-32 sm:h-40 w-full rounded-2xl bg-gray-200 animate-pulse"
+                />
+              ))}
+            </div>
+            <div className="h-56 sm:h-72 w-full rounded-2xl bg-gray-200 animate-pulse" />
+            <div className="grid grid-cols-2 gap-3">
+              {[1, 2].map((item) => (
+                <div
+                  key={item}
+                  className="h-32 sm:h-40 w-full rounded-2xl bg-gray-200 animate-pulse"
+                />
               ))}
             </div>
           </div>
@@ -165,7 +209,7 @@ const Newsroom = () => {
           />
           <Link
             href="/news"
-            className="mb-2 inline-flex shrink-0 items-center gap-2 text-xs sm:text-sm font-semibold text-[var(--color-primary)] transition-all duration-200 hover:gap-3"
+            className="mb-2 inline-flex shrink-0 items-center gap-1.5 rounded-full border border-[var(--color-primary)]/30 bg-[var(--color-primary)]/5 px-3 py-1.5 text-xs sm:text-sm font-semibold text-[var(--color-primary)] transition-all duration-200 hover:gap-2.5 hover:bg-[var(--color-primary)]/10"
           >
             View All News
             <FiArrowRight />
@@ -173,79 +217,18 @@ const Newsroom = () => {
         </div>
 
         {/* Mobile / tablet: compact layout — row, big image, row */}
-        <div className="lg:hidden space-y-5">
-          <div className="grid grid-cols-2 gap-x-4">
+        <div className="lg:hidden space-y-4">
+          <div className="grid grid-cols-2 gap-3">
             {rest.slice(0, 2).map((post) => (
-              <Link
-                key={post._id || post.slug}
-                href={`/news/${post.slug}`}
-                className="group block"
-              >
-                <div className="relative h-20 sm:h-24 w-full overflow-hidden rounded-md bg-[var(--color-surface)]">
-                  {getImageUrl(post.featuredImage) && (
-                    <img
-                      src={getImageUrl(post.featuredImage)}
-                      alt={post.title}
-                      className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-                    />
-                  )}
-                </div>
-                <h4 className="mt-2 text-xs font-semibold leading-snug text-[var(--color-heading)] line-clamp-2 group-hover:text-[var(--color-primary)] transition-colors">
-                  {post.title}
-                </h4>
-                <span className="mt-1 block text-[10px] text-[var(--color-body)]">
-                  {formatTimeAgo(post.publishDate || post.createdAt)}
-                </span>
-              </Link>
+              <MobileNewsCard key={post._id || post.slug} post={post} />
             ))}
           </div>
 
-          <Link href={`/news/${featured.slug}`} className="group block">
-            <div className="relative h-44 sm:h-64 w-full overflow-hidden rounded-lg bg-[var(--color-surface)]">
-              {getImageUrl(featured.featuredImage) && (
-                <img
-                  src={getImageUrl(featured.featuredImage)}
-                  alt={featured.title}
-                  className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-                />
-              )}
-              {getPrimaryCategory(featured) && (
-                <span className="absolute left-3 top-3 rounded bg-[var(--color-primary)] px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wide text-white">
-                  {getPrimaryCategory(featured)}
-                </span>
-              )}
-            </div>
-            <h3 className="mt-3 text-base sm:text-xl font-bold leading-snug text-[var(--color-heading)] line-clamp-2 group-hover:text-[var(--color-primary)] transition-colors">
-              {featured.title}
-            </h3>
-            <span className="mt-2 block text-xs text-[var(--color-body)]">
-              {formatTimeAgo(featured.publishDate || featured.createdAt)}
-            </span>
-          </Link>
+          <MobileNewsCard post={featured} big />
 
-          <div className="grid grid-cols-2 gap-x-4">
+          <div className="grid grid-cols-2 gap-3">
             {rest.slice(2, 4).map((post) => (
-              <Link
-                key={post._id || post.slug}
-                href={`/news/${post.slug}`}
-                className="group block"
-              >
-                <div className="relative h-20 sm:h-24 w-full overflow-hidden rounded-md bg-[var(--color-surface)]">
-                  {getImageUrl(post.featuredImage) && (
-                    <img
-                      src={getImageUrl(post.featuredImage)}
-                      alt={post.title}
-                      className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-                    />
-                  )}
-                </div>
-                <h4 className="mt-2 text-xs font-semibold leading-snug text-[var(--color-heading)] line-clamp-2 group-hover:text-[var(--color-primary)] transition-colors">
-                  {post.title}
-                </h4>
-                <span className="mt-1 block text-[10px] text-[var(--color-body)]">
-                  {formatTimeAgo(post.publishDate || post.createdAt)}
-                </span>
-              </Link>
+              <MobileNewsCard key={post._id || post.slug} post={post} />
             ))}
           </div>
         </div>
