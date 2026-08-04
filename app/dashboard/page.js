@@ -58,7 +58,7 @@ export default function Dashboard() {
             </span>
           </h1>
           <p className="text-slate-600">
-            Manage your A2IT content from here
+            Manage your site content from here
           </p>
         </motion.div>
 

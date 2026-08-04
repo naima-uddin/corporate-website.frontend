@@ -1,50 +1,53 @@
 import ContactUsWrapper from "@/components/contact-page-component/ContactUsWrapper";
 import React from "react";
+import { getSiteInfo, getContactInfo, resolveLogoUrl } from "@/lib/siteInfo";
 
-export const metadata = {
+export async function generateMetadata() {
+  const site = await getSiteInfo();
 
-  metadataBase: new URL('https://a2itltd.com'),
-  title: "Contact Us | A2IT Ltd | Get in Touch",
-  description:
-    "Get in touch with A2IT Ltd for inquiries about IT services, web development, eCommerce solutions, digital marketing, and more.",
-  keywords: [
-    "Contact A2IT Ltd",
-    "IT Services Inquiry",
-    "Web Development Contact",
-    "eCommerce Consultation",
-    "Digital Marketing Contact",
-    "Shopify Contact",
-    "Amazon Services Inquiry",
-  ],
-  alternates: {
-    canonical: "https://a2itltd.com/contact",
-  },
-  openGraph: {
-    title: "Contact Us | A2IT Ltd | Get in Touch",
-    description:
-      "Reach out to A2IT Ltd for any queries regarding web development, mobile apps, eCommerce, Shopify, Amazon, or digital marketing services.",
-    url: "https://a2itltd.com/contact",
-    siteName: "A2IT Ltd",
-    images: [
-      {
-        url: "/og-contact.jpg", // Place this in /public
-        width: 1200,
-        height: 630,
-        alt: "Contact A2IT Ltd",
-      },
+  return {
+    metadataBase: new URL("https://a2itltd.com"),
+    title: `Contact Us | ${site.siteName} | Get in Touch`,
+    description: `Get in touch with ${site.siteName} for inquiries about IT services, web development, eCommerce solutions, digital marketing, and more.`,
+    keywords: [
+      `Contact ${site.siteName}`,
+      "IT Services Inquiry",
+      "Web Development Contact",
+      "eCommerce Consultation",
+      "Digital Marketing Contact",
+      "Shopify Contact",
+      "Amazon Services Inquiry",
     ],
-    type: "website",
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "Contact Us | A2IT Ltd | Get in Touch",
-    description:
-      "Contact A2IT Ltd for inquiries about IT services, web development, eCommerce, Shopify, Amazon, and digital marketing solutions.",
-    images: ["/og-contact.jpg"],
-  },
-};
+    alternates: {
+      canonical: "https://a2itltd.com/contact",
+    },
+    openGraph: {
+      title: `Contact Us | ${site.siteName} | Get in Touch`,
+      description: `Reach out to ${site.siteName} for any queries regarding web development, mobile apps, eCommerce, Shopify, Amazon, or digital marketing services.`,
+      url: "https://a2itltd.com/contact",
+      siteName: site.siteName,
+      images: [
+        {
+          url: "/og-contact.jpg", // Place this in /public
+          width: 1200,
+          height: 630,
+          alt: `Contact ${site.siteName}`,
+        },
+      ],
+      type: "website",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: `Contact Us | ${site.siteName} | Get in Touch`,
+      description: `Contact ${site.siteName} for inquiries about IT services, web development, eCommerce, Shopify, Amazon, and digital marketing solutions.`,
+      images: ["/og-contact.jpg"],
+    },
+  };
+}
 
-export default function Page() {
+export default async function Page() {
+  const [site, contact] = await Promise.all([getSiteInfo(), getContactInfo()]);
+
   return (
     <>
       <ContactUsWrapper />
@@ -58,20 +61,19 @@ export default function Page() {
             "@type": "ContactPage",
             name: "Contact Us",
             url: "https://a2itltd.com/contact",
-            description:
-              "Get in touch with A2IT Ltd for inquiries about IT services, web development, eCommerce solutions, digital marketing, and more.",
+            description: `Get in touch with ${site.siteName} for inquiries about IT services, web development, eCommerce solutions, digital marketing, and more.`,
             publisher: {
               "@type": "Organization",
-              name: "A2IT Ltd",
+              name: site.siteName,
               url: "https://a2itltd.com",
-              logo: "https://a2itltd.com/logo.png",
+              logo: resolveLogoUrl(site.logoImage),
             },
             contactOption: [
               {
                 "@type": "ContactPoint",
                 contactType: "customer support",
-                telephone: "+880XXXXXXXXXX",
-                email: "info@a2itltd.com",
+                telephone: contact.phone,
+                email: contact.email,
                 areaServed: "Worldwide",
               },
             ],
@@ -81,8 +83,3 @@ export default function Page() {
     </>
   );
 }
-
-
-
-
-

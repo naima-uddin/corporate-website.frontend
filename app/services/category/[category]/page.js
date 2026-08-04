@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import ServiceCategoryClient from "@/components/ServicePage/ServiceCategoryClient";
+import { getSiteInfo } from "@/lib/siteInfo";
 
 async function getCategory(categoryName) {
   const res = await fetch(
@@ -36,15 +37,18 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }) {
   const { category: categoryName } = await params;
-  const category = await getCategory(categoryName);
+  const [category, site] = await Promise.all([
+    getCategory(categoryName),
+    getSiteInfo(),
+  ]);
 
   if (!category) return {};
 
   return {
-    title: `${category.displayName} Services | A2IT Ltd`,
+    title: `${category.displayName} Services | ${site.siteName}`,
     description:
       category.description ||
-      `Explore A2IT's ${category.displayName} services and solutions.`,
+      `Explore ${site.siteName}'s ${category.displayName} services and solutions.`,
     alternates: {
       canonical: `https://a2itltd.com/services/category/${categoryName}`,
     },

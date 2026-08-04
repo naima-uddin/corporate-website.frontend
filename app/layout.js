@@ -3,6 +3,7 @@ import "./globals.css";
 import RouteAwareChrome from "@/components/shared/RouteAwareChrome";
 import { AuthProvider } from "@/context/AuthContext";
 import LoadingProvider from "@/components/shared/LoadingProvider";
+import { getSiteInfo, getContactInfo, resolveLogoUrl } from "@/lib/siteInfo";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -14,43 +15,43 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-// 🔹 Global SEO metadata
-export const metadata = {
-  title:
-    "A2IT Ltd | IT Services, Web Development, eCommerce & Digital Solutions",
-  description:
-    "A2IT Ltd provides IT services including web development, mobile apps, UI/UX design, eCommerce, Shopify, Amazon, eBay, SEO, and digital marketing solutions worldwide.",
-  icons: {
-    icon: "/A2ITLogo.png",
-  },
-  openGraph: {
-    title:
-      "A2IT Ltd | IT Services, Web Development, eCommerce & Digital Solutions",
-    description:
-      "Professional IT services, web & mobile development, eCommerce, digital marketing, and marketplace solutions from A2IT Ltd.",
-    url: "https://a2itltd.com",
-    siteName: "A2IT Ltd",
-    images: [
-      {
-        url: "/A2ITLogo.png", // 👉 site-wide OG image
-        width: 1200,
-        height: 630,
-        alt: "A2IT Ltd - IT Services and Digital Solutions",
-      },
-    ],
-    type: "website",
-  },
-  twitter: {
-    card: "summary_large_image",
-    title:
-      "A2IT Ltd | IT Services, Web Development, eCommerce & Digital Solutions",
-    description:
-      "A2IT Ltd offers IT services, web development, mobile apps, eCommerce, Shopify, Amazon, eBay, SEO, and digital marketing solutions.",
-    images: ["/A2ITLogo.png"],
-  },
-};
+// 🔹 Global SEO metadata, sourced from the dashboard-managed SiteSettings
+export async function generateMetadata() {
+  const site = await getSiteInfo();
+  const title = `${site.siteName} | IT Services, Web Development, eCommerce & Digital Solutions`;
 
-export default function RootLayout({ children }) {
+  return {
+    title,
+    description: `${site.siteName} provides IT services including web development, mobile apps, UI/UX design, eCommerce, Shopify, Amazon, eBay, SEO, and digital marketing solutions worldwide.`,
+    icons: {
+      icon: site.logoImage || "/A2ITLogo.png",
+    },
+    openGraph: {
+      title,
+      description: `Professional IT services, web & mobile development, eCommerce, digital marketing, and marketplace solutions from ${site.siteName}.`,
+      url: "https://a2itltd.com",
+      siteName: site.siteName,
+      images: [
+        {
+          url: site.logoImage || "/A2ITLogo.png", // 👉 site-wide OG image
+          width: 1200,
+          height: 630,
+          alt: `${site.siteName} - IT Services and Digital Solutions`,
+        },
+      ],
+      type: "website",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description: `${site.siteName} offers IT services, web development, mobile apps, eCommerce, Shopify, Amazon, eBay, SEO, and digital marketing solutions.`,
+      images: [site.logoImage || "/A2ITLogo.png"],
+    },
+  };
+}
+
+export default async function RootLayout({ children }) {
+  const [site, contact] = await Promise.all([getSiteInfo(), getContactInfo()]);
   return (
     <html lang="en">
       <body
@@ -69,22 +70,21 @@ export default function RootLayout({ children }) {
             __html: JSON.stringify({
               "@context": "https://schema.org",
               "@type": "Organization",
-              name: "A2IT Ltd",
+              name: site.siteName,
               url: "https://a2itltd.com",
-              logo: "https://a2itltd.com/A2ITLogo.png",
+              logo: resolveLogoUrl(site.logoImage),
               sameAs: [
-                "https://www.facebook.com/A2ITLtd",
-                "https://www.linkedin.com/company/yourcompany",
-                "https://twitter.com/yourcompany",
+                "https://www.facebook.com/",
+                "https://www.linkedin.com/",
+                "https://twitter.com/",
               ],
-              description:
-                "A2IT Ltd provides IT services including web development, mobile apps, UI/UX, eCommerce, Shopify, Amazon, eBay, SEO, and digital marketing solutions worldwide.",
+              description: `${site.siteName} provides IT services including web development, mobile apps, UI/UX, eCommerce, Shopify, Amazon, eBay, SEO, and digital marketing solutions worldwide.`,
               contactPoint: [
                 {
                   "@type": "ContactPoint",
                   contactType: "customer support",
-                  telephone: "+8801846937397", // replace with your number
-                  email: "info@a2itltd.com", // replace with your email
+                  telephone: contact.phone,
+                  email: contact.email,
                   areaServed: "Worldwide",
                 },
               ],

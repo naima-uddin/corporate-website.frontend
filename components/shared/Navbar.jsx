@@ -5,12 +5,13 @@ import {
   FaEbay,
   FaAmazon,
   FaSearch,
-  FaUsers,
   FaVectorSquare,
   FaDownload,
   FaLaptopCode,
   FaBars,
   FaTimes,
+  FaBullhorn,
+  FaServer,
 } from "react-icons/fa";
 import { FaCartShopping } from "react-icons/fa6";
 import { IoIosArrowDown } from "react-icons/io";
@@ -19,10 +20,25 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 
+const CATEGORY_ICONS = {
+  shopify: <FaShopify />,
+  ebay: <FaEbay />,
+  amazon: <FaAmazon />,
+  erp: <FaVectorSquare />,
+  hosting: <FaServer />,
+  "digital-marketing": <FaBullhorn />,
+  "design-development": <FaLaptopCode />,
+  "ecommerce-dev": <FaCartShopping />,
+};
+
+const getCategoryIcon = (name) =>
+  CATEGORY_ICONS[String(name || "").toLowerCase()] || <FaLaptopCode />;
+
 const Navbar = () => {
   const pathname = usePathname();
 
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [services, setServices] = useState([]);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [servicesOpen, setServicesOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
@@ -55,6 +71,37 @@ const Navbar = () => {
     };
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/api/service-categories`,
+        );
+        if (!res.ok) return;
+        const data = await res.json();
+        const categories = Array.isArray(data.categories)
+          ? data.categories
+          : [];
+
+        setServices(
+          categories.map((category) => {
+            const desc = String(category.description || "").trim();
+            return [
+              category.displayName,
+              `/services/category/${category.name}`,
+              getCategoryIcon(category.name),
+              desc.length > 90 ? `${desc.slice(0, 90)}...` : desc,
+            ];
+          }),
+        );
+      } catch (error) {
+        console.error("Error fetching service categories:", error);
+      }
+    };
+
+    fetchCategories();
   }, []);
 
   useEffect(() => {
@@ -133,57 +180,6 @@ const Navbar = () => {
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
-
-  const services = [
-    [
-      "Design & Development",
-      "/services/category/development",
-      <FaLaptopCode />,
-      "Websites, apps & product design built for scale",
-    ],
-    [
-      "E-Commerce",
-      "/services/e-commerce",
-      <FaCartShopping />,
-      "Storefronts and marketplace integrations",
-    ],
-    [
-      "Amazon",
-      "/services/category/ecommerce",
-      <FaAmazon />,
-      "FBA, vendor central & marketplace growth",
-    ],
-    [
-      "Shopify",
-      "/services/shopify",
-      <FaShopify />,
-      "Store setup, theming & conversion optimisation",
-    ],
-    [
-      "ERP System Development",
-      "/services/erp",
-      <FaVectorSquare />,
-      "Custom enterprise resource planning systems",
-    ],
-    [
-      "SEO / SEM / PPC",
-      "/services/seo",
-      <FaSearch />,
-      "Search visibility and performance marketing",
-    ],
-    [
-      "Server & Hosting",
-      "/services/server-hosting",
-      <FaUsers />,
-      "Cloud infrastructure, hosting & support",
-    ],
-    [
-      "E-bay",
-      "/services/e-bay",
-      <FaEbay />,
-      "Listing, fulfillment & account management",
-    ],
-  ];
 
   const linkColorClasses = (active) =>
     `relative py-2 transition-colors duration-200 ${
@@ -299,7 +295,7 @@ const Navbar = () => {
                 <div className="hidden lg:flex flex-col justify-center bg-[var(--color-ink)] p-6 relative overflow-hidden">
                   <Image
                     src="/assets/banner.avif"
-                    alt="A2IT portfolio"
+                    alt="MRH portfolio"
                     width="400"
                     height="400"
                     unoptimized
@@ -314,7 +310,7 @@ const Navbar = () => {
                     </p>
                     <a
                       href="/RakibHasanPortfolio.pdf"
-                      download="A2IT-Portfolio"
+                      download="MRH-Portfolio"
                       className="inline-flex items-center gap-2 px-4 py-2.5 bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)] rounded-md text-sm font-semibold text-white transition-colors"
                       onClick={handleServiceClick}
                     >

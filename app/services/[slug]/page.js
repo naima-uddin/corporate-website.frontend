@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import ServiceDetailClient from "@/components/ServicePage/ServiceDetailClient";
+import { getSiteInfo, resolveLogoUrl } from "@/lib/siteInfo";
 
 const normalizeSlug = (path) =>
   String(path || "")
@@ -40,12 +41,12 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }) {
   const { slug } = await params;
-  const service = await getServiceBySlug(slug);
+  const [service, site] = await Promise.all([getServiceBySlug(slug), getSiteInfo()]);
 
   if (!service) return {};
 
   return {
-    title: `${service.title} | A2IT Ltd`,
+    title: `${service.title} | ${site.siteName}`,
     description: service.description,
     alternates: {
       canonical: `https://a2itltd.com${service.path}`,
@@ -54,7 +55,7 @@ export async function generateMetadata({ params }) {
       title: service.title,
       description: service.description,
       url: `https://a2itltd.com${service.path}`,
-      siteName: "A2IT Ltd",
+      siteName: site.siteName,
       images: service.image ? [{ url: service.image }] : undefined,
       type: "website",
     },
@@ -69,7 +70,10 @@ export default async function ServiceDetailPage({ params }) {
     notFound();
   }
 
-  const categoryLabel = await getCategoryDisplayName(service.category);
+  const [categoryLabel, site] = await Promise.all([
+    getCategoryDisplayName(service.category),
+    getSiteInfo(),
+  ]);
 
   return (
     <>
@@ -88,9 +92,9 @@ export default async function ServiceDetailPage({ params }) {
             description: service.description,
             provider: {
               "@type": "Organization",
-              name: "A2IT",
+              name: site.siteName,
               url: "https://a2itltd.com",
-              logo: "https://a2itltd.com/logo.png",
+              logo: resolveLogoUrl(site.logoImage),
             },
             areaServed: {
               "@type": "Country",

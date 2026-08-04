@@ -29,12 +29,11 @@ const ClientSideMap = dynamic(() => import("./ClientSideMap"), {
 const FALLBACK_CONTACT = {
   eyebrow: "Contact Us",
   heading: "Connect with",
-  address:
-    "Plot No 470, Road No 06 (Old 29), DOHS Mirpur, Dhaka Division, Bangladesh",
-  phone: "+880 1846-937397",
-  email: "info@a2itltd.com",
-  mapLat: 23.836236,
-  mapLng: 90.358672,
+  address: "House-320, Road-21, DOHS, Mohakhali, Dhaka, Bangladesh",
+  phone: "+880 1711-270825 (Mobile) / +880 2-9833330 (Landline)",
+  email: "msmdrakibhasan1992@gmail.com",
+  mapLat: 23.78286,
+  mapLng: 90.395439,
 };
 
 const fadeIn = {
@@ -94,7 +93,7 @@ const ContactUs = () => {
   const [agreed, setAgreed] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isClient, setIsClient] = useState(false);
-  const [siteName, setSiteName] = useState("A2IT Ltd");
+  const [siteName, setSiteName] = useState("MRH");
 
   useEffect(() => {
     setIsClient(true);

@@ -1,4 +1,5 @@
 import NewsDetailClient from "@/components/news/NewsDetailClient";
+import { getSiteInfo } from "@/lib/siteInfo";
 
 const API = process.env.NEXT_PUBLIC_API_URL;
 
@@ -19,6 +20,7 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }) {
   const { slug } = await params;
+  const site = await getSiteInfo();
 
   try {
     const resp = await fetch(`${API}/api/news/${slug}`);
@@ -28,13 +30,13 @@ export async function generateMetadata({ params }) {
       const news = data.news;
 
       return {
-        title: `${news?.title || "News"} | A2IT`,
+        title: `${news?.title || "News"} | ${site.siteName}`,
         description:
           news?.excerpt ||
           news?.content?.replace(/<[^>]*>/g, "").substring(0, 160) ||
-          "Read the latest news from A2IT.",
+          `Read the latest news from ${site.siteName}.`,
         openGraph: {
-          title: `${news?.title || "News"} | A2IT`,
+          title: `${news?.title || "News"} | ${site.siteName}`,
           description: news?.excerpt,
           images: news?.featuredImage ? [{ url: news.featuredImage }] : [],
         },
@@ -45,8 +47,8 @@ export async function generateMetadata({ params }) {
   }
 
   return {
-    title: "A2IT News",
-    description: "Read the latest news and updates from A2IT.",
+    title: `${site.siteName} News`,
+    description: `Read the latest news and updates from ${site.siteName}.`,
   };
 }
 
