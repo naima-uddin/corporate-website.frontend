@@ -225,12 +225,14 @@ const ContactUs = () => {
       </section>
 
       {/* Decorative Divider */}
-      <div
-        className="h-24 w-full sm:h-32"
-        style={{
-          background: `repeating-linear-gradient(135deg, var(--color-ink), var(--color-ink) 2px, var(--color-ink-2) 2px, var(--color-ink-2) 24px)`,
-        }}
-      />
+      {!contact.backgroundImage && (
+        <div
+          className="h-24 w-full sm:h-32"
+          style={{
+            background: `repeating-linear-gradient(135deg, var(--color-ink), var(--color-ink) 2px, var(--color-ink-2) 2px, var(--color-ink-2) 24px)`,
+          }}
+        />
+      )}
 
       {/* Form + Map Section */}
       <section className="relative overflow-hidden">
