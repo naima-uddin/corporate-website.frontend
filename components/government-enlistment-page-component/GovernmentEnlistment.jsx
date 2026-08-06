@@ -115,7 +115,7 @@ const CertificatesModal = ({ item, onClose }) => {
                 key={file + index}
                 src={file}
                 alt={`${item.name} certificate ${index + 1}`}
-                className="w-full rounded-lg border border-[var(--color-border)]"
+                className="w-full rounded-lg border border-[var(--color-heading)]"
               />
             ),
           )}
