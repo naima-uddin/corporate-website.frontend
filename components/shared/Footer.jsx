@@ -1,5 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
+import Link from "next/link";
 import { FaPhone, FaEnvelope, FaMapMarkerAlt, FaGlobe } from "react-icons/fa";
 import {
   FaFacebookF,
@@ -181,12 +182,12 @@ const Footer = () => {
               <ul className="space-y-2.5">
                 {(column.links || []).map((link, linkIndex) => (
                   <li key={linkIndex}>
-                    <a
+                    <Link
                       href={link.url}
                       className="text-sm hover:text-white transition-colors"
                     >
                       {link.label}
-                    </a>
+                    </Link>
                   </li>
                 ))}
               </ul>
@@ -254,13 +255,13 @@ const Footer = () => {
           <p className="text-xs text-white/40">{copyrightText}</p>
           <div className="flex gap-5">
             {(footer.legalLinks || []).map((link, index) => (
-              <a
+              <Link
                 key={index}
                 href={link.url}
                 className="text-xs text-white/40 hover:text-white transition-colors"
               >
                 {link.label}
-              </a>
+              </Link>
             ))}
           </div>
         </div>

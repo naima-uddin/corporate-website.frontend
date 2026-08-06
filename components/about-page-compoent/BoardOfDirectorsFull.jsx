@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { MemberCard } from "./BoardOfDirectorsSection";
+import { MemberCard, SpeechModal } from "./BoardOfDirectorsSection";
 
 const MotionDiv =
   motion?.div ||
@@ -18,6 +18,7 @@ const MotionDiv =
 
 const BoardOfDirectorsFull = () => {
   const [members, setMembers] = useState(null);
+  const [activeMember, setActiveMember] = useState(null);
 
   useEffect(() => {
     const fetchAbout = async () => {
@@ -65,11 +66,17 @@ const BoardOfDirectorsFull = () => {
         ) : (
           <div className="flex flex-wrap divide-x divide-slate-200 bg-white border border-slate-200">
             {members.map((member, index) => (
-              <MemberCard key={index} member={member} />
+              <MemberCard
+                key={index}
+                member={member}
+                onOpenSpeech={setActiveMember}
+              />
             ))}
           </div>
         )}
       </div>
+
+      <SpeechModal member={activeMember} onClose={() => setActiveMember(null)} />
     </section>
   );
 };

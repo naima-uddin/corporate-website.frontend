@@ -30,6 +30,7 @@ const emptyMember = {
   publicId: "",
   name: "",
   title: "",
+  speech: "",
 };
 
 const emptyMilestone = { year: "", description: "" };
@@ -398,6 +399,19 @@ export default function AboutPageAdmin() {
                     className="w-full px-4 py-3 bg-white border border-slate-300 rounded-lg text-slate-900"
                   />
                 </div>
+              </div>
+
+              <div>
+                <label className="block text-sm font-semibold text-slate-700 mb-2">
+                  Speech (optional)
+                </label>
+                <textarea
+                  rows={4}
+                  value={member.speech}
+                  onChange={(e) => updateMember(index, "speech", e.target.value)}
+                  placeholder="If filled, an arrow will show next to this member's name on the About page, opening this speech in a popup."
+                  className="w-full px-4 py-3 bg-white border border-slate-300 rounded-lg text-slate-900"
+                />
               </div>
             </div>
           ))}

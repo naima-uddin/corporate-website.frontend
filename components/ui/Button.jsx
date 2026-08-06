@@ -1,6 +1,7 @@
 import { Button as ButtonPrimitive } from "@base-ui/react/button"
 import { cva } from "class-variance-authority";
 import { ArrowRight } from "lucide-react";
+import Link from "next/link";
 
 import { cn } from "@/lib/utils"
 
@@ -46,13 +47,32 @@ function Button({
   variant = "default",
   size = "default",
   showArrow = false,
+  href,
   children,
   ...props
 }) {
+  const buttonClassName = cn(buttonVariants({ variant, size, className }));
+
+  if (href) {
+    return (
+      <Link
+        data-slot="button"
+        href={href}
+        className={buttonClassName}
+        {...props}
+      >
+        {children}
+        {showArrow && (
+          <ArrowRight className="transition-transform group-hover/button:translate-x-0.5" />
+        )}
+      </Link>
+    );
+  }
+
   return (
     <ButtonPrimitive
       data-slot="button"
-      className={cn(buttonVariants({ variant, size, className }))}
+      className={buttonClassName}
       {...props}
     >
       {children}

@@ -12,9 +12,25 @@ import {
   FiInfo,
   FiEdit3,
 } from "react-icons/fi";
+import {
+  FaFacebookF,
+  FaTwitter,
+  FaLinkedinIn,
+  FaInstagram,
+  FaYoutube,
+} from "react-icons/fa";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
 import { redirectToThankYou } from "../shared/contactSuccessRedirect";
+
+const SOCIAL_ICON_MAP = {
+  facebook: FaFacebookF,
+  twitter: FaTwitter,
+  x: FaTwitter,
+  linkedin: FaLinkedinIn,
+  instagram: FaInstagram,
+  youtube: FaYoutube,
+};
 
 // Dynamically import the map component with no SSR
 const ClientSideMap = dynamic(() => import("./ClientSideMap"), {
@@ -94,6 +110,7 @@ const ContactUs = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isClient, setIsClient] = useState(false);
   const [siteName, setSiteName] = useState("MRH");
+  const [socialLinks, setSocialLinks] = useState([]);
 
   useEffect(() => {
     setIsClient(true);
@@ -115,6 +132,15 @@ const ContactUs = () => {
           const merged = { ...FALLBACK_CONTACT, ...data.settings };
           setContact(merged);
           setPosition([merged.mapLat, merged.mapLng]);
+        }
+      })
+      .catch(() => {});
+
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/footer`)
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => {
+        if (isMounted && data?.footer?.socialLinks?.length) {
+          setSocialLinks(data.footer.socialLinks);
         }
       })
       .catch(() => {});
@@ -217,6 +243,27 @@ const ContactUs = () => {
                 >
                   {contact.phone}
                 </a>
+
+                {socialLinks.length > 0 && (
+                  <div className="mt-3 flex items-center gap-2.5">
+                    {socialLinks.map((link) => {
+                      const Icon = SOCIAL_ICON_MAP[link.platform?.toLowerCase()];
+                      if (!Icon) return null;
+                      return (
+                        <a
+                          key={link.platform}
+                          href={link.url || "#"}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          aria-label={link.platform}
+                          className="flex h-9 w-9 items-center justify-center rounded-full border border-[var(--color-border)] text-[var(--color-primary)] transition-colors hover:bg-[var(--color-primary)] hover:text-white"
+                        >
+                          <Icon className="text-sm" />
+                        </a>
+                      );
+                    })}
+                  </div>
+                )}
               </InfoBlock>
             </motion.div>
           </div>
