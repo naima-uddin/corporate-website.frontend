@@ -54,7 +54,7 @@ const JobCard = ({ job, index }) => (
           {job.deadline && (
             <span className="inline-flex items-center gap-1.5">
               <Clock className="w-4 h-4 text-[var(--color-primary)]" />
-              Apply by {formatDeadline(job.deadline)}
+              Apply before {formatDeadline(job.deadline)}
             </span>
           )}
         </div>
