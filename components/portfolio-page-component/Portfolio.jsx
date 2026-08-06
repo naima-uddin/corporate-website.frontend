@@ -11,51 +11,62 @@ import {
   Building,
 } from "lucide-react";
 import {
-  FcHome,
-  FcAutomotive,
-  FcShop,
-  FcRules,
-  FcInspection,
-  FcTimeline,
-  FcOrganization,
-  FcSettings,
-  FcPackage,
-  FcEngineering,
-  FcFactory,
-  FcConferenceCall,
-  FcGlobe,
-  FcProcess,
-  FcLandscape,
-  FcDam,
-  FcGraduationCap,
-  FcLike,
-  FcBiomass,
-} from "react-icons/fc";
+  PiCraneTowerDuotone,
+  PiTruckDuotone,
+  PiShoppingCartDuotone,
+  PiGavelDuotone,
+  PiClipboardTextDuotone,
+  PiFlagBannerDuotone,
+  PiBankDuotone,
+  PiWrenchDuotone,
+  PiPackageDuotone,
+  PiHammerDuotone,
+  PiWarehouseDuotone,
+  PiUsersThreeDuotone,
+  PiMapPinDuotone,
+  PiFactoryDuotone,
+  PiTreeEvergreenDuotone,
+  PiDropDuotone,
+  PiGraduationCapDuotone,
+  PiHeartbeatDuotone,
+  PiPlantDuotone,
+} from "react-icons/pi";
 import StatCounter from "@/components/ui/StatCounter";
 
 const ICON_MAP = {
-  Building2: FcHome,
-  Truck: FcAutomotive,
-  ShoppingCart: FcShop,
-  Gavel: FcRules,
-  ClipboardCheck: FcInspection,
-  Milestone: FcTimeline,
-  Landmark: FcOrganization,
-  Wrench: FcSettings,
-  Package: FcPackage,
-  Hammer: FcEngineering,
-  Warehouse: FcFactory,
-  Users: FcConferenceCall,
-  MapPin: FcGlobe,
-  Factory: FcProcess,
-  TreePine: FcLandscape,
-  Droplet: FcDam,
-  School: FcGraduationCap,
-  HeartPulse: FcLike,
-  Wheat: FcBiomass,
+  Building2: PiCraneTowerDuotone,
+  Truck: PiTruckDuotone,
+  ShoppingCart: PiShoppingCartDuotone,
+  Gavel: PiGavelDuotone,
+  ClipboardCheck: PiClipboardTextDuotone,
+  Milestone: PiFlagBannerDuotone,
+  Landmark: PiBankDuotone,
+  Wrench: PiWrenchDuotone,
+  Package: PiPackageDuotone,
+  Hammer: PiHammerDuotone,
+  Warehouse: PiWarehouseDuotone,
+  Users: PiUsersThreeDuotone,
+  MapPin: PiMapPinDuotone,
+  Factory: PiFactoryDuotone,
+  TreePine: PiTreeEvergreenDuotone,
+  Droplet: PiDropDuotone,
+  School: PiGraduationCapDuotone,
+  HeartPulse: PiHeartbeatDuotone,
+  Wheat: PiPlantDuotone,
 };
 
-const getIcon = (name) => ICON_MAP[name] || FcHome;
+const getIcon = (name) => ICON_MAP[name] || PiCraneTowerDuotone;
+
+const CATEGORY_ICON_COLORS = [
+  "text-blue-500",
+  "text-orange-500",
+  "text-emerald-500",
+  "text-fuchsia-500",
+  "text-rose-500",
+  "text-indigo-500",
+  "text-amber-500",
+  "text-teal-500",
+];
 
 const statusStyles = {
   Completed: "bg-emerald-100 text-emerald-700",
@@ -429,12 +440,16 @@ const Portfolio = () => {
                 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-6">
                   {workCategories.map((cat, idx) => {
                     const Icon = getIcon(cat.icon);
+                    const color =
+                      CATEGORY_ICON_COLORS[idx % CATEGORY_ICON_COLORS.length];
                     return (
                       <div
                         key={idx}
                         className="group flex flex-col items-center text-center gap-3 p-2 rounded-xl border border-[var(--color-border)] hover:border-[var(--color-primary)] hover:shadow-md transition-all"
                       >
-                        <Icon className="w-11 h-11 group-hover:scale-110 transition-transform" />
+                        <Icon
+                          className={`w-12 h-12 ${color} group-hover:scale-110 transition-transform`}
+                        />
                         <span className="text-sm font-semibold text-[var(--color-heading)]">
                           {cat.name}
                         </span>
@@ -497,16 +512,16 @@ const Portfolio = () => {
       {/* CTA */}
       <section className=" py-14 mt-6">
         <div className="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">
-          <h2 className="main-title text-2xl md:text-3xl lg:text-4xl font-bold text-black mb-4">
+          <h2 className="main-title text-2xl md:text-3xl lg:text-4xl font-bold mb-4 bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-primary-dark)] bg-clip-text text-transparent">
             {cta.heading || "Let's Build a Better Tomorrow Together"}
           </h2>
-          <p className="text-gray-600 mb-8 max-w-2xl mx-auto">
+          <p className="text-[var(--color-body)] mb-8 max-w-2xl mx-auto">
             {cta.description}
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
               href={cta.buttonLink || "/contact"}
-              className="inline-flex items-center justify-center gap-2 bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)] text- font-semibold px-6 py-3 rounded-lg transition-colors"
+              className="inline-flex items-center justify-center gap-2 bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)] text-white font-semibold px-6 py-3 rounded-lg shadow-sm hover:shadow-md transition-all"
             >
               {cta.buttonText || "Contact Us"} <ArrowRight className="w-4 h-4" />
             </Link>
@@ -514,7 +529,7 @@ const Portfolio = () => {
               <a
                 href={cta.secondaryButtonLink}
                 download
-                className="inline-flex items-center justify-center bg-gray-400 gap-2 border border-white/40 text-black font-semibold px-6 py-3 rounded-lg hover:bg-white/10 transition-colors"
+                className="inline-flex items-center justify-center gap-2 border-2 border-[var(--color-primary)] text-[var(--color-primary)] font-semibold px-6 py-3 rounded-lg hover:bg-[var(--color-primary)] hover:text-white transition-colors"
               >
                 <Download className="w-4 h-4" />{" "}
                 {cta.secondaryButtonText || "Download Company Profile"}
