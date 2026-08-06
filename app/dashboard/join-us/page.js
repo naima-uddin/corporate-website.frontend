@@ -266,6 +266,14 @@ export default function JoinUsPage() {
                   placeholder="https://..."
                   className="w-full px-4 py-3 bg-white border border-slate-300 rounded-lg text-slate-900"
                 />
+                {index === 0 && (
+                  <p className="mt-2 text-xs text-slate-500">
+                    Tip: set this to <code>/careers</code> to link to the Job
+                    Opportunities page managed under{" "}
+                    <span className="font-semibold">Job Opportunities</span>{" "}
+                    in the sidebar.
+                  </p>
+                )}
               </div>
             </div>
           ))}

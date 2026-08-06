@@ -37,6 +37,7 @@ export const NAV_SECTIONS = [
       { id: "banner", label: "Manage Banner", icon: ImageIcon, href: "/dashboard/banner" },
       { id: "spotlight", label: "Leadership Spotlight", icon: Quote, href: "/dashboard/spotlight" },
       { id: "join-us", label: "Join Us Section", icon: Users2, href: "/dashboard/join-us" },
+      { id: "job-opportunities", label: "Job Opportunities", icon: Briefcase, href: "/dashboard/job-opportunities" },
       { id: "client-showcase", label: "Client Showcase", icon: Building2, href: "/dashboard/client-showcase" },
     ],
   },

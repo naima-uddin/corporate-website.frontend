@@ -10,7 +10,6 @@ const emptyForm = {
   excerpt: "",
   content: "",
   featuredImage: "",
-  category: "",
   isFeatured: false,
   status: "draft",
   publishDate: "",

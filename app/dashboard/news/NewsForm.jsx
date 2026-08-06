@@ -109,19 +109,6 @@ export default function NewsForm({
 
             <div>
               <label className="block text-sm font-semibold text-slate-700 mb-2">
-                Category
-              </label>
-              <input
-                type="text"
-                value={form.category}
-                onChange={handleFieldChange("category")}
-                placeholder="e.g. Company News"
-                className="w-full px-4 py-3 bg-white border border-slate-300 rounded-lg text-slate-900"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-semibold text-slate-700 mb-2">
                 Publish Date
               </label>
               <input

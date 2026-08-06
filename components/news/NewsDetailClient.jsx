@@ -2,7 +2,14 @@
 
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
-import { FiArrowLeft, FiClock, FiCalendar, FiLink } from "react-icons/fi";
+import {
+  FiArrowLeft,
+  FiCalendar,
+  FiLink,
+  FiChevronLeft,
+  FiChevronRight,
+  FiX,
+} from "react-icons/fi";
 import NewsCard from "@/components/ui/NewsCard";
 
 const API = process.env.NEXT_PUBLIC_API_URL;
@@ -18,14 +25,11 @@ const formatDate = (value) => {
   });
 };
 
-const getReadingMinutes = (html) => {
-  if (!html) return 1;
-  const words = html
-    .replace(/<[^>]*>/g, " ")
-    .trim()
-    .split(/\s+/)
-    .filter(Boolean).length;
-  return Math.max(1, Math.round(words / 200));
+const RELATED_PER_PAGE = 3;
+
+const getWindowItems = (arr, start, count) => {
+  if (arr.length <= count) return arr;
+  return Array.from({ length: count }, (_, i) => arr[(start + i) % arr.length]);
 };
 
 const NewsDetailClient = ({ slug }) => {
@@ -33,7 +37,18 @@ const NewsDetailClient = ({ slug }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [related, setRelated] = useState([]);
+  const [relatedStart, setRelatedStart] = useState(0);
   const [siteName, setSiteName] = useState("MRH");
+  const [lightboxImage, setLightboxImage] = useState(null);
+
+  useEffect(() => {
+    if (!lightboxImage) return;
+    const onKeyDown = (e) => {
+      if (e.key === "Escape") setLightboxImage(null);
+    };
+    document.addEventListener("keydown", onKeyDown);
+    return () => document.removeEventListener("keydown", onKeyDown);
+  }, [lightboxImage]);
 
   useEffect(() => {
     fetch(`${API}/api/site-settings`)
@@ -60,13 +75,13 @@ const NewsDetailClient = ({ slug }) => {
         if (isMounted) setNews(data.news);
 
         try {
-          const relRes = await fetch(`${API}/api/news?limit=8`);
+          const relRes = await fetch(`${API}/api/news?limit=13`);
           if (relRes.ok) {
             const relData = await relRes.json();
             const items = (relData.news || []).filter(
               (item) => item.slug !== slug,
             );
-            if (isMounted) setRelated(items.slice(0, 3));
+            if (isMounted) setRelated(items);
           }
         } catch (relErr) {
           console.error("Failed to fetch related news:", relErr);
@@ -88,6 +103,13 @@ const NewsDetailClient = ({ slug }) => {
     navigator.clipboard.writeText(window.location.href);
     alert("Link copied to clipboard!");
   };
+
+  const prevRelated = () =>
+    setRelatedStart(
+      (prev) => (prev - RELATED_PER_PAGE + related.length) % related.length,
+    );
+  const nextRelated = () =>
+    setRelatedStart((prev) => (prev + RELATED_PER_PAGE) % related.length);
 
   if (loading) {
     return (
@@ -129,29 +151,8 @@ const NewsDetailClient = ({ slug }) => {
     );
   }
 
-  const readingMinutes = getReadingMinutes(news.content);
-
   return (
     <article className="pb-20 bg-white">
-      {/* Breadcrumb */}
-      <div className="border-b border-[var(--color-border)] bg-white/80 backdrop-blur-sm sticky top-0 z-10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
-          <nav className="flex items-center gap-2 text-xs sm:text-sm text-[var(--color-body)] overflow-hidden">
-            <Link href="/" className="hover:text-[var(--color-primary)] transition-colors shrink-0">
-              Home
-            </Link>
-            <span className="shrink-0">/</span>
-            <Link href="/news" className="hover:text-[var(--color-primary)] transition-colors shrink-0">
-              News
-            </Link>
-            <span className="shrink-0">/</span>
-            <span className="truncate text-[var(--color-heading)] font-medium">
-              {news.title}
-            </span>
-          </nav>
-        </div>
-      </div>
-
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-10">
         {/* Header */}
         <header className="text-center">
@@ -169,16 +170,15 @@ const NewsDetailClient = ({ slug }) => {
               <FiCalendar className="text-[var(--color-primary)]" />
               {formatDate(news.publishDate || news.createdAt)}
             </span>
-            <span className="flex items-center gap-1.5 bg-[var(--color-surface)] px-3 py-1.5 rounded-full text-[var(--color-body)]">
-              <FiClock className="text-[var(--color-primary)]" />
-              {readingMinutes} min read
-            </span>
           </div>
         </header>
 
         {/* Featured image */}
         {news.featuredImage && (
-          <div className="relative mt-8 aspect-[16/8] w-full overflow-hidden rounded-2xl shadow-xl bg-[var(--color-surface)]">
+          <div
+            className="relative mt-8 aspect-[16/8] w-full overflow-hidden rounded-2xl shadow-xl bg-[var(--color-surface)] cursor-zoom-in"
+            onClick={() => setLightboxImage(news.featuredImage)}
+          >
             <img
               src={news.featuredImage}
               alt={news.title}
@@ -207,7 +207,7 @@ const NewsDetailClient = ({ slug }) => {
                 [&_ul]:list-disc [&_ul]:pl-6 [&_ul]:mb-4 [&_ul]:space-y-1
                 [&_ol]:list-decimal [&_ol]:pl-6 [&_ol]:mb-4 [&_ol]:space-y-1
                 [&_blockquote]:border-l-4 [&_blockquote]:border-[var(--color-primary)] [&_blockquote]:bg-[var(--color-primary-tint)] [&_blockquote]:rounded-r-lg [&_blockquote]:py-3 [&_blockquote]:px-5 [&_blockquote]:my-5 [&_blockquote]:italic [&_blockquote]:text-[var(--color-heading)]
-                [&_img]:rounded-xl [&_img]:my-6 [&_img]:mx-auto [&_img]:max-w-full [&_img]:shadow-md
+                [&_img]:rounded-xl [&_img]:my-6 [&_img]:mx-auto [&_img]:max-w-full [&_img]:shadow-md [&_img]:cursor-zoom-in [&_img]:transition-opacity [&_img]:hover:opacity-90
                 [&_code]:bg-[var(--color-surface)] [&_code]:text-[var(--color-primary)] [&_code]:px-1.5 [&_code]:py-0.5 [&_code]:rounded [&_code]:text-sm
                 [&_pre]:bg-[var(--color-ink)] [&_pre]:text-white [&_pre]:p-4 [&_pre]:rounded-xl [&_pre]:overflow-x-auto [&_pre]:my-5
                 [&_hr]:my-8 [&_hr]:border-[var(--color-border)]
@@ -215,6 +215,11 @@ const NewsDetailClient = ({ slug }) => {
                 [&_th]:border [&_th]:border-[var(--color-border)] [&_th]:bg-[var(--color-surface)] [&_th]:p-2 [&_th]:text-left
                 [&_td]:border [&_td]:border-[var(--color-border)] [&_td]:p-2"
               dangerouslySetInnerHTML={{ __html: news.content }}
+              onClick={(e) => {
+                if (e.target.tagName === "IMG") {
+                  setLightboxImage(e.target.getAttribute("src"));
+                }
+              }}
             />
           </div>
         )}
@@ -280,11 +285,33 @@ const NewsDetailClient = ({ slug }) => {
       {/* Related news */}
       {related.length > 0 && (
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-16">
-          <h2 className="text-xl md:text-2xl font-bold text-[var(--color-heading)] mb-6">
-            More from {siteName}
-          </h2>
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-xl md:text-2xl font-bold text-[var(--color-heading)]">
+              More from {siteName}
+            </h2>
+            {related.length > RELATED_PER_PAGE && (
+              <div className="flex items-center gap-2 shrink-0">
+                <button
+                  type="button"
+                  onClick={prevRelated}
+                  aria-label="Previous news"
+                  className="flex items-center justify-center w-9 h-9 rounded-full border border-[var(--color-border)] text-[var(--color-heading)] hover:bg-[var(--color-surface)] transition-colors"
+                >
+                  <FiChevronLeft />
+                </button>
+                <button
+                  type="button"
+                  onClick={nextRelated}
+                  aria-label="Next news"
+                  className="flex items-center justify-center w-9 h-9 rounded-full border border-[var(--color-border)] text-[var(--color-heading)] hover:bg-[var(--color-surface)] transition-colors"
+                >
+                  <FiChevronRight />
+                </button>
+              </div>
+            )}
+          </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {related.map((item) => (
+            {getWindowItems(related, relatedStart, RELATED_PER_PAGE).map((item) => (
               <NewsCard
                 key={item._id || item.slug}
                 href={`/news/${item.slug}`}
@@ -296,6 +323,29 @@ const NewsDetailClient = ({ slug }) => {
               />
             ))}
           </div>
+        </div>
+      )}
+
+      {/* Image lightbox */}
+      {lightboxImage && (
+        <div
+          className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4"
+          onClick={() => setLightboxImage(null)}
+        >
+          <button
+            type="button"
+            onClick={() => setLightboxImage(null)}
+            aria-label="Close"
+            className="absolute top-4 right-4 z-10 w-10 h-10 bg-black/50 hover:bg-black/70 text-white rounded-full flex items-center justify-center transition-colors"
+          >
+            <FiX className="text-xl" />
+          </button>
+          <img
+            src={lightboxImage}
+            alt=""
+            onClick={(e) => e.stopPropagation()}
+            className="max-w-full max-h-[90vh] object-contain rounded-lg shadow-2xl"
+          />
         </div>
       )}
     </article>
