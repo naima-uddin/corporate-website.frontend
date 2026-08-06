@@ -92,7 +92,7 @@ const NewsDetailClient = ({ slug }) => {
   if (loading) {
     return (
       <article className="pb-20">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pt-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16">
           <div className="h-4 bg-gray-200 rounded-lg w-24 mb-6 animate-pulse" />
           <div className="h-10 bg-gray-200 rounded-xl w-full mb-3 animate-pulse" />
           <div className="h-10 bg-gray-200 rounded-xl w-2/3 mb-8 animate-pulse" />
@@ -112,7 +112,7 @@ const NewsDetailClient = ({ slug }) => {
 
   if (error || !news) {
     return (
-      <div className="max-w-3xl mx-auto px-4 py-24 text-center">
+      <div className="max-w-7xl mx-auto px-4 py-24 text-center">
         <h1 className="text-2xl font-bold text-[var(--color-heading)]">
           News item not found
         </h1>
@@ -135,7 +135,7 @@ const NewsDetailClient = ({ slug }) => {
     <article className="pb-20 bg-white">
       {/* Breadcrumb */}
       <div className="border-b border-[var(--color-border)] bg-white/80 backdrop-blur-sm sticky top-0 z-10">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
           <nav className="flex items-center gap-2 text-xs sm:text-sm text-[var(--color-body)] overflow-hidden">
             <Link href="/" className="hover:text-[var(--color-primary)] transition-colors shrink-0">
               Home
@@ -152,7 +152,7 @@ const NewsDetailClient = ({ slug }) => {
         </div>
       </div>
 
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pt-10">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-10">
         {/* Header */}
         <header className="text-center">
           {news.category && (
@@ -279,7 +279,7 @@ const NewsDetailClient = ({ slug }) => {
 
       {/* Related news */}
       {related.length > 0 && (
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 mt-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-16">
           <h2 className="text-xl md:text-2xl font-bold text-[var(--color-heading)] mb-6">
             More from {siteName}
           </h2>

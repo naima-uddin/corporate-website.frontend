@@ -161,6 +161,46 @@ select option {
   --sidebar-ring: oklch(0.556 0 0);
 }
 
+/* Multi-image galleries inserted from the rich text editor (news/blog content).
+   Layout is driven by data-count so 2 images fill one row, 3 fill one row,
+   4 wrap into a 2x2 grid, and 5+ wrap a 3-column grid automatically. */
+.news-gallery {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.75rem;
+  margin: 1.5rem 0 !important;
+}
+.news-gallery[data-count="1"] {
+  grid-template-columns: 1fr;
+}
+.news-gallery[data-count="2"] {
+  grid-template-columns: repeat(2, 1fr);
+}
+.news-gallery[data-count="3"] {
+  grid-template-columns: repeat(3, 1fr);
+}
+.news-gallery[data-count="4"] {
+  grid-template-columns: repeat(2, 1fr);
+}
+.news-gallery img {
+  width: 100% !important;
+  height: 100% !important;
+  max-width: 100% !important;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  border-radius: 0.75rem;
+  margin: 0 !important;
+  cursor: pointer;
+}
+@media (max-width: 640px) {
+  .news-gallery {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+  .news-gallery[data-count="1"] {
+    grid-template-columns: 1fr !important;
+  }
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;

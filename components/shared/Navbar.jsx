@@ -478,6 +478,17 @@ const Navbar = () => {
           </li>
 
           <li>
+            <Link href="/csr" className={linkColorClasses(isActive("/csr"))}>
+              CSR
+              {isActive("/csr") && (
+                <span
+                  className={`absolute -bottom-1 left-0 w-full h-0.5 rounded-full ${underlineClasses}`}
+                />
+              )}
+            </Link>
+          </li>
+
+          <li>
             <Link
               href="/gallery"
               className={linkColorClasses(isActive("/gallery"))}
@@ -664,6 +675,18 @@ const Navbar = () => {
             onClick={handleServiceClick}
           >
             Projects
+          </Link>
+
+          <Link
+            href="/csr"
+            className={`block py-2.5 hover:text-[var(--color-primary)] transition-colors duration-200 ${
+              isActive("/csr")
+                ? "text-[var(--color-primary)] font-semibold border-l-4 border-[var(--color-primary)] pl-3"
+                : "pl-4"
+            }`}
+            onClick={handleServiceClick}
+          >
+            CSR
           </Link>
 
           <Link

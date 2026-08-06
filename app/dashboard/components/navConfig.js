@@ -19,6 +19,7 @@ import {
   FolderKanban,
   Phone,
   Menu,
+  HeartHandshake,
 } from "lucide-react";
 
 export const NAV_SECTIONS = [
@@ -45,6 +46,7 @@ export const NAV_SECTIONS = [
     items: [
       { id: "about", label: "About Page", icon: Info, href: "/dashboard/about" },
       { id: "government-enlistment", label: "Government Enlistment", icon: Landmark, href: "/dashboard/government-enlistment" },
+      { id: "csr", label: "CSR Page", icon: HeartHandshake, href: "/dashboard/csr" },
       { id: "projects-page", label: "Projects Page Settings", icon: FolderKanban, href: "/dashboard/projects-page" },
       { id: "contact-page", label: "Contact Page", icon: Phone, href: "/dashboard/contact-page" },
     ],
