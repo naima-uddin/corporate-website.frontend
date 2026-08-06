@@ -4,70 +4,69 @@ import { Upload, X, Loader } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 
 /**
- * Multi-image upload component — thumbnails render in a row.
- * Usage: <MultiImageUploadFactory type="csr" images={[...]} onImagesChanged={(urls) => ...} />
+ * Multiple image upload component — uploads one or many files to Cloudinary
+ * via /api/upload/:type and keeps the resulting URL list in sync with a
+ * parent-owned array (e.g. Portfolio.images).
+ *
+ * Usage: <MultiImageUploadFactory type="portfolio" images={form.images} onImagesChange={(next) => setForm({...form, images: next})} />
  */
 export default function MultiImageUploadFactory({
-  type = "general",
+  type = "portfolio",
   images = [],
-  onImagesChanged,
-  label = "Images",
+  onImagesChange,
+  label = "Additional Images",
   maxSizeMB = 10,
 }) {
   const { token } = useAuth();
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState(null);
 
-  const handleFileChange = async (e) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
-    if (!file.type.startsWith("image/")) {
-      setError("Please select an image file");
-      return;
-    }
+  const handleFilesChange = async (e) => {
+    const files = Array.from(e.target.files || []);
+    if (files.length === 0) return;
 
     const maxBytes = maxSizeMB * 1024 * 1024;
-    if (file.size > maxBytes) {
-      setError(`Image must be less than ${maxSizeMB}MB`);
+    const invalid = files.find(
+      (file) => !file.type.startsWith("image/") || file.size > maxBytes,
+    );
+    if (invalid) {
+      setError(`Each image must be an image file under ${maxSizeMB}MB`);
       return;
     }
 
-    setUploading(true);
     setError(null);
+    setUploading(true);
 
-    try {
-      const formData = new FormData();
-      formData.append("image", file);
+    const uploadedUrls = [];
+    for (const file of files) {
+      try {
+        const formData = new FormData();
+        formData.append("image", file);
 
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/upload/${type}`,
-        {
-          method: "POST",
-          headers: { Authorization: `Bearer ${token}` },
-          body: formData,
-        },
-      );
-
-      const data = await response.json();
-
-      if (data.success) {
-        onImagesChanged([...images, data.url]);
-        setError(null);
-      } else {
-        setError(data.error || "Upload failed");
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/api/upload/${type}`,
+          {
+            method: "POST",
+            headers: { Authorization: `Bearer ${token}` },
+            body: formData,
+          },
+        );
+        const data = await response.json();
+        if (data.success) {
+          uploadedUrls.push(data.url);
+        }
+      } catch (err) {
+        console.error("Error uploading image:", err);
       }
-    } catch (err) {
-      console.error("Upload error:", err);
-      setError("Upload failed. Please try again.");
-    } finally {
-      setUploading(false);
-      e.target.value = "";
     }
+
+    onImagesChange([...images, ...uploadedUrls]);
+    setUploading(false);
+    e.target.value = "";
   };
 
-  const handleRemove = (index) => {
-    onImagesChanged(images.filter((_, i) => i !== index));
+  const removeImage = (index) => {
+    onImagesChange(images.filter((_, i) => i !== index));
   };
 
   return (
@@ -76,55 +75,53 @@ export default function MultiImageUploadFactory({
         {label}
       </label>
 
-      <div className="flex flex-wrap items-center gap-3">
-        {images.map((url, index) => (
-          <div key={index} className="relative group shrink-0">
-            <img
-              src={url}
-              alt={`Image ${index + 1}`}
-              className="h-24 w-24 rounded-lg border-2 border-slate-300 object-cover"
-            />
-            <button
-              type="button"
-              onClick={() => handleRemove(index)}
-              className="absolute -top-2 -right-2 rounded-full bg-red-500 p-1.5 text-white opacity-0 transition group-hover:opacity-100"
-            >
-              <X className="h-4 w-4" />
-            </button>
-          </div>
-        ))}
-
-        <label className="flex h-24 w-24 shrink-0 cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-slate-300 hover:border-cyan-500 hover:bg-cyan-50 transition">
-          {uploading ? (
-            <Loader className="h-5 w-5 animate-spin text-slate-400" />
-          ) : (
-            <>
-              <Upload className="mb-1 h-5 w-5 text-slate-400" />
-              <p className="px-1 text-center text-[11px] text-slate-500">
-                Add image
-              </p>
-            </>
-          )}
-          <input
-            type="file"
-            className="hidden"
-            accept="image/*"
-            onChange={handleFileChange}
-            disabled={uploading}
-          />
-        </label>
-      </div>
-
-      {error && (
-        <div className="rounded bg-red-50 px-3 py-2 text-sm text-red-600">
-          {error}
+      {images.length > 0 && (
+        <div className="flex flex-wrap gap-3">
+          {images.map((url, index) => (
+            <div key={`${url}-${index}`} className="relative group">
+              <img
+                src={url}
+                alt={`Additional ${index + 1}`}
+                className="w-24 h-24 object-cover rounded-lg border-2 border-slate-300"
+              />
+              <button
+                type="button"
+                onClick={() => removeImage(index)}
+                className="absolute -top-2 -right-2 bg-red-500 text-white p-1 rounded-full opacity-0 group-hover:opacity-100 transition"
+              >
+                <X className="w-3.5 h-3.5" />
+              </button>
+            </div>
+          ))}
         </div>
       )}
 
-      <p className="text-xs text-slate-500">
-        Max {maxSizeMB}MB per image. Multiple images will show as a slider on
-        the site.
-      </p>
+      <label className="flex flex-col items-center justify-center w-full py-6 border-2 border-dashed border-slate-300 rounded-lg cursor-pointer hover:border-cyan-500 hover:bg-cyan-50 transition">
+        {uploading ? (
+          <Loader className="w-5 h-5 text-slate-400 mb-1 animate-spin" />
+        ) : (
+          <Upload className="w-5 h-5 text-slate-400 mb-1" />
+        )}
+        <p className="text-xs text-slate-500 text-center">
+          {uploading
+            ? "Uploading..."
+            : "Click to add one or more images to the gallery"}
+        </p>
+        <input
+          type="file"
+          accept="image/*"
+          multiple
+          onChange={handleFilesChange}
+          disabled={uploading}
+          className="hidden"
+        />
+      </label>
+
+      {error && (
+        <div className="text-sm text-red-600 bg-red-50 px-3 py-2 rounded">
+          {error}
+        </div>
+      )}
     </div>
   );
 }

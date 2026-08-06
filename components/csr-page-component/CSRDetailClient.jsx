@@ -5,7 +5,6 @@ import Link from "next/link";
 import Image from "next/image";
 import { FiArrowLeft, FiCalendar, FiLink } from "react-icons/fi";
 import { FaHandsHelping } from "react-icons/fa";
-import ImageSlider from "@/components/ui/ImageSlider";
 
 const API = process.env.NEXT_PUBLIC_API_URL;
 
@@ -15,9 +14,9 @@ const RelatedActivityCard = ({ item }) => (
     className="flex flex-col overflow-hidden rounded-2xl border border-[var(--color-border)] bg-white shadow-sm hover:shadow-lg transition-shadow duration-300"
   >
     <div className="relative h-40 w-full bg-[var(--color-surface)]">
-      {item.images?.[0] ? (
+      {item.image ? (
         <Image
-          src={item.images[0]}
+          src={item.image}
           alt={item.title}
           fill
           unoptimized
@@ -167,9 +166,13 @@ const CSRDetailClient = ({ slug }) => {
           )}
         </header>
 
-        {activity.images?.length > 0 && (
+        {activity.image && (
           <div className="relative mt-8 aspect-[16/8] w-full overflow-hidden rounded-2xl shadow-xl bg-[var(--color-surface)]">
-            <ImageSlider images={activity.images} alt={activity.title} />
+            <img
+              src={activity.image}
+              alt={activity.title}
+              className="h-full w-full object-cover"
+            />
           </div>
         )}
 

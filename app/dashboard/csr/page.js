@@ -5,7 +5,6 @@ import { useAuth } from "@/context/AuthContext";
 import { motion } from "framer-motion";
 import { Save, Plus, Trash2, Pencil, X } from "lucide-react";
 import ImageUploadFactory from "../components/forms/ImageUploadFactory";
-import MultiImageUploadFactory from "../components/forms/MultiImageUploadFactory";
 import RichTextEditor from "../components/forms/RichTextEditor";
 
 const emptyData = {
@@ -25,7 +24,7 @@ const emptyActivityForm = {
   title: "",
   excerpt: "",
   content: "",
-  images: [],
+  image: "",
   date: "",
   order: 0,
   status: "published",
@@ -177,7 +176,7 @@ export default function CSRAdmin() {
       title: item.title || "",
       excerpt: item.excerpt || "",
       content: item.content || "",
-      images: Array.isArray(item.images) ? item.images : [],
+      image: item.image || "",
       date: item.date || "",
       order: item.order ?? 0,
       status: item.status || "published",
@@ -432,14 +431,14 @@ export default function CSRAdmin() {
               </div>
             )}
 
-            <div className="space-y-4">
-              <MultiImageUploadFactory
+            <div className="grid grid-cols-1 md:grid-cols-[auto_1fr] gap-6">
+              <ImageUploadFactory
                 type="csr"
-                label="Images"
-                images={activityForm.images}
-                onImagesChanged={(images) =>
-                  setActivityForm((prev) => ({ ...prev, images }))
+                label="Image"
+                onImageUploaded={(url) =>
+                  setActivityForm((prev) => ({ ...prev, image: url || "" }))
                 }
+                currentImage={activityForm.image}
               />
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
