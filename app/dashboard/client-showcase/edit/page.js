@@ -5,7 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
 import ClientLogoForm from "../ClientLogoForm";
 
-const emptyForm = { image: "", name: "", description: "" };
+const emptyForm = { image: "" };
 
 function EditClientLogoContent() {
   const id = useSearchParams().get("id");
@@ -37,8 +37,6 @@ function EditClientLogoContent() {
           }
           setForm({
             image: item.image || "",
-            name: item.name || "",
-            description: item.description || "",
           });
         } else {
           setNotFound(true);

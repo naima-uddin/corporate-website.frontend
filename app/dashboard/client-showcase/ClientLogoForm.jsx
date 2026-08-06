@@ -49,34 +49,6 @@ export default function ClientLogoForm({
           currentImage={form.image}
         />
 
-        <div>
-          <label className="block text-sm font-semibold text-slate-700 mb-2">
-            Client Name (optional)
-          </label>
-          <input
-            type="text"
-            value={form.name}
-            onChange={(e) => setForm((prev) => ({ ...prev, name: e.target.value }))}
-            placeholder="e.g. Acme Corp"
-            className="w-full px-4 py-3 bg-white border border-slate-300 rounded-lg text-slate-900"
-          />
-        </div>
-
-        <div>
-          <label className="block text-sm font-semibold text-slate-700 mb-2">
-            Description (optional)
-          </label>
-          <textarea
-            value={form.description}
-            onChange={(e) =>
-              setForm((prev) => ({ ...prev, description: e.target.value }))
-            }
-            placeholder="Short description shown on the client's card"
-            rows={3}
-            className="w-full px-4 py-3 bg-white border border-slate-300 rounded-lg text-slate-900 resize-none"
-          />
-        </div>
-
         <div className="flex gap-3 justify-end">
           <button
             type="button"

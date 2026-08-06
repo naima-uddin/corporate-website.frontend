@@ -10,7 +10,6 @@ const ClientShowcase = () => {
   const [logos, setLogos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [description, setDescription] = useState("");
-  const [activeId, setActiveId] = useState(null);
 
   useEffect(() => {
     const fetchLogos = async () => {
@@ -86,51 +85,21 @@ const ClientShowcase = () => {
           >
             {Array.from({ length: MARQUEE_REPEAT }, () => logos)
               .flat()
-              .map((logo, idx) => {
-              const hasDetails = logo.name || logo.description;
-              const isActive = activeId === `${logo._id}-${idx}`;
-
-              return (
+              .map((logo, idx) => (
                 <div
                   key={`${logo._id}-${idx}`}
                   className="group relative mx-6 md:mx-8 shrink-0"
-                  onClick={() =>
-                    hasDetails &&
-                    setActiveId(isActive ? null : `${logo._id}-${idx}`)
-                  }
                 >
                   <Image
                     src={logo.image}
-                    alt={logo.name || "Client logo"}
+                    alt="Client logo"
                     width={120}
                     height={64}
-                    className="inline-block h-20 md:h-24 w-auto object-contain transition duration-300 cursor-pointer group-hover:scale-105"
+                    className="inline-block h-20 md:h-24 w-auto object-contain transition duration-300 group-hover:scale-105"
                     unoptimized
                   />
-
-                  {hasDetails && (
-                    <div
-                      className={`absolute left-1/2 bottom-full mb-2 -translate-x-1/2 w-max max-w-[220px] rounded-lg bg-slate-900 text-white text-xs px-3 py-2 shadow-lg pointer-events-none transition-opacity duration-200 z-10 ${
-                        isActive
-                          ? "opacity-100"
-                          : "opacity-0 group-hover:opacity-100"
-                      }`}
-                    >
-                      {logo.name && (
-                        <p className="font-semibold whitespace-nowrap">
-                          {logo.name}
-                        </p>
-                      )}
-                      {logo.description && (
-                        <p className="text-slate-300 mt-0.5 leading-snug whitespace-normal">
-                          {logo.description}
-                        </p>
-                      )}
-                    </div>
-                  )}
                 </div>
-              );
-            })}
+              ))}
           </div>
         </div>
 

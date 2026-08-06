@@ -214,17 +214,9 @@ export default function ClientShowcasePage() {
                   <GripVertical className="w-4 h-4 text-slate-300 absolute top-2 left-2" />
                   <img
                     src={logo.image}
-                    alt={logo.name || "Client logo"}
+                    alt="Client logo"
                     className="w-full h-16 object-contain"
                   />
-                  <p className="text-xs font-medium text-slate-600 truncate w-full text-center">
-                    {logo.name || "—"}
-                  </p>
-                  {logo.description && (
-                    <p className="text-[11px] text-slate-400 line-clamp-2 w-full text-center">
-                      {logo.description}
-                    </p>
-                  )}
                   <div className="flex gap-2">
                     <Link
                       href={`/dashboard/client-showcase/edit?id=${logo._id}`}
