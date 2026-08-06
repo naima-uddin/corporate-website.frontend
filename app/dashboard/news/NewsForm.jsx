@@ -103,7 +103,7 @@ export default function NewsForm({
                 }
                 uploadType="news"
                 minHeight={320}
-                placeholder="Use the toolbar to format text, color it, or insert images. Use the gallery icon to select multiple images at once — they'll auto-arrange into a grid."
+                placeholder="Use the toolbar to format text or color it. Click the gallery icon and select as many images as you like — they'll automatically arrange 2 per row."
               />
             </div>
 
