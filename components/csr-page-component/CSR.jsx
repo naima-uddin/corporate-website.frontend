@@ -49,9 +49,9 @@ const ChairmanMessage = ({ chairman }) => {
 };
 
 const CSRActivityRow = ({ item, reversed }) => (
-  <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
+  <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-start">
     <div
-      className={`relative h-64 sm:h-80 lg:h-96 w-full overflow-hidden rounded-2xl bg-[var(--color-surface)] ${
+      className={`relative h-44 md:h-60 lg:h-76 w-full overflow-hidden rounded-xl bg-[var(--color-surface)] border-[var(--color-heading)] ${
         reversed ? "lg:order-2" : "lg:order-1"
       }`}
     >

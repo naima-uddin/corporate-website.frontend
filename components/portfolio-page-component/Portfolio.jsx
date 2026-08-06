@@ -10,63 +10,31 @@ import {
   ArrowRight,
   Building,
 } from "lucide-react";
-import {
-  PiCraneTowerDuotone,
-  PiTruckDuotone,
-  PiShoppingCartDuotone,
-  PiGavelDuotone,
-  PiClipboardTextDuotone,
-  PiFlagBannerDuotone,
-  PiBankDuotone,
-  PiWrenchDuotone,
-  PiPackageDuotone,
-  PiHammerDuotone,
-  PiWarehouseDuotone,
-  PiUsersThreeDuotone,
-  PiMapPinDuotone,
-  PiFactoryDuotone,
-  PiTreeEvergreenDuotone,
-  PiDropDuotone,
-  PiGraduationCapDuotone,
-  PiHeartbeatDuotone,
-  PiPlantDuotone,
-} from "react-icons/pi";
 import StatCounter from "@/components/ui/StatCounter";
 
 const ICON_MAP = {
-  Building2: PiCraneTowerDuotone,
-  Truck: PiTruckDuotone,
-  ShoppingCart: PiShoppingCartDuotone,
-  Gavel: PiGavelDuotone,
-  ClipboardCheck: PiClipboardTextDuotone,
-  Milestone: PiFlagBannerDuotone,
-  Landmark: PiBankDuotone,
-  Wrench: PiWrenchDuotone,
-  Package: PiPackageDuotone,
-  Hammer: PiHammerDuotone,
-  Warehouse: PiWarehouseDuotone,
-  Users: PiUsersThreeDuotone,
-  MapPin: PiMapPinDuotone,
-  Factory: PiFactoryDuotone,
-  TreePine: PiTreeEvergreenDuotone,
-  Droplet: PiDropDuotone,
-  School: PiGraduationCapDuotone,
-  HeartPulse: PiHeartbeatDuotone,
-  Wheat: PiPlantDuotone,
+  Building2: "🏗️",
+  Truck: "🚚",
+  ShoppingCart: "🛒",
+  Gavel: "⚖️",
+  ClipboardCheck: "📋",
+  Milestone: "🚩",
+  Landmark: "🏛️",
+  Wrench: "🔧",
+  Package: "📦",
+  Hammer: "🔨",
+  Warehouse: "🏢",
+  Users: "👥",
+  MapPin: "📍",
+  Factory: "🏭",
+  TreePine: "🌲",
+  Droplet: "💧",
+  School: "🎓",
+  HeartPulse: "🏥",
+  Wheat: "🌾",
 };
 
-const getIcon = (name) => ICON_MAP[name] || PiCraneTowerDuotone;
-
-const CATEGORY_ICON_COLORS = [
-  "text-blue-500",
-  "text-orange-500",
-  "text-emerald-500",
-  "text-fuchsia-500",
-  "text-rose-500",
-  "text-indigo-500",
-  "text-amber-500",
-  "text-teal-500",
-];
+const getIcon = (name) => ICON_MAP[name] || "🏗️";
 
 const statusStyles = {
   Completed: "bg-emerald-100 text-emerald-700",
@@ -439,17 +407,15 @@ const Portfolio = () => {
                 </p>
                 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-6">
                   {workCategories.map((cat, idx) => {
-                    const Icon = getIcon(cat.icon);
-                    const color =
-                      CATEGORY_ICON_COLORS[idx % CATEGORY_ICON_COLORS.length];
+                    const icon = getIcon(cat.icon);
                     return (
                       <div
                         key={idx}
                         className="group flex flex-col items-center text-center gap-3 p-2 rounded-xl border border-[var(--color-border)] hover:border-[var(--color-primary)] hover:shadow-md transition-all"
                       >
-                        <Icon
-                          className={`w-12 h-12 ${color} group-hover:scale-110 transition-transform`}
-                        />
+                        <span className="text-5xl leading-none group-hover:scale-110 transition-transform">
+                          {icon}
+                        </span>
                         <span className="text-sm font-semibold text-[var(--color-heading)]">
                           {cat.name}
                         </span>
