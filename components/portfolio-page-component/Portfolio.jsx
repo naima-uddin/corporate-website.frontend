@@ -3,56 +3,59 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import {
-  Building2,
-  Truck,
-  ShoppingCart,
-  Gavel,
   ClipboardCheck,
-  Milestone,
-  Landmark,
-  Wrench,
-  Package,
-  Hammer,
-  Warehouse,
-  Users,
-  MapPin,
-  Factory,
-  TreePine,
-  Droplet,
-  School,
-  HeartPulse,
-  Wheat,
   Eye,
   X,
   Download,
   ArrowRight,
   Building,
 } from "lucide-react";
+import {
+  FcHome,
+  FcAutomotive,
+  FcShop,
+  FcRules,
+  FcInspection,
+  FcTimeline,
+  FcOrganization,
+  FcSettings,
+  FcPackage,
+  FcEngineering,
+  FcFactory,
+  FcConferenceCall,
+  FcGlobe,
+  FcProcess,
+  FcLandscape,
+  FcDam,
+  FcGraduationCap,
+  FcLike,
+  FcBiomass,
+} from "react-icons/fc";
 import StatCounter from "@/components/ui/StatCounter";
 
 const ICON_MAP = {
-  Building2,
-  Truck,
-  ShoppingCart,
-  Gavel,
-  ClipboardCheck,
-  Milestone,
-  Landmark,
-  Wrench,
-  Package,
-  Hammer,
-  Warehouse,
-  Users,
-  MapPin,
-  Factory,
-  TreePine,
-  Droplet,
-  School,
-  HeartPulse,
-  Wheat,
+  Building2: FcHome,
+  Truck: FcAutomotive,
+  ShoppingCart: FcShop,
+  Gavel: FcRules,
+  ClipboardCheck: FcInspection,
+  Milestone: FcTimeline,
+  Landmark: FcOrganization,
+  Wrench: FcSettings,
+  Package: FcPackage,
+  Hammer: FcEngineering,
+  Warehouse: FcFactory,
+  Users: FcConferenceCall,
+  MapPin: FcGlobe,
+  Factory: FcProcess,
+  TreePine: FcLandscape,
+  Droplet: FcDam,
+  School: FcGraduationCap,
+  HeartPulse: FcLike,
+  Wheat: FcBiomass,
 };
 
-const getIcon = (name) => ICON_MAP[name] || Building2;
+const getIcon = (name) => ICON_MAP[name] || FcHome;
 
 const statusStyles = {
   Completed: "bg-emerald-100 text-emerald-700",
@@ -429,11 +432,9 @@ const Portfolio = () => {
                     return (
                       <div
                         key={idx}
-                        className="flex flex-col items-center text-center gap-3 p-4 rounded-xl border border-[var(--color-border)] hover:border-[var(--color-primary)] hover:shadow-md transition-all"
+                        className="group flex flex-col items-center text-center gap-3 p-2 rounded-xl border border-[var(--color-border)] hover:border-[var(--color-primary)] hover:shadow-md transition-all"
                       >
-                        <div className="w-12 h-12 rounded-full bg-[var(--color-primary-tint)] flex items-center justify-center">
-                          <Icon className="w-6 h-6 text-[var(--color-primary)]" />
-                        </div>
+                        <Icon className="w-11 h-11 group-hover:scale-110 transition-transform" />
                         <span className="text-sm font-semibold text-[var(--color-heading)]">
                           {cat.name}
                         </span>
