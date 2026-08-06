@@ -16,7 +16,7 @@ const MotionDiv =
   }) => <div {...props}>{children}</div>);
 
 const AwardCard = ({ award, featured }) => (
-  <div className="relative h-full min-h-[220px] sm:min-h-[260px] rounded-lg overflow-hidden border border-slate-200 shadow-sm hover:shadow-lg transition-all duration-300 bg-slate-50">
+  <div className="relative h-full  rounded-sm overflow-hidden border border-slate-300 shadow-sm hover:shadow-lg transition-all duration-300 bg-slate-30">
     {award.image ? (
       <Image
         src={award.image}
@@ -33,7 +33,7 @@ const AwardCard = ({ award, featured }) => (
 
     {(award.title || award.description) && (
       <div
-        className={`absolute inset-x-0 bottom-0 bg-white/25 backdrop-blur-md border-t border-white/40 px-4 py-3 ${featured ? "md:px-6 md:py-4" : ""}`}
+        className={`absolute inset-x-0 bottom-0 bg-white/25 backdrop-blur-md border-t border-white/40 px-4 py-1 -mb-1 ${featured ? "md:px-6 md:py-2" : ""}`}
       >
         {award.title && (
           <h3
@@ -64,7 +64,7 @@ const AwardsSection = ({ awards }) => {
           Awards &amp; <span className="text-[#0066ff]">Accolades</span>
         </h2>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 lg:auto-rows-[240px]">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 lg:auto-rows-[240px]">
           {awards.map((award, index) => {
             const featured = index === 0;
             return (
