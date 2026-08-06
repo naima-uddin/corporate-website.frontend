@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { ArrowLeft, Save } from "lucide-react";
 import ImageUploadFactory from "../components/forms/ImageUploadFactory";
+import RichTextEditor from "../components/forms/RichTextEditor";
 
 export default function NewsForm({
   form,
@@ -95,12 +96,14 @@ export default function NewsForm({
               <label className="block text-sm font-semibold text-slate-700 mb-2">
                 Content
               </label>
-              <textarea
+              <RichTextEditor
                 value={form.content}
-                onChange={handleFieldChange("content")}
-                rows={8}
-                placeholder="Full article body. Basic HTML tags like <p>, <h2>, <strong>, <a> are supported."
-                className="w-full px-4 py-3 bg-white border border-slate-300 rounded-lg text-slate-900 font-mono text-sm"
+                onChange={(html) =>
+                  setForm((prev) => ({ ...prev, content: html }))
+                }
+                uploadType="news"
+                minHeight={320}
+                placeholder="Use the toolbar to format text and click the image icon to insert pictures anywhere in the article."
               />
             </div>
 
