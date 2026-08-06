@@ -41,7 +41,7 @@ const CSRDetailClient = ({ slug }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [related, setRelated] = useState([]);
-  const [lightboxOpen, setLightboxOpen] = useState(false);
+  const [lightboxImage, setLightboxImage] = useState(null);
 
   useEffect(() => {
     let isMounted = true;
@@ -84,15 +84,22 @@ const CSRDetailClient = ({ slug }) => {
   }, [slug]);
 
   useEffect(() => {
-    if (!lightboxOpen) return;
+    if (!lightboxImage) return;
 
     const handleKeyDown = (e) => {
-      if (e.key === "Escape") setLightboxOpen(false);
+      if (e.key === "Escape") setLightboxImage(null);
     };
 
     document.addEventListener("keydown", handleKeyDown);
     return () => document.removeEventListener("keydown", handleKeyDown);
-  }, [lightboxOpen]);
+  }, [lightboxImage]);
+
+  const handleContentClick = (e) => {
+    const target = e.target;
+    if (target.tagName === "IMG") {
+      setLightboxImage(target.getAttribute("src"));
+    }
+  };
 
   const copyLink = () => {
     navigator.clipboard.writeText(window.location.href);
@@ -181,7 +188,7 @@ const CSRDetailClient = ({ slug }) => {
         {activity.image && (
           <button
             type="button"
-            onClick={() => setLightboxOpen(true)}
+            onClick={() => setLightboxImage(activity.image)}
             className="relative mt-8 aspect-[16/8] w-full overflow-hidden rounded-2xl shadow-xl bg-[var(--color-surface)] cursor-zoom-in block"
             aria-label="View full image"
           >
@@ -202,6 +209,7 @@ const CSRDetailClient = ({ slug }) => {
         {activity.content && (
           <div className="mt-8 rounded-2xl border border-[var(--color-border)] bg-white p-5 sm:p-8 shadow-sm">
             <div
+              onClick={handleContentClick}
               className="text-base leading-relaxed text-[var(--color-body)]
                 [&_h2]:text-2xl [&_h2]:font-bold [&_h2]:text-[var(--color-heading)] [&_h2]:mt-8 [&_h2]:mb-3
                 [&_h3]:text-xl [&_h3]:font-bold [&_h3]:text-[var(--color-heading)] [&_h3]:mt-6 [&_h3]:mb-2
@@ -212,7 +220,7 @@ const CSRDetailClient = ({ slug }) => {
                 [&_ul]:list-disc [&_ul]:pl-6 [&_ul]:mb-4 [&_ul]:space-y-1
                 [&_ol]:list-decimal [&_ol]:pl-6 [&_ol]:mb-4 [&_ol]:space-y-1
                 [&_blockquote]:border-l-4 [&_blockquote]:border-[var(--color-primary)] [&_blockquote]:bg-[var(--color-primary-tint)] [&_blockquote]:rounded-r-lg [&_blockquote]:py-3 [&_blockquote]:px-5 [&_blockquote]:my-5 [&_blockquote]:italic [&_blockquote]:text-[var(--color-heading)]
-                [&_img]:rounded-xl [&_img]:my-6 [&_img]:mx-auto [&_img]:max-w-full [&_img]:shadow-md
+                [&_img]:rounded-xl [&_img]:my-6 [&_img]:mx-auto [&_img]:max-w-full [&_img]:shadow-md [&_img]:cursor-zoom-in [&_img]:transition-transform [&_img]:hover:scale-[1.01]
                 [&_code]:bg-[var(--color-surface)] [&_code]:text-[var(--color-primary)] [&_code]:px-1.5 [&_code]:py-0.5 [&_code]:rounded [&_code]:text-sm
                 [&_pre]:bg-[var(--color-ink)] [&_pre]:text-white [&_pre]:p-4 [&_pre]:rounded-xl [&_pre]:overflow-x-auto [&_pre]:my-5
                 [&_hr]:my-8 [&_hr]:border-[var(--color-border)]
@@ -294,21 +302,21 @@ const CSRDetailClient = ({ slug }) => {
         </div>
       )}
 
-      {lightboxOpen && activity.image && (
+      {lightboxImage && (
         <div
           className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 p-4 sm:p-8"
-          onClick={() => setLightboxOpen(false)}
+          onClick={() => setLightboxImage(null)}
         >
           <button
             type="button"
-            onClick={() => setLightboxOpen(false)}
+            onClick={() => setLightboxImage(null)}
             className="absolute top-4 right-4 sm:top-6 sm:right-6 flex h-10 w-10 items-center justify-center rounded-full bg-white/10 text-white hover:bg-white/20 transition"
             aria-label="Close"
           >
             <FiX className="text-xl" />
           </button>
           <img
-            src={activity.image}
+            src={lightboxImage}
             alt={activity.title}
             className="max-h-full max-w-full object-contain rounded-lg"
             onClick={(e) => e.stopPropagation()}

@@ -20,6 +20,7 @@ import {
   Phone,
   Menu,
   HeartHandshake,
+  Scale,
 } from "lucide-react";
 
 export const NAV_SECTIONS = [
@@ -50,6 +51,7 @@ export const NAV_SECTIONS = [
       { id: "csr", label: "CSR Page", icon: HeartHandshake, href: "/dashboard/csr" },
       { id: "projects-page", label: "Projects Page Settings", icon: FolderKanban, href: "/dashboard/projects-page" },
       { id: "contact-page", label: "Contact Page", icon: Phone, href: "/dashboard/contact-page" },
+      { id: "legal-pages", label: "Privacy & Terms", icon: Scale, href: "/dashboard/legal-pages" },
     ],
   },
   {
