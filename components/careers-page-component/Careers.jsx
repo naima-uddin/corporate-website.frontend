@@ -13,6 +13,11 @@ const formatDeadline = (deadline) => {
   });
 };
 
+const normalizeUrl = (url) => {
+  if (!url) return "";
+  return /^https?:\/\//i.test(url) ? url : `https://${url}`;
+};
+
 const JobCardSkeleton = () => (
   <div className="bg-white rounded-2xl border border-[var(--color-border)] shadow-sm p-8">
     <div className="h-6 bg-gray-200 rounded-lg w-2/3 mb-4 animate-pulse" />
@@ -57,7 +62,11 @@ const JobCard = ({ job, index }) => (
 
       {(job.applyLink || job.applyEmail) && (
         <a
-          href={job.applyLink || `mailto:${job.applyEmail}`}
+          href={
+            job.applyLink
+              ? normalizeUrl(job.applyLink)
+              : `mailto:${job.applyEmail}`
+          }
           target={job.applyLink ? "_blank" : undefined}
           rel={job.applyLink ? "noopener noreferrer" : undefined}
           className="group shrink-0 inline-flex items-center justify-center gap-1.5 px-5 py-2.5 rounded-full bg-[var(--color-primary)] text-white text-sm font-semibold transition-colors hover:opacity-90"
