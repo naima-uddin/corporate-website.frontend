@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { FaQuoteLeft, FaArrowRight, FaHandsHelping } from "react-icons/fa";
+import ImageSlider from "@/components/ui/ImageSlider";
 
 const ChairmanMessage = ({ chairman }) => {
   if (!chairman || (!chairman.message && !chairman.name)) return null;
@@ -55,14 +56,8 @@ const CSRActivityRow = ({ item, reversed }) => (
         reversed ? "lg:order-2" : "lg:order-1"
       }`}
     >
-      {item.image ? (
-        <Image
-          src={item.image}
-          alt={item.title}
-          fill
-          unoptimized
-          className="object-cover"
-        />
+      {item.images?.length > 0 ? (
+        <ImageSlider images={item.images} alt={item.title} />
       ) : (
         <div className="flex h-full w-full items-center justify-center">
           <FaHandsHelping className="text-5xl text-[var(--color-primary)]/40" />

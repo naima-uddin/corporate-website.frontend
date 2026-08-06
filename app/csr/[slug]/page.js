@@ -40,7 +40,7 @@ export async function generateMetadata({ params }) {
         openGraph: {
           title: `${activity?.title || "CSR Activity"} | ${site.siteName}`,
           description: activity?.excerpt,
-          images: activity?.image ? [{ url: activity.image }] : [],
+          images: activity?.images?.[0] ? [{ url: activity.images[0] }] : [],
         },
       };
     }
