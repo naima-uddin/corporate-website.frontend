@@ -268,10 +268,11 @@ export default function JoinUsPage() {
                 />
                 {index === 0 && (
                   <p className="mt-2 text-xs text-slate-500">
-                    Tip: set this to <code>/careers</code> to link to the Job
-                    Opportunities page managed under{" "}
+                    This card links to <code>/careers</code> automatically
+                    (managed under{" "}
                     <span className="font-semibold">Job Opportunities</span>{" "}
-                    in the sidebar.
+                    in the sidebar). Leave blank, or set a different URL here
+                    to override it.
                   </p>
                 )}
               </div>

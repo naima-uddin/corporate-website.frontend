@@ -96,10 +96,15 @@ const JoinUs = () => {
         <div className="flex flex-col md:flex-row gap-5 md:h-[500px]">
           {cards.map((card, index) => {
             const isFeatured = index === 0;
+            const isJobOpportunities = /job opportunities/i.test(
+              card.label || "",
+            );
+            const href =
+              card.link || (isJobOpportunities ? "/careers" : undefined);
             return (
               <motion.a
                 key={index}
-                href={card.link || undefined}
+                href={href}
                 initial={{ opacity: 0, y: 24 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
@@ -108,7 +113,7 @@ const JoinUs = () => {
                   isFeatured
                     ? "h-80 sm:h-96 md:flex-[1.6]"
                     : "h-32 sm:h-40 md:flex-1"
-                } ${card.link ? "cursor-pointer" : "cursor-default"}`}
+                } ${href ? "cursor-pointer" : "cursor-default"}`}
               >
                 {card.image ? (
                   <img
