@@ -2,7 +2,14 @@
 
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { MapPin, Clock, Briefcase, ArrowRight, Mail } from "lucide-react";
+import {
+  MapPin,
+  Clock,
+  Briefcase,
+  ArrowRight,
+  Mail,
+  X,
+} from "lucide-react";
 
 const formatDeadline = (deadline) => {
   if (!deadline) return "";
@@ -27,7 +34,33 @@ const JobCardSkeleton = () => (
   </div>
 );
 
-const JobCard = ({ job, index }) => (
+const ApplyButton = ({ job }) =>
+  (job.applyLink || job.applyEmail) && (
+    <a
+      href={
+        job.applyLink
+          ? normalizeUrl(job.applyLink)
+          : `mailto:${job.applyEmail}`
+      }
+      target={job.applyLink ? "_blank" : undefined}
+      rel={job.applyLink ? "noopener noreferrer" : undefined}
+      className="group shrink-0 inline-flex items-center justify-center gap-1.5 px-5 py-2.5 rounded-full bg-[var(--color-primary)] text-white text-sm font-semibold transition-colors hover:opacity-90"
+    >
+      {job.applyLink ? (
+        <>
+          Apply Now
+          <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+        </>
+      ) : (
+        <>
+          Apply via Email
+          <Mail className="w-4 h-4" />
+        </>
+      )}
+    </a>
+  );
+
+const JobCard = ({ job, index, onViewDetails }) => (
   <motion.div
     initial={{ opacity: 0, y: 20 }}
     whileInView={{ opacity: 1, y: 0 }}
@@ -60,43 +93,91 @@ const JobCard = ({ job, index }) => (
         </div>
       </div>
 
-      {(job.applyLink || job.applyEmail) && (
-        <a
-          href={
-            job.applyLink
-              ? normalizeUrl(job.applyLink)
-              : `mailto:${job.applyEmail}`
-          }
-          target={job.applyLink ? "_blank" : undefined}
-          rel={job.applyLink ? "noopener noreferrer" : undefined}
-          className="group shrink-0 inline-flex items-center justify-center gap-1.5 px-5 py-2.5 rounded-full bg-[var(--color-primary)] text-white text-sm font-semibold transition-colors hover:opacity-90"
-        >
-          {job.applyLink ? (
-            <>
-              Apply Now
-              <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
-            </>
-          ) : (
-            <>
-              Apply via Email
-              <Mail className="w-4 h-4" />
-            </>
-          )}
-        </a>
-      )}
+      <ApplyButton job={job} />
     </div>
 
     {job.description && (
-      <p className="mt-5 text-sm md:text-base leading-relaxed text-[var(--color-body,#555)] whitespace-pre-line">
+      <p className="mt-5 text-sm md:text-base leading-relaxed text-[var(--color-body,#555)] whitespace-pre-line line-clamp-3">
         {job.description}
       </p>
+    )}
+
+    {job.description && (
+      <button
+        type="button"
+        onClick={() => onViewDetails(job)}
+        className="mt-3 inline-flex items-center gap-1.5 text-sm font-semibold text-[var(--color-primary)] hover:underline"
+      >
+        See Details
+        <ArrowRight className="w-3.5 h-3.5" />
+      </button>
     )}
   </motion.div>
 );
 
+const JobDetailsModal = ({ job, onClose }) => {
+  if (!job) return null;
+
+  return (
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4"
+      onClick={onClose}
+    >
+      <div
+        className="flex w-full max-w-2xl max-h-[85vh] flex-col overflow-hidden rounded-2xl bg-white"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="flex items-start justify-between gap-4 border-b border-[var(--color-border)] p-5 md:p-6">
+          <div>
+            <h3 className="text-xl md:text-2xl font-bold text-[#0a1a3c] mb-2">
+              {job.title}
+            </h3>
+            <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-sm text-[var(--color-body,#555)]">
+              {job.location && (
+                <span className="inline-flex items-center gap-1.5">
+                  <MapPin className="w-4 h-4 text-[var(--color-primary)]" />
+                  {job.location}
+                </span>
+              )}
+              <span className="inline-flex items-center gap-1.5">
+                <Briefcase className="w-4 h-4 text-[var(--color-primary)]" />
+                {job.jobType}
+              </span>
+              {job.deadline && (
+                <span className="inline-flex items-center gap-1.5">
+                  <Clock className="w-4 h-4 text-[var(--color-primary)]" />
+                  Apply before {formatDeadline(job.deadline)}
+                </span>
+              )}
+            </div>
+          </div>
+          <button
+            type="button"
+            onClick={onClose}
+            className="shrink-0 p-2 text-slate-400 hover:text-slate-700"
+          >
+            <X className="w-5 h-5" />
+          </button>
+        </div>
+
+        <div className="flex-1 overflow-y-auto p-5 md:p-6">
+          <p className="text-sm md:text-base leading-relaxed text-[var(--color-body,#555)] whitespace-pre-line">
+            {job.description}
+          </p>
+        </div>
+
+        <div className="border-t border-[var(--color-border)] p-5 md:p-6">
+          <ApplyButton job={job} />
+        </div>
+      </div>
+    </div>
+  );
+};
+
 const Careers = () => {
   const [jobs, setJobs] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [activeJob, setActiveJob] = useState(null);
 
   useEffect(() => {
     const fetchJobs = async () => {
@@ -147,7 +228,12 @@ const Careers = () => {
         ) : jobs.length > 0 ? (
           <div className="space-y-6">
             {jobs.map((job, index) => (
-              <JobCard key={job._id || index} job={job} index={index} />
+              <JobCard
+                key={job._id || index}
+                job={job}
+                index={index}
+                onViewDetails={setActiveJob}
+              />
             ))}
           </div>
         ) : (
@@ -162,6 +248,8 @@ const Careers = () => {
           </div>
         )}
       </section>
+
+      <JobDetailsModal job={activeJob} onClose={() => setActiveJob(null)} />
     </div>
   );
 };
