@@ -447,8 +447,17 @@ const Portfolio = () => {
             {/* Stats */}
             {stats.length > 0 && (
               <section className="py-14">
-                <div className="bg-[var(--color-ink)] rounded-2xl px-6 py-10">
-                  <StatCounter stats={stats} dark />
+                <div className="relative overflow-hidden rounded-2xl px-6 py-10">
+                  <Image
+                    src="/projectsbanner.jpg"
+                    alt=""
+                    fill
+                    className="object-cover"
+                  />
+                  <div className="absolute inset-0 bg-[var(--color-ink)]/80" />
+                  <div className="relative">
+                    <StatCounter stats={stats} dark />
+                  </div>
                 </div>
               </section>
             )}
