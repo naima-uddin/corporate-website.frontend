@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { FiArrowLeft, FiCalendar, FiLink } from "react-icons/fi";
+import { FiArrowLeft, FiCalendar, FiLink, FiX } from "react-icons/fi";
 import { FaHandsHelping } from "react-icons/fa";
 
 const API = process.env.NEXT_PUBLIC_API_URL;
@@ -41,6 +41,7 @@ const CSRDetailClient = ({ slug }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [related, setRelated] = useState([]);
+  const [lightboxOpen, setLightboxOpen] = useState(false);
 
   useEffect(() => {
     let isMounted = true;
@@ -81,6 +82,17 @@ const CSRDetailClient = ({ slug }) => {
       isMounted = false;
     };
   }, [slug]);
+
+  useEffect(() => {
+    if (!lightboxOpen) return;
+
+    const handleKeyDown = (e) => {
+      if (e.key === "Escape") setLightboxOpen(false);
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [lightboxOpen]);
 
   const copyLink = () => {
     navigator.clipboard.writeText(window.location.href);
@@ -167,13 +179,18 @@ const CSRDetailClient = ({ slug }) => {
         </header>
 
         {activity.image && (
-          <div className="relative mt-8 aspect-[16/8] w-full overflow-hidden rounded-2xl shadow-xl bg-[var(--color-surface)]">
+          <button
+            type="button"
+            onClick={() => setLightboxOpen(true)}
+            className="relative mt-8 aspect-[16/8] w-full overflow-hidden rounded-2xl shadow-xl bg-[var(--color-surface)] cursor-zoom-in block"
+            aria-label="View full image"
+          >
             <img
               src={activity.image}
               alt={activity.title}
               className="h-full w-full object-cover"
             />
-          </div>
+          </button>
         )}
 
         {activity.excerpt && (
@@ -274,6 +291,28 @@ const CSRDetailClient = ({ slug }) => {
               <RelatedActivityCard key={item._id || item.slug} item={item} />
             ))}
           </div>
+        </div>
+      )}
+
+      {lightboxOpen && activity.image && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 p-4 sm:p-8"
+          onClick={() => setLightboxOpen(false)}
+        >
+          <button
+            type="button"
+            onClick={() => setLightboxOpen(false)}
+            className="absolute top-4 right-4 sm:top-6 sm:right-6 flex h-10 w-10 items-center justify-center rounded-full bg-white/10 text-white hover:bg-white/20 transition"
+            aria-label="Close"
+          >
+            <FiX className="text-xl" />
+          </button>
+          <img
+            src={activity.image}
+            alt={activity.title}
+            className="max-h-full max-w-full object-contain rounded-lg"
+            onClick={(e) => e.stopPropagation()}
+          />
         </div>
       )}
     </article>
