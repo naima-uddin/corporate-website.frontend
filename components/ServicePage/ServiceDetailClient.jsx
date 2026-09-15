@@ -200,7 +200,7 @@ const ServiceDetailClient = ({
               transition={{ duration: 0.5 }}
               className={`flex flex-col ${
                 reversed ? "lg:flex-row-reverse" : "lg:flex-row"
-              } items-center gap-2 md:gap-4 lg:gap-12`}
+              } items-start gap-2 md:gap-4 lg:gap-12`}
             >
               <div className="w-full lg:w-1/2 grid grid-cols-2 gap-2">
                 {sec.image ? (
