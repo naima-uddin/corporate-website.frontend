@@ -162,18 +162,14 @@ const GovernmentEnlistment = () => {
 
   return (
     <div className="bg-gradient-to-b from-[#eef4ff] to-white text-black">
-      <section className="container mx-auto px-6 py-16 text-center">
+      <section className="container mx-auto px-6 py-6 text-center">
         <span className="uppercase tracking-widest text-sm font-bold text-[var(--color-primary)]">
           {data?.label || "Our Credentials"}
         </span>
         <h1 className="main-title text-2xl md:text-3xl lg:text-4xl font-bold mt-3 mb-6 leading-tight text-[#0a1a3c]">
           {data?.heading || "Government Enlistment"}
         </h1>
-        <div className="flex items-center justify-center gap-3 max-w-md mx-auto mb-8">
-          <span className="h-px flex-1 bg-[var(--color-border)]" />
-          <span className="w-2 h-2 rounded-full bg-[var(--color-primary)]" />
-          <span className="h-px flex-1 bg-[var(--color-border)]" />
-        </div>
+       
         <p className="text-base md:text-lg text-[var(--color-body)] max-w-2xl mx-auto leading-relaxed">
           {data?.description ||
             "We are enlisted with various government departments and organizations. Our registrations reflect our credibility, compliance and commitment to quality."}

@@ -146,11 +146,7 @@ const CSR = () => {
         <h1 className="main-title text-2xl md:text-3xl lg:text-4xl font-bold mt-3 mb-6 leading-tight text-[#0a1a3c]">
           {data?.heading || "Corporate Social Responsibility"}
         </h1>
-        <div className="flex items-center justify-center gap-3 max-w-md mx-auto mb-8">
-          <span className="h-px flex-1 bg-[var(--color-border)]" />
-          <span className="w-2 h-2 rounded-full bg-[var(--color-primary)]" />
-          <span className="h-px flex-1 bg-[var(--color-border)]" />
-        </div>
+       
         <p className="text-base md:text-lg text-[var(--color-body)] max-w-2xl mx-auto leading-relaxed">
           {data?.description ||
             "We believe in creating a positive impact beyond our business — supporting communities, education and sustainable initiatives."}

@@ -26,7 +26,7 @@ const normalizeUrl = (url) => {
 };
 
 const JobCardSkeleton = () => (
-  <div className="bg-white rounded-2xl border border-[var(--color-border)] shadow-sm p-8">
+  <div className="bg-white rounded-2xl border border-[var(--color-border)] shadow-sm p-6 md:p-8">
     <div className="h-6 bg-gray-200 rounded-lg w-2/3 mb-4 animate-pulse" />
     <div className="h-4 bg-gray-200 rounded-lg w-1/3 mb-6 animate-pulse" />
     <div className="h-4 bg-gray-200 rounded-lg w-full mb-2 animate-pulse" />
@@ -44,7 +44,7 @@ const ApplyButton = ({ job }) =>
       }
       target={job.applyLink ? "_blank" : undefined}
       rel={job.applyLink ? "noopener noreferrer" : undefined}
-      className="group shrink-0 inline-flex items-center justify-center gap-1.5 px-5 py-2.5 rounded-full bg-[var(--color-primary)] text-white text-sm font-semibold transition-colors hover:opacity-90"
+      className="group shrink-0 inline-flex w-full md:w-auto items-center justify-center gap-1.5 px-5 py-2.5 rounded-full bg-[var(--color-primary)] text-white text-sm font-semibold transition-colors hover:opacity-90"
     >
       {job.applyLink ? (
         <>
@@ -66,7 +66,7 @@ const JobCard = ({ job, index, onViewDetails }) => (
     whileInView={{ opacity: 1, y: 0 }}
     viewport={{ once: true }}
     transition={{ duration: 0.4, delay: index * 0.06 }}
-    className="bg-white rounded-2xl border border-[var(--color-border)] shadow-sm hover:shadow-lg transition-shadow duration-300 p-6 md:p-8"
+    className="bg-white rounded-2xl border border-[var(--color-border)] shadow-sm hover:shadow-lg transition-shadow duration-300 px-4 py-5 md:p-8"
   >
     <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
       <div className="min-w-0">
@@ -200,33 +200,33 @@ const Careers = () => {
 
   return (
     <div className="bg-gradient-to-b from-[#eef4ff] to-white text-black min-h-[60vh]">
-      <section className="container mx-auto px-6 py-16 text-center">
-        <span className="uppercase tracking-widest text-sm font-bold text-[var(--color-primary)]">
+      <section className="container mx-auto px-3 sm:px-6 py-5 md:py-16 text-center">
+        <span className="uppercase tracking-widest text-xs sm:text-sm font-bold text-[var(--color-primary)]">
           Careers
         </span>
-        <h1 className="main-title text-2xl md:text-3xl lg:text-4xl font-bold mt-3 mb-6 leading-tight text-[#0a1a3c]">
+        <h1 className="main-title text-2xl md:text-3xl lg:text-4xl font-bold mt-2 md:mt-3 mb-4 md:mb-6 leading-tight text-[#0a1a3c]">
           Job Opportunities
         </h1>
-        <div className="flex items-center justify-center gap-3 max-w-md mx-auto mb-8">
+        <div className="flex items-center justify-center gap-3 max-w-md mx-auto mb-5 md:mb-8">
           <span className="h-px flex-1 bg-[var(--color-border)]" />
           <span className="w-2 h-2 rounded-full bg-[var(--color-primary)]" />
           <span className="h-px flex-1 bg-[var(--color-border)]" />
         </div>
-        <p className="text-base md:text-lg text-[var(--color-body)] max-w-2xl mx-auto leading-relaxed">
+        <p className="text-sm md:text-lg text-[var(--color-body)] max-w-2xl mx-auto leading-relaxed">
           We foster a culture where people with a can-do attitude can be a
           part of our growing team. Check back here for our current
           openings.
         </p>
       </section>
 
-      <section className="container mx-auto px-6 pb-20 max-w-4xl">
+      <section className="container mx-auto px-2 sm:px-4 pb-12 md:pb-20 max-w-4xl">
         {loading ? (
-          <div className="space-y-6">
+          <div className="space-y-4 sm:space-y-6">
             <JobCardSkeleton />
             <JobCardSkeleton />
           </div>
         ) : jobs.length > 0 ? (
-          <div className="space-y-6">
+          <div className="space-y-4 sm:space-y-6">
             {jobs.map((job, index) => (
               <JobCard
                 key={job._id || index}
@@ -237,7 +237,7 @@ const Careers = () => {
             ))}
           </div>
         ) : (
-          <div className="text-center bg-white rounded-2xl border border-dashed border-[var(--color-border)] py-20 px-6">
+          <div className="text-center bg-white rounded-2xl border border-dashed border-[var(--color-border)] py-12 md:py-20 px-6">
             <p className="text-lg md:text-xl font-semibold text-[#0a1a3c] mb-2">
               No current job opportunities right now
             </p>
