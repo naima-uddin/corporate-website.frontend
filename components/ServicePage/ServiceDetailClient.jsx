@@ -264,7 +264,7 @@ const ServiceDetailClient = ({
           <div className="absolute inset-0 bg-gradient-to-br from-[var(--color-primary)] to-[var(--color-ink-2)]" />
         )}
 
-        <div className="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-20 sm:py-28">
+        <div className="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
           {(backHref || categoryLabel) && (
             <Link
               href={backHref || `/services/category/${categorySlug}`}
