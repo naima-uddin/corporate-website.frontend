@@ -9,7 +9,7 @@ const ChairmanMessage = ({ chairman }) => {
   if (!chairman || (!chairman.message && !chairman.name)) return null;
 
   return (
-    <section className="container mx-auto px-6 pb-16">
+    <section className="container mx-auto px-2 md:px-6 pb-6">
       <div className="max-w-5xl mx-auto grid grid-cols-1 sm:grid-cols-[auto_1fr] gap-8 items-center bg-white rounded-2xl border border-[var(--color-border)] shadow-sm p-8 sm:p-10">
         {chairman.image ? (
           <div className="relative h-32 w-32 sm:h-40 sm:w-40 shrink-0 overflow-hidden rounded-full border-4 border-[var(--color-primary-tint)] mx-auto sm:mx-0">
@@ -49,7 +49,7 @@ const ChairmanMessage = ({ chairman }) => {
 };
 
 const CSRActivityRow = ({ item, reversed }) => (
-  <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-start">
+  <div className="grid grid-cols-1 lg:grid-cols-2 gap-2 md:gap-8 lg:gap-12 items-start">
     <div
       className={`relative h-44 md:h-60 lg:h-76 w-full overflow-hidden rounded-xl bg-[var(--color-surface)] border-[var(--color-heading)] ${
         reversed ? "lg:order-2" : "lg:order-1"
@@ -74,11 +74,11 @@ const CSRActivityRow = ({ item, reversed }) => (
       <span className="text-xs font-bold uppercase tracking-widest text-[var(--color-primary)]">
         CSR Activities
       </span>
-      <h2 className="mt-2 mb-4 text-2xl md:text-3xl font-bold leading-tight text-[#0a1a3c]">
+      <h2 className="mt-0 md:mt-2 mb-1 md:mb-4 text-2xl md:text-3xl font-bold leading-tight text-[#0a1a3c]">
         {item.title}
       </h2>
       {item.excerpt && (
-        <p className="text-sm md:text-base text-[var(--color-body)] leading-relaxed line-clamp-6 mb-5 whitespace-pre-line">
+        <p className="text-sm md:text-base text-[var(--color-body)] leading-relaxed line-clamp-6 mb-2 md:mb-5 whitespace-pre-line">
           {item.excerpt}
         </p>
       )}
@@ -139,7 +139,7 @@ const CSR = () => {
 
   return (
     <div className="bg-gradient-to-b from-[#eef4ff] to-white text-black">
-      <section className="container mx-auto px-6 py-16 text-center">
+      <section className="container mx-auto px-6 py-6 text-center">
         <span className="uppercase tracking-widest text-sm font-bold text-[var(--color-primary)]">
           {data?.label || "Giving Back"}
         </span>
@@ -155,7 +155,7 @@ const CSR = () => {
 
       <ChairmanMessage chairman={data?.chairman} />
 
-      <section className="container mx-auto px-6 pb-24">
+      <section className="container mx-auto px-6 pb-6 md:pb-24">
         <div className="max-w-6xl mx-auto space-y-16 lg:space-y-24">
           {loading ? (
             [1, 2].map((item) => <CSRActivitySkeleton key={item} />)
