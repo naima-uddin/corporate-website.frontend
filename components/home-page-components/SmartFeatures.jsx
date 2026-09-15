@@ -91,7 +91,7 @@ const parsePercent = (value) => {
 };
 
 const LightCard = ({ feature }) => (
-  <div className="flex flex-col justify-between rounded-2xl bg-[#f4f6fb] p-6 md:p-8 min-h-[22rem]">
+  <div className="flex flex-col justify-between rounded-2xl bg-[#f4f6fb] p-5 sm:p-6 md:p-8 min-h-[15rem] sm:min-h-[22rem]">
     <div>
       <div className="flex items-start justify-between gap-4">
         <h3 className="text-xl md:text-2xl font-bold text-[var(--color-heading)] leading-snug">
@@ -113,7 +113,7 @@ const LightCard = ({ feature }) => (
         {feature.statValue && (
           <AnimatedStat
             value={feature.statValue}
-            className="text-4xl md:text-5xl font-extrabold text-[var(--color-heading)] leading-none"
+            className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-[var(--color-heading)] leading-none"
           />
         )}
         {feature.statLabel && (
@@ -127,7 +127,7 @@ const LightCard = ({ feature }) => (
 );
 
 const ImageCard = ({ feature }) => (
-  <div className="relative flex flex-col justify-between rounded-2xl overflow-hidden p-6 md:p-8 min-h-[22rem]">
+  <div className="relative flex flex-col justify-between rounded-2xl overflow-hidden p-5 sm:p-6 md:p-8 min-h-[15rem] sm:min-h-[22rem]">
     {feature.image ? (
       <img
         src={feature.image}
@@ -175,12 +175,12 @@ const DarkCard = ({ feature }) => {
         }));
 
   return (
-    <div className="flex flex-col justify-between rounded-2xl bg-[#0e2f6b] p-6 md:p-8 min-h-[22rem]">
+    <div className="flex flex-col justify-between rounded-2xl bg-[#0e2f6b] p-5 sm:p-6 md:p-8 min-h-[15rem] sm:min-h-[22rem]">
       <div>
         {feature.statValue && (
           <AnimatedStat
             value={feature.statValue}
-            className="block text-5xl md:text-6xl font-extrabold text-white leading-none"
+            className="block text-4xl sm:text-5xl md:text-6xl font-extrabold text-white leading-none"
           />
         )}
         {(feature.description || feature.statLabel) && (
@@ -251,13 +251,13 @@ const SmartFeatures = () => {
 
   if (loading) {
     return (
-      <section className="py-10 md:py-16">
+      <section className="py-4 md:py-6">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
             {[1, 2, 3].map((i) => (
               <div
                 key={i}
-                className="min-h-[22rem] rounded-2xl bg-gray-200 animate-pulse"
+                className="min-h-[15rem] sm:min-h-[22rem] rounded-2xl bg-gray-200 animate-pulse"
               />
             ))}
           </div>
@@ -273,9 +273,9 @@ const SmartFeatures = () => {
   const titleAccent = settings?.titleAccent || "";
 
   return (
-    <section className="py-10 md:py-16">
+    <section className="py-6 md:py-16">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex flex-col items-start gap-4 mb4 md:mb-6">
+        <div className="flex flex-col items-start gap-2 sm:gap-4 mb-4 md:mb-6">
           {eyebrow && (
             <span className="inline-flex w-fit items-center eyebrow">
               {eyebrow}
@@ -289,7 +289,7 @@ const SmartFeatures = () => {
           )}
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
           {features.map((feature) => (
             <CardByStyle key={feature._id} feature={feature} />
           ))}

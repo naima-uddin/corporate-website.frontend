@@ -75,7 +75,7 @@ const ClientShowcase = () => {
   if (logos.length === 0) return null;
 
   return (
-    <section className="py-4 md:py-10 ">
+    <section className="py-4 md:py-6 ">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <SectionHeading
           eyebrow="Trusted By"
@@ -86,7 +86,7 @@ const ClientShowcase = () => {
           compact
         />
 
-        <div className="overflow-hidden pt-20">
+        <div className="overflow-hidden pt-20 ">
           <div
             className="flex items-center w-max -mt-20 hover:[animation-play-state:paused]"
             style={{ animation: "scroll 30s linear infinite" }}
