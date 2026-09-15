@@ -38,14 +38,14 @@ const JoinUs = () => {
             </div>
             <div className="h-12 bg-gray-300 rounded-full w-40 shrink-0 animate-pulse" />
           </div>
-          <div className="flex flex-col md:flex-row gap-5 md:h-[500px]">
+          <div className="flex flex-col md:flex-row gap-3 sm:gap-5 md:h-[500px]">
             {[1, 2, 3, 4].map((item) => (
               <div
                 key={item}
                 className={`md:h-full bg-gray-300 animate-pulse ${
                   item === 1
-                    ? "h-80 sm:h-96 md:flex-[1.6]"
-                    : "h-32 sm:h-40 md:flex-1"
+                    ? "h-60 sm:h-96 md:flex-[1.6]"
+                    : "h-28 sm:h-40 md:flex-1"
                 }`}
               />
             ))}
@@ -61,17 +61,17 @@ const JoinUs = () => {
   if (cards.length === 0) return null;
 
   return (
-    <section className="py-6 md:py-10 bg-[var(--color-surface,#f0f0f0)]">
+    <section className="py-4 md:py-10 bg-[var(--color-surface,#f0f0f0)]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
-          className="flex flex-row items-start justify-between gap-4 md:items-end mb-4 md:mb-6"
+          className="flex flex-row items-start justify-between gap-4 md:items-end mb-3 md:mb-6"
         >
           <div className="max-w-2xl min-w-0">
-            <span className="eyebrow mb-3">Careers</span>
+            <span className="eyebrow mb-1 md:mb-3">Careers</span>
             <h2 className="main-title text-2xl md:text-3xl lg:text-4xl font-extrabold tracking-tight text-[var(--color-heading,#111)] uppercase">
               {joinUs.title}
             </h2>
@@ -93,7 +93,7 @@ const JoinUs = () => {
           )}
         </motion.div>
 
-        <div className="flex flex-col md:flex-row gap-5 md:h-[500px]">
+        <div className="flex flex-col md:flex-row gap-3 sm:gap-5 md:h-[500px]">
           {cards.map((card, index) => {
             const isFeatured = index === 0;
             const isJobOpportunities = /job opportunities/i.test(
@@ -111,8 +111,8 @@ const JoinUs = () => {
                 transition={{ duration: 0.5, delay: index * 0.08 }}
                 className={`group relative block overflow-hidden bg-[var(--color-ink,#1a1a1a)] shadow-md ring-1 ring-black/5 transition-all duration-500 hover:-translate-y-1.5 hover:shadow-2xl md:h-full ${
                   isFeatured
-                    ? "h-80 sm:h-96 md:flex-[1.6]"
-                    : "h-32 sm:h-40 md:flex-1"
+                    ? "h-60 sm:h-96 md:flex-[1.6]"
+                    : "h-28 sm:h-40 md:flex-1"
                 } ${href ? "cursor-pointer" : "cursor-default"}`}
               >
                 {card.image ? (
@@ -129,7 +129,7 @@ const JoinUs = () => {
                 <div className="absolute inset-0 ring-1 ring-inset ring-white/10" />
 
                 {card.label && (
-                  <div className="absolute inset-x-0 bottom-0 p-5 md:p-6">
+                  <div className="absolute inset-x-0 bottom-0 p-4 sm:p-5 md:p-6">
                     <span
                       className={`block font-semibold text-white ${
                         isFeatured ? "text-xl md:text-2xl" : "text-base md:text-lg"
