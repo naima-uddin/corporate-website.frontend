@@ -28545,7 +28545,7 @@ const k8 = () => {
             }),
             r.jsxs("div", {
               className:
-                "border-t border-[#00f0ff]/20 pt-8 flex flex-col md:flex-row justify-between items-center",
+                " pt-8 flex flex-col md:flex-row justify-between items-center",
               children: [
                 r.jsxs("p", {
                   className: "text-[#b0b0ff] mb-4 md:mb-0",
@@ -30124,7 +30124,7 @@ const q8 = () =>
           }),
         }),
         r.jsx("section", {
-          className: "bg-[#12121a] py-20 border-t border-[#00f0ff]/20",
+          className: "bg-[#12121a] py-20 ",
           children: r.jsxs("div", {
             className: "max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8",
             children: [
@@ -40591,7 +40591,7 @@ const ST = [23.836236, 90.358672],
                             }),
                             r.jsx("div", {
                               className:
-                                "p-4 bg-[#12121a] text-center border-t border-[#00f0ff]/20",
+                                "p-4 bg-[#12121a] text-center ",
                               children: r.jsx(Ue, {
                                 to: `/portfolio/${t.id}`,
                                 className:
@@ -44612,7 +44612,7 @@ const ST = [23.836236, 90.358672],
                   initial: { opacity: 0 },
                   whileInView: { opacity: 1 },
                   transition: { duration: 0.8, delay: 1.4 },
-                  className: "mt-16 pt-8 border-t border-[#00f0ff]/20",
+                  className: "mt-16 pt-8 ",
                   children: [
                     r.jsx("h2", {
                       className: "text-2xl font-bold text-[#00f0ff] mb-4",
@@ -45009,7 +45009,7 @@ const ST = [23.836236, 90.358672],
                   initial: { opacity: 0 },
                   whileInView: { opacity: 1 },
                   transition: { duration: 0.8, delay: 1.8 },
-                  className: "mt-16 pt-8 border-t border-[#00f0ff]/20",
+                  className: "mt-16 pt-8 ",
                   children: [
                     r.jsxs("h2", {
                       className:
@@ -45109,7 +45109,7 @@ function UT() {
                   ],
                 }),
                 r.jsxs("div", {
-                  className: "border-t border-[#00f0ff]/20 pt-6",
+                  className: " pt-6",
                   children: [
                     r.jsx("p", {
                       className: "text-[#b0b0ff] mb-3",

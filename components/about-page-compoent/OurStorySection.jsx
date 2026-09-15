@@ -21,7 +21,7 @@ const OurStorySection = ({ data }) => {
   const steps = Array.isArray(milestones) ? milestones : [];
 
   return (
-    <section className="relative px-2 md:px-6 py-6 bg-white text-black border-t border-[#00f0ff]/20">
+    <section className="relative px-2 md:px-6 py-6 md:py-10 bg-white text-black ">
       <div className="max-w-4xl mx-auto">
         <div className="text-center mb-12 md:mb-16">
           <div className="flex items-center justify-center gap-2 text-[#0066ff] mb-4">
