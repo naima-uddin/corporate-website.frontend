@@ -175,7 +175,7 @@ const WhoRWe = () => {
                   <div className="w-full h-full bg-gradient-to-br from-[var(--color-primary-dark)] to-[var(--color-primary)]" />
                 )}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
-                <span className="absolute inset-x-0 top-0 p-4 text-xs font-semibold uppercase tracking-wide text-white/90">
+                <span className="absolute inset-x-0 top-0 px-4 text-xs font-semibold uppercase tracking-wide text-white/90">
                   Warm Welcome From Our Founder
                 </span>
               </div>
@@ -274,8 +274,8 @@ const WhoRWe = () => {
                 Warm Welcome From Our Founder
               </span>
 
-              <div className="relative mt-8 mb-10">
-                <div className="relative bg-[var(--color-surface)] p-10 shadow-md ring-1 ring-[var(--color-border)] rounded-[48px/32px]">
+              <div className="relative mt-4 mb-6">
+                <div className="relative bg-[var(--color-surface)] p-6 shadow-md ring-1 ring-[var(--color-border)] rounded-[48px/32px]">
                   <p className="relative text-xl-0.5px leading-relaxed text-[var(--color-heading)]">
                     <span dangerouslySetInnerHTML={{ __html: visibleQuoteHtml }} />
                     {!typingDone && (

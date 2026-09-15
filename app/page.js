@@ -1,5 +1,6 @@
 import Banner from "@/components/home-page-components/Banner";
 import ClientShowcase from "@/components/home-page-components/ClientShowcase";
+import SmartFeatures from "@/components/home-page-components/SmartFeatures";
 import JoinUs from "@/components/home-page-components/JoinUs";
 import Newsroom from "@/components/home-page-components/Newsroom";
 import WhatWeOffer from "@/components/home-page-components/WhatWeOffer";
@@ -67,6 +68,7 @@ export default async function Home() {
       <WhoRWe />
       <WhatWeOffer />
       <ClientShowcase />
+      <SmartFeatures />
       <Newsroom />
       <JoinUs />
 

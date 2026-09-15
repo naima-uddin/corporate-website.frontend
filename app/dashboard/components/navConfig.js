@@ -21,6 +21,7 @@ import {
   Menu,
   HeartHandshake,
   Scale,
+  Sparkles,
 } from "lucide-react";
 
 export const NAV_SECTIONS = [
@@ -40,6 +41,7 @@ export const NAV_SECTIONS = [
       { id: "join-us", label: "Join Us Section", icon: Users2, href: "/dashboard/join-us" },
       { id: "job-opportunities", label: "Job Opportunities", icon: Briefcase, href: "/dashboard/job-opportunities" },
       { id: "client-showcase", label: "Client Showcase", icon: Building2, href: "/dashboard/client-showcase" },
+      { id: "smart-features", label: "Smart Features", icon: Sparkles, href: "/dashboard/smart-features" },
     ],
   },
   {
