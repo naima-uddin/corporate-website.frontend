@@ -26,7 +26,7 @@ const SectionHeading = ({
       </h2>
       {subtitle && (
         <p
-          className={`${compact ? "mt-1.5" : "mt-4"} max-w-2xl text-base md:text-lg leading-relaxed ${
+          className={`${compact ? "mt-1.5 text-sm md:text-base" : "mt-4 text-base md:text-lg"} max-w-2xl leading-relaxed ${
             dark ? "text-white/70" : "text-[var(--color-body)]"
           } ${align === "left" ? "" : "mx-auto"}`}
         >
