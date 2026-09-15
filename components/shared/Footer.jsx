@@ -120,7 +120,7 @@ const Footer = () => {
         }
       >
         <div className="absolute inset-0 bg-[var(--color-ink)]/80" />
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16 flex flex-col md:flex-row items-center justify-between gap-8">
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 md:py-14 flex flex-col md:flex-row items-center justify-between gap-4 md:gap-8">
           <div className="text-center md:text-left">
             {footer.topBandEyebrow && (
               <span className="eyebrow text-white/80 mb-3">
@@ -159,12 +159,12 @@ const Footer = () => {
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14 md:py-16">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-10 md:gap-8 mb-12">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 md:py-14">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-x-6 gap-y-3 md:gap-8 mb-4 md:mb-12">
           <div className="col-span-2 md:col-span-1">
-            <div className="flex items-center gap-2 mb-4">
+            <div className="flex items-center gap-2 mb-2 md:mb-4">
               {footer.logoImage ? (
-                <img src={footer.logoImage} alt="Logo" className="h-16 w-auto" />
+                <img src={footer.logoImage} alt="Logo" className="h-12 sm:h-16 w-auto" />
               ) : (
                 <Logo variant="light" />
               )}
@@ -176,10 +176,10 @@ const Footer = () => {
 
           {(footer.columns || []).map((column, colIndex) => (
             <div key={colIndex}>
-              <h3 className="text-sm font-bold uppercase tracking-wide text-white mb-5">
+              <h3 className="text-sm font-bold uppercase tracking-wide text-white mb-3 md:mb-5">
                 {column.title}
               </h3>
-              <ul className="space-y-2.5">
+              <ul className="space-y-1.5 md:space-y-2.5">
                 {(column.links || []).map((link, linkIndex) => (
                   <li key={linkIndex}>
                     <Link
@@ -195,10 +195,10 @@ const Footer = () => {
           ))}
 
           <div>
-            <h3 className="text-sm font-bold uppercase tracking-wide text-white mb-5">
+            <h3 className="text-sm font-bold uppercase tracking-wide text-white mb-3 md:mb-5">
               Contact Us
             </h3>
-            <address className="not-italic space-y-3 text-sm">
+            <address className="not-italic space-y-2 md:space-y-3 text-sm leading-snug">
               {footer.address && (
                 <div className="flex items-start gap-2.5">
                   <FaMapMarkerAlt className="text-[var(--color-primary)] mt-1 flex-shrink-0" />
@@ -230,7 +230,7 @@ const Footer = () => {
             </address>
 
             {footer.socialLinks?.length > 0 && (
-              <div className="flex gap-3 mt-5">
+              <div className="flex gap-3 mt-3 md:mt-5">
                 {footer.socialLinks.map((social, index) => {
                   const Icon =
                     SOCIAL_ICON_MAP[social.platform?.toLowerCase()] || FaGlobe;
@@ -240,7 +240,7 @@ const Footer = () => {
                       href={social.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center text-sm hover:bg-[var(--color-primary)] hover:text-white transition-colors"
+                      className="w-8 h-8 md:w-9 md:h-9 rounded-full bg-white/10 flex items-center justify-center text-sm hover:bg-[var(--color-primary)] hover:text-white transition-colors"
                     >
                       <Icon />
                     </a>
@@ -251,7 +251,7 @@ const Footer = () => {
           </div>
         </div>
 
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-3 border-t border-white/10 pt-6">
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-2 border-t border-white/10 pt-4 md:pt-6">
           <p className="text-xs text-white/40">{copyrightText}</p>
           <div className="flex gap-5">
             {(footer.legalLinks || []).map((link, index) => (
