@@ -198,5 +198,13 @@ select option {
   }
   html {
     @apply font-sans;
+    /* Guard against stray horizontal overflow (e.g. full-bleed sections,
+       marquees) leaking a horizontal scrollbar on mobile — which left a blank
+       gap to the right of the sticky navbar. `clip` (not `hidden`) avoids
+       creating a scroll container, so `position: sticky` keeps working. */
+    overflow-x: clip;
+  }
+  body {
+    overflow-x: clip;
   }
 }

@@ -5,7 +5,12 @@ import Image from "next/image";
 const FALLBACK_LOGO = "/logo.png";
 const FALLBACK_NAME = "Rakibhasan";
 
-const Logo = ({ variant = "default", className = "", showName = true }) => {
+const Logo = ({
+  variant = "default",
+  className = "",
+  showName = true,
+  nameClassName = "",
+}) => {
   const [settings, setSettings] = useState({
     logoImage: "",
     siteName: "",
@@ -55,7 +60,7 @@ const Logo = ({ variant = "default", className = "", showName = true }) => {
         <span
           className={`text-lg font-bold leading-none whitespace-nowrap ${
             variant === "light" ? "text-white" : "text-[var(--color-heading)]"
-          }`}
+          } ${nameClassName}`}
         >
           {siteName}
         </span>

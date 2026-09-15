@@ -327,7 +327,10 @@ const Navbar = () => {
       }`}
     >
       <Link href="/" className="flex items-center space-x-2 shrink-0">
-        <Logo variant={overlay ? "light" : "default"} />
+        <Logo
+          variant={overlay ? "light" : "default"}
+          nameClassName="hidden md:inline"
+        />
       </Link>
 
       <ul className="hidden md:flex gap-6 lg:gap-8 items-center text-sm font-semibold relative">
