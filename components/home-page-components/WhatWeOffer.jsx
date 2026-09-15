@@ -241,7 +241,7 @@ const WhatWeOffer = () => {
                       <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
                     )}
 
-                    <div className="absolute inset-x-0 bottom-0 flex items-center justify-between px-4 py-3">
+                    <div className="absolute inset-x-0 bottom-0 flex items-center justify-between px-4 py-1">
                       <span className="text-sm sm:text-base font-semibold text-white">
                         {tile.label}
                       </span>

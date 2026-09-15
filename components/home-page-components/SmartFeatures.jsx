@@ -3,8 +3,21 @@
 import React, { useEffect, useState } from "react";
 import { Zap } from "lucide-react";
 
-// Decorative bar chart shown on the "dark" style card (design accent only).
+// Bar heights (%) for the "dark" style card chart. When a numeric statValue is
+// present (e.g. "30%") the chart is derived from it; otherwise this decorative
+// pattern is used as a fallback.
 const DECOR_BARS = [55, 80, 45, 95, 60, 85];
+const BAR_COUNT = 6;
+// Pleasant rising/dipping shape the dynamic chart is scaled against.
+const BAR_SHAPE = [0.5, 0.75, 0.4, 1, 0.65, 0.85];
+
+// Pulls a 0–100 number out of a stat string like "30%", "30 %", "30".
+const parsePercent = (value) => {
+  if (value == null) return null;
+  const n = parseFloat(String(value).replace(/[^0-9.]/g, ""));
+  if (Number.isNaN(n)) return null;
+  return Math.max(0, Math.min(100, n));
+};
 
 const LightCard = ({ feature }) => (
   <div className="flex flex-col justify-between rounded-2xl bg-[#f4f6fb] p-6 md:p-8 min-h-[22rem]">
@@ -52,7 +65,7 @@ const ImageCard = ({ feature }) => (
     ) : (
       <div className="absolute inset-0 bg-gradient-to-br from-sky-400 to-blue-600" />
     )}
-    <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/10 to-black/5" />
+    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/40 to-black/30" />
 
     <div className="relative z-10">
       <h3 className="text-xl md:text-2xl font-bold text-white leading-snug">
@@ -75,34 +88,49 @@ const ImageCard = ({ feature }) => (
   </div>
 );
 
-const DarkCard = ({ feature }) => (
-  <div className="flex flex-col justify-between rounded-2xl bg-[#0e2f6b] p-6 md:p-8 min-h-[22rem]">
-    <div>
-      {feature.statValue && (
-        <span className="block text-5xl md:text-6xl font-extrabold text-white leading-none">
-          {feature.statValue}
-        </span>
-      )}
-      {(feature.description || feature.statLabel) && (
-        <p className="mt-4 text-sm md:text-base text-white/80 max-w-xs">
-          {feature.description || feature.statLabel}
-        </p>
-      )}
-    </div>
+const DarkCard = ({ feature }) => {
+  const percent = parsePercent(feature.statValue);
 
-    <div className="flex items-end gap-2 md:gap-3 mt-8 h-24">
-      {DECOR_BARS.map((h, i) => (
-        <div
-          key={i}
-          className={`flex-1 rounded-md ${
-            i % 3 === 1 ? "bg-white" : "bg-white/25"
-          }`}
-          style={{ height: `${h}%` }}
-        />
-      ))}
+  // Dynamic chart: heights follow the shape scaled by the stat value, and the
+  // number of highlighted bars reflects the percentage (e.g. 30% ≈ 2 of 6 lit).
+  const bars =
+    percent == null
+      ? DECOR_BARS.map((h, i) => ({ height: h, active: i % 3 === 1 }))
+      : BAR_SHAPE.map((f, i) => ({
+          // Shape keeps the chart looking full; the value drives how many bars light up.
+          height: Math.round(35 + f * 65),
+          active: i < Math.round((percent / 100) * BAR_COUNT),
+        }));
+
+  return (
+    <div className="flex flex-col justify-between rounded-2xl bg-[#0e2f6b] p-6 md:p-8 min-h-[22rem]">
+      <div>
+        {feature.statValue && (
+          <span className="block text-5xl md:text-6xl font-extrabold text-white leading-none">
+            {feature.statValue}
+          </span>
+        )}
+        {(feature.description || feature.statLabel) && (
+          <p className="mt-4 text-sm md:text-base text-white/80 max-w-xs">
+            {feature.description || feature.statLabel}
+          </p>
+        )}
+      </div>
+
+      <div className="flex items-end gap-2 md:gap-3 mt-8 h-24">
+        {bars.map((bar, i) => (
+          <div
+            key={i}
+            className={`flex-1 rounded-md transition-all ${
+              bar.active ? "bg-white" : "bg-white/25"
+            }`}
+            style={{ height: `${bar.height}%` }}
+          />
+        ))}
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
 const CardByStyle = ({ feature }) => {
   if (feature.style === "image") return <ImageCard feature={feature} />;
@@ -174,15 +202,14 @@ const SmartFeatures = () => {
   return (
     <section className="py-10 md:py-16">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-6 mb-10 md:mb-14">
+        <div className="flex flex-col items-start gap-4 mb4 md:mb-6">
           {eyebrow && (
-            <span className="inline-flex w-fit items-center rounded-full border border-gray-200 px-4 py-1.5 text-sm font-medium text-[var(--color-body)]">
-              <span className="mr-2 inline-block h-1.5 w-1.5 rounded-full bg-[var(--color-heading)]" />
+            <span className="inline-flex w-fit items-center eyebrow">
               {eyebrow}
             </span>
           )}
           {(title || titleAccent) && (
-            <h2 className="main-title text-2xl md:text-3xl lg:text-4xl font-extrabold tracking-tight text-right lg:max-w-xl">
+            <h2 className="main-title text-2xl md:text-3xl lg:text-4xl font-extrabold tracking-tight text-left lg:max-w-2xl">
               <span className="text-[var(--color-heading)]">{title}</span>{" "}
               <span className="text-gray-400">{titleAccent}</span>
             </h2>
