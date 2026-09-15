@@ -123,7 +123,7 @@ const Portfolio = () => {
     <div className="bg-white text-[var(--color-heading)]">
       {/* Hero */}
       <div
-        className="relative py-20 px-4 sm:px-6 lg:px-8 bg-[var(--color-ink)]"
+        className="relative py-10 md:py-20 px-4 sm:px-6 lg:px-8 bg-[var(--color-ink)]"
         style={{
           backgroundImage: hero.backgroundImage
             ? `linear-gradient(rgba(11,14,20,0.75), rgba(11,14,20,0.75)), url(${hero.backgroundImage})`
@@ -138,13 +138,13 @@ const Portfolio = () => {
               {hero.label}
             </span>
           )}
-          <h1 className="main-title text-2xl md:text-3xl lg:text-4xl font-bold mt-3 mb-4 text-white">
+          <h1 className="main-title text-2xl md:text-3xl lg:text-4xl font-bold mt-2 md:mt-3 mb-3 md:mb-4 text-white">
             {hero.heading || "Our Projects"}{" "}
             {hero.highlight && (
               <span className="text-[#7fb3ff]">{hero.highlight}</span>
             )}
           </h1>
-          <p className="text-lg md:text-xl text-white/70 max-w-3xl mx-auto">
+          <p className="text-sm md:text-xl text-white/70 max-w-3xl mx-auto">
             {hero.description}
           </p>
         </div>
@@ -153,12 +153,12 @@ const Portfolio = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Government Clients */}
         {clients.length > 0 && (
-          <section className="py-12 -mt-10 relative z-10">
-            <div className="bg-white rounded-2xl border border-[var(--color-border)] shadow-lg p-8">
-              <p className="text-center uppercase tracking-widest text-xs font-bold text-[var(--color-primary)] mb-8">
+          <section className="py-8 md:py-12 -mt-8 md:-mt-10 relative z-10">
+            <div className="bg-white rounded-2xl border border-[var(--color-border)] shadow-lg p-5 sm:p-8">
+              <p className="text-center uppercase tracking-widest text-xs font-bold text-[var(--color-primary)] mb-5 md:mb-8">
                 Government Clients
               </p>
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-7 gap-5">
+              <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-7 gap-4 md:gap-5">
                 {clients.map((item, idx) => (
                   <div
                     key={item.name || idx}
@@ -226,7 +226,7 @@ const Portfolio = () => {
         {!loading && !error && (
           <>
             {/* Recent Government Contracts */}
-            <section className="py-10">
+            <section className="py-8 md:py-10">
               <div className="flex items-center justify-between mb-5">
                 <h2 className="text-xl sm:text-2xl font-bold flex items-center gap-2">
                   <ClipboardCheck className="text-[var(--color-primary)]" />
@@ -317,7 +317,7 @@ const Portfolio = () => {
 
             {/* Featured Government Projects */}
             {featuredProjects.length > 0 && (
-              <section className="py-10">
+              <section className="py-8 md:py-10">
                 <div className="flex items-center justify-between mb-5">
                   <h2 className="text-xl sm:text-2xl font-bold">
                     {featuredSection.heading || "Featured Government Projects"}
@@ -401,7 +401,7 @@ const Portfolio = () => {
 
             {/* Work Categories */}
             {workCategories.length > 0 && (
-              <section className="py-10">
+              <section className="py-8 md:py-10">
                 <p className="text-center uppercase tracking-widest text-xs font-bold text-[var(--color-primary)] mb-6">
                   Our Work Categories
                 </p>
@@ -413,7 +413,7 @@ const Portfolio = () => {
                         key={idx}
                         className="group flex flex-col items-center text-center gap-3 p-2 rounded-xl border border-[var(--color-border)] hover:border-[var(--color-primary)] hover:shadow-md transition-all"
                       >
-                        <span className="text-5xl leading-none group-hover:scale-110 transition-transform">
+                        <span className="text-4xl sm:text-5xl leading-none group-hover:scale-110 transition-transform">
                           {icon}
                         </span>
                         <span className="text-sm font-semibold text-[var(--color-heading)]">
@@ -428,7 +428,7 @@ const Portfolio = () => {
 
             {/* Stats */}
             {stats.length > 0 && (
-              <section className="py-14">
+              <section className="py-10 md:py-14">
                 <div className="relative overflow-hidden rounded-2xl px-6 py-10">
                   <Image
                     src="/projectsbanner.jpg"
@@ -446,8 +446,8 @@ const Portfolio = () => {
 
             {/* Timeline */}
             {timeline.length > 0 && (
-              <section className="py-14">
-                <h2 className="text-xl sm:text-2xl font-bold text-center mb-10">
+              <section className="py-10 md:py-14">
+                <h2 className="text-xl sm:text-2xl font-bold text-center mb-6 md:mb-10">
                   Our Project Timeline
                 </h2>
                 <div className="relative overflow-x-auto pb-4">
@@ -476,7 +476,7 @@ const Portfolio = () => {
       </div>
 
       {/* CTA */}
-      <section className=" py-14 mt-6">
+      <section className="py-10 md:py-14 mt-6">
         <div className="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">
           <h2 className="main-title text-2xl md:text-3xl lg:text-4xl font-bold mb-4 bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-primary-dark)] bg-clip-text text-transparent">
             {cta.heading || "Let's Build a Better Tomorrow Together"}
