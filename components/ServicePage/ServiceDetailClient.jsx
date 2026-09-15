@@ -67,10 +67,10 @@ const ServiceDetailClient = ({
   const blocks = {
     features: service.features?.length > 0 && (
       <section key="features">
-        <h2 className="text-2xl font-bold text-[var(--color-heading)] mb-6">
+        <h2 className="text-xl sm:text-2xl font-bold text-[var(--color-heading)] mb-4 sm:mb-6">
           What's Included
         </h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
           {service.features.map((feature, i) => (
             <motion.div
               key={feature}
@@ -90,16 +90,16 @@ const ServiceDetailClient = ({
 
     process: service.process?.length > 0 && (
       <section key="process">
-        <h2 className="text-2xl font-bold text-[var(--color-heading)] mb-6">
+        <h2 className="text-xl sm:text-2xl font-bold text-[var(--color-heading)] mb-4 sm:mb-6">
           Our Process
         </h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-5">
           {service.process.map((line, i) => {
             const { primary, secondary } = parsePair(line);
             return (
               <div
                 key={line}
-                className="rounded-lg border border-[var(--color-border)] bg-white p-5"
+                className="rounded-lg border border-[var(--color-border)] bg-white p-4 sm:p-5"
               >
                 <div className="flex items-center gap-3 mb-2">
                   <span className="flex h-8 w-8 items-center justify-center rounded-full bg-[var(--color-primary-tint)] text-sm font-bold text-[var(--color-primary)]">
@@ -121,7 +121,7 @@ const ServiceDetailClient = ({
 
     stats: service.stats?.length > 0 && (
       <section key="stats">
-        <h2 className="text-2xl font-bold text-[var(--color-heading)] mb-6">
+        <h2 className="text-xl sm:text-2xl font-bold text-[var(--color-heading)] mb-4 sm:mb-6">
           Results That Matter
         </h2>
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
@@ -147,7 +147,7 @@ const ServiceDetailClient = ({
 
     gallery: gallery.length > 1 && (
       <section key="gallery">
-        <h2 className="text-2xl font-bold text-[var(--color-heading)] mb-6">
+        <h2 className="text-xl sm:text-2xl font-bold text-[var(--color-heading)] mb-4 sm:mb-6">
           Gallery
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -159,7 +159,7 @@ const ServiceDetailClient = ({
               <img
                 src={src}
                 alt={service.title}
-                className="w-full h-64 object-cover"
+                className="w-full h-48 sm:h-64 object-cover"
               />
             </div>
           ))}
@@ -169,14 +169,14 @@ const ServiceDetailClient = ({
 
     details: detailParagraphs.length > 0 && (
       <section key="details">
-        <h2 className="text-2xl font-bold text-[var(--color-heading)] mb-6">
+        <h2 className="text-xl sm:text-2xl font-bold text-[var(--color-heading)] mb-4 sm:mb-6">
           More Details
         </h2>
-        <div className="space-y-4">
+        <div className="space-y-3">
           {detailParagraphs.map((paragraph) => (
             <p
               key={paragraph}
-              className="text-[var(--color-body)] leading-relaxed"
+              className="text-sm sm:text-base text-[var(--color-body)] leading-relaxed"
             >
               {paragraph}
             </p>
@@ -186,7 +186,7 @@ const ServiceDetailClient = ({
     ),
 
     sections: sections.length > 0 && (
-      <section key="sections" className="space-y-16 pt-4">
+      <section key="sections" className="space-y-10 md:space-y-16 pt-4">
         {sections.map((sec, index) => {
           const reversed = index % 2 === 1;
           const secondaryImage = sec.images?.[0];
@@ -200,9 +200,9 @@ const ServiceDetailClient = ({
               transition={{ duration: 0.5 }}
               className={`flex flex-col ${
                 reversed ? "lg:flex-row-reverse" : "lg:flex-row"
-              } items-center gap-8 lg:gap-12`}
+              } items-center gap-2 md:gap-4 lg:gap-12`}
             >
-              <div className="w-full lg:w-1/2 grid grid-cols-2 gap-3">
+              <div className="w-full lg:w-1/2 grid grid-cols-2 gap-2">
                 {sec.image ? (
                   <img
                     src={sec.image}
@@ -224,10 +224,10 @@ const ServiceDetailClient = ({
               </div>
 
               <div className="w-full lg:w-1/2">
-                <h2 className="text-2xl sm:text-3xl font-bold text-[var(--color-heading)] mb-4">
+                <h2 className="text-xl sm:text-3xl font-bold text-[var(--color-heading)] mb-2 md:mb-4">
                   {sec.title}
                 </h2>
-                <p className="text-[var(--color-body)] leading-relaxed mb-6">
+                <p className="text-sm sm:text-base text-[var(--color-body)] leading-relaxed mb-2 md:mb-6">
                   {sec.description}
                 </p>
                 {sec.slug && (
@@ -264,11 +264,11 @@ const ServiceDetailClient = ({
           <div className="absolute inset-0 bg-gradient-to-br from-[var(--color-primary)] to-[var(--color-ink-2)]" />
         )}
 
-        <div className="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
+        <div className="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-16">
           {(backHref || categoryLabel) && (
             <Link
               href={backHref || `/services/category/${categorySlug}`}
-              className="inline-flex items-center gap-1.5 text-sm font-medium text-white/80 hover:text-white mb-6"
+              className="inline-flex items-center gap-1.5 text-sm font-medium text-white/80 hover:text-white mb-4 sm:mb-6"
             >
               <ArrowLeft className="w-4 h-4" />
               {backLabel || categoryLabel}
@@ -282,19 +282,19 @@ const ServiceDetailClient = ({
           <h1 className="main-title text-2xl md:text-3xl lg:text-4xl font-extrabold text-white tracking-tight max-w-3xl">
             {service.title}
           </h1>
-          <p className="mt-4 text-lg text-white/85 max-w-2xl leading-relaxed">
+          <p className="mt-3 sm:mt-4 text-base sm:text-lg text-white/85 max-w-2xl leading-relaxed">
             {service.description}
           </p>
           <a
             href="#contact"
-            className="inline-flex mt-8 items-center bg-white text-[var(--color-heading)] font-semibold py-3 px-7 rounded-lg hover:bg-white/90 transition-colors duration-200"
+            className="inline-flex mt-6 sm:mt-8 items-center bg-white text-[var(--color-heading)] font-semibold py-2.5 sm:py-3 px-6 sm:px-7 rounded-lg hover:bg-white/90 transition-colors duration-200"
           >
             Get in Touch
           </a>
         </div>
       </section>
 
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-14 sm:py-16 space-y-16">
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-16 space-y-8 sm:space-y-16">
         {order.map((key) => blocks[key]).filter(Boolean)}
 
       

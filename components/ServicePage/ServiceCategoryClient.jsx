@@ -28,12 +28,12 @@ const ServiceCategoryClient = ({ category, services }) => {
           <div className="absolute inset-0 bg-gradient-to-br from-[var(--color-primary)] to-[var(--color-ink-2)]" />
         )}
 
-        <div className="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-20 sm:py-28 text-center">
+        <div className="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-28 text-center">
           <h1 className="main-title text-2xl md:text-3xl lg:text-4xl font-extrabold text-white tracking-tight">
             {category.displayName}
           </h1>
           {category.description && (
-            <p className="mt-4 text-lg text-white/85 max-w-2xl mx-auto leading-relaxed">
+            <p className="mt-3 sm:mt-4 text-base sm:text-lg text-white/85 max-w-2xl mx-auto leading-relaxed">
               {category.description}
             </p>
           )}
@@ -41,7 +41,7 @@ const ServiceCategoryClient = ({ category, services }) => {
       </section>
 
       {/* Services list */}
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20 space-y-16">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-20 space-y-10 sm:space-y-16">
         {services.length === 0 && (
           <p className="text-center text-[var(--color-body)]">
             No services found in this category yet.
@@ -61,7 +61,7 @@ const ServiceCategoryClient = ({ category, services }) => {
               transition={{ duration: 0.5 }}
               className={`flex flex-col ${
                 reversed ? "lg:flex-row-reverse" : "lg:flex-row"
-              } items-center gap-8 lg:gap-12`}
+              } items-center gap-5 sm:gap-8 lg:gap-12`}
             >
               <div className="w-full lg:w-1/2 grid grid-cols-2 gap-3">
                 {service.image ? (

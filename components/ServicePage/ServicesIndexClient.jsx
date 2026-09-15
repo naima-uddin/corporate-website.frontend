@@ -42,12 +42,12 @@ const ServicesIndexClient = ({ heading, subheading, services }) => {
     <div className="bg-[var(--color-surface)]">
       {/* Hero */}
       <section className="relative overflow-hidden bg-gradient-to-br from-[var(--color-primary)] to-[var(--color-ink-2)]">
-        <div className="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-20 sm:py-28 text-center">
+        <div className="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-28 text-center">
           <h1 className="main-title text-2xl md:text-3xl lg:text-4xl font-extrabold text-white tracking-tight">
             {heading}
           </h1>
           {subheading && (
-            <p className="mt-4 text-lg text-white/85 max-w-2xl mx-auto leading-relaxed">
+            <p className="mt-3 sm:mt-4 text-base sm:text-lg text-white/85 max-w-2xl mx-auto leading-relaxed">
               {subheading}
             </p>
           )}
@@ -55,13 +55,13 @@ const ServicesIndexClient = ({ heading, subheading, services }) => {
       </section>
 
       {/* Services grid */}
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-20">
         {services.length === 0 ? (
           <p className="text-center text-[var(--color-body)]">
             Services are coming soon.
           </p>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
             {services.map((service, index) => {
               const Icon = iconMap[service.icon] || Server;
               return (
