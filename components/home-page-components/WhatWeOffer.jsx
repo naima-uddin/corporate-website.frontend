@@ -183,6 +183,7 @@ const WhatWeOffer = () => {
           subtitle="Comprehensive digital solutions tailored to elevate your business to new heights."
           align="left"
           bottomSpacing="mb-3 md:mb-8"
+          compact
         />
 
         {isLoading && categoryTiles.length === 0 && (
@@ -220,7 +221,7 @@ const WhatWeOffer = () => {
                   <button
                     key={tile.id}
                     onClick={() => setActiveCategory(tile.id)}
-                    className={`group relative h-20 sm:h-32 overflow-hidden rounded-md text-left transition-all duration-300 ${
+                    className={`group relative h-16 sm:h-32 overflow-hidden rounded-md text-left transition-all duration-300 ${
                       isActive ? "shadow-lg" : "hover:-translate-y-0.5 hover:shadow-lg"
                     }`}
                   >
