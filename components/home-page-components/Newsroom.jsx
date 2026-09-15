@@ -46,7 +46,7 @@ const MobileNewsCard = ({ post, big = false }) => (
   <Link
     href={`/news/${post.slug}`}
     className={`group relative block overflow-hidden rounded-2xl shadow-md shadow-black/10 ring-1 ring-black/5 ${
-      big ? "h-56 sm:h-72" : "h-32 sm:h-40"
+      big ? "h-44 sm:h-64" : "h-32 sm:h-40"
     }`}
   >
     {getImageUrl(post.featuredImage) ? (
@@ -79,10 +79,12 @@ const MobileNewsCard = ({ post, big = false }) => (
   </Link>
 );
 
-const NewsListItem = ({ post }) => (
+const NewsListItem = ({ post, compact = false }) => (
   <Link
     href={`/news/${post.slug}`}
-    className="group flex items-start justify-between gap-1 py-4 first:pt-0"
+    className={`group flex items-start justify-between gap-1 first:pt-0 ${
+      compact ? "py-1.5" : "py-3"
+    }`}
   >
     <div className="min-w-0 flex-1">
       <h3 className="text-sm font-semibold leading-snug text-[var(--color-heading)] line-clamp-2 group-hover:text-[var(--color-primary)] transition-colors">
@@ -92,7 +94,11 @@ const NewsListItem = ({ post }) => (
         {formatTimeAgo(post.publishDate || post.createdAt)}
       </span>
     </div>
-    <div className="h-16 w-16 shrink-0 overflow-hidden rounded-sm bg-[var(--color-surface)]">
+    <div
+      className={`shrink-0 overflow-hidden rounded-sm bg-[var(--color-surface)] ${
+        compact ? "h-12 w-12" : "h-16 w-16"
+      }`}
+    >
       {getImageUrl(post.featuredImage) && (
         <img
           src={getImageUrl(post.featuredImage)}
@@ -166,22 +172,17 @@ const Newsroom = () => {
               ))}
             </div>
           </div>
-          <div className="lg:hidden space-y-4">
-            <div className="grid grid-cols-2 gap-3">
+          <div className="lg:hidden">
+            <div className="h-44 sm:h-64 w-full rounded-2xl bg-gray-200 animate-pulse" />
+            <div className="mt-4 divide-y divide-[var(--color-border)]">
               {[1, 2].map((item) => (
-                <div
-                  key={item}
-                  className="h-32 sm:h-40 w-full rounded-2xl bg-gray-200 animate-pulse"
-                />
-              ))}
-            </div>
-            <div className="h-56 sm:h-72 w-full rounded-2xl bg-gray-200 animate-pulse" />
-            <div className="grid grid-cols-2 gap-3">
-              {[1, 2].map((item) => (
-                <div
-                  key={item}
-                  className="h-32 sm:h-40 w-full rounded-2xl bg-gray-200 animate-pulse"
-                />
+                <div key={item} className="flex items-start gap-3 py-4 first:pt-0">
+                  <div className="flex-1 space-y-2">
+                    <div className="h-4 bg-gray-200 rounded-lg w-full animate-pulse" />
+                    <div className="h-3 bg-gray-200 rounded-lg w-20 animate-pulse" />
+                  </div>
+                  <div className="h-16 w-16 shrink-0 rounded-md bg-gray-200 animate-pulse" />
+                </div>
               ))}
             </div>
           </div>
@@ -198,9 +199,9 @@ const Newsroom = () => {
   const rightPosts = rest.slice(4, 8);
 
   return (
-    <section className="py-4 md:py-8 lg:py-10 bg-white">
+    <section className="py-3 md:py-6 lg:py-8 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-end justify-between gap-3 mb-3 md:mb-4">
+        <div className="flex items-end justify-between gap-3 mb-2 md:mb-3">
           <SectionHeading
             eyebrow="Newsroom"
             title="News & Media"
@@ -218,19 +219,13 @@ const Newsroom = () => {
           </Link>
         </div>
 
-        {/* Mobile / tablet: compact layout — row, big image, row */}
-        <div className="lg:hidden space-y-4">
-          <div className="grid grid-cols-2 gap-3">
-            {rest.slice(0, 2).map((post) => (
-              <MobileNewsCard key={post._id || post.slug} post={post} />
-            ))}
-          </div>
-
+        {/* Mobile / tablet: big featured card on top, clean thumbnail list below */}
+        <div className="lg:hidden">
           <MobileNewsCard post={featured} big />
 
-          <div className="grid grid-cols-2 gap-3">
-            {rest.slice(2, 4).map((post) => (
-              <MobileNewsCard key={post._id || post.slug} post={post} />
+          <div className="mt-3 divide-y divide-[var(--color-border)]">
+            {rest.slice(0, 2).map((post) => (
+              <NewsListItem key={post._id || post.slug} post={post} compact />
             ))}
           </div>
         </div>
