@@ -137,7 +137,7 @@ const BoardOfDirectorsSection = ({ members }) => {
   const preview = members.slice(0, 4);
 
   return (
-    <section className="py-16 px-4 md:px-6 bg-white">
+    <section className="py-6 px-2 md:px-6 bg-white">
       <div className="max-w-6xl mx-auto">
         <MotionDiv
           initial={{ opacity: 0, y: 30 }}

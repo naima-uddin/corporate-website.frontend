@@ -58,7 +58,7 @@ const AwardsSection = ({ awards }) => {
   if (!Array.isArray(awards) || awards.length === 0) return null;
 
   return (
-    <section className="px-6 md:px-20 py-16 bg-white text-black border-t border-[#00f0ff]/20">
+    <section className="px-2 md:px-6 py-6 bg-white text-black border-t border-[#00f0ff]/20">
       <div className="max-w-7xl mx-auto">
         <h2 className="main-title text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight mb-8 md:mb-10">
           Awards &amp; <span className="text-[#0066ff]">Accolades</span>

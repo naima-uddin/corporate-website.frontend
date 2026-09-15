@@ -40,8 +40,8 @@ const MissionVisionSection = ({ mission, vision }) => {
   if (!mission && !vision) return null;
 
   return (
-    <section className="relative px-6 md:px-20 py-16 bg-white text-black border-t border-[#00f0ff]/20">
-      <div className="max-w-7xl mx-auto grid md:grid-cols-2 gap-8">
+    <section className="relative px-2 md:px-6 py-3 bg-white text-black border-t border-[#00f0ff]/20">
+      <div className="max-w-7xl mx-auto grid md:grid-cols-2 gap-4 md:gap-8">
         {mission && (
           <Card data={mission} Icon={PiTarget} fallbackLabel="Our Mission" />
         )}

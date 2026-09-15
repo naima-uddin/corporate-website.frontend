@@ -43,7 +43,7 @@ const WhoWeAreSection = ({ data }) => {
     Array.isArray(stats) && stats.length > 0 ? stats : DEFAULT_STATS;
 
   return (
-    <section className="relative  px-6 md:px-20 py-16 bg-white text-black overflow-hidden ">
+    <section className="relative  px-2 md:px-6 py-6 bg-white text-black overflow-hidden ">
       <div className="absolute left-0 w-1/2 h-full bg-gradient-to-r from-[#00f0ff]/10 to-transparent opacity-30"></div>
 
       <div className="relative grid md:grid-cols-[0.9fr_1.1fr] gap-8 md:gap-12 items-stretch max-w-7xl mx-auto">
