@@ -297,17 +297,7 @@ const ServiceDetailClient = ({
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-14 sm:py-16 space-y-16">
         {order.map((key) => blocks[key]).filter(Boolean)}
 
-        {/* Contact */}
-        <section id="contact" className="scroll-mt-24">
-          <h2 className="text-2xl font-bold text-[var(--color-heading)] mb-6">
-            Let's Talk
-          </h2>
-          <ContactFormCard
-            subject={service.title}
-            title={`Interested in ${service.title}?`}
-            subtitle="Share a few details and our team will get back to you shortly."
-          />
-        </section>
+      
       </div>
     </div>
   );

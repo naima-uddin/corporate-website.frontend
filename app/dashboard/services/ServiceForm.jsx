@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import ServiceFields, { Section } from "./ServiceFields";
 import { emptySection } from "./serviceFormUtils";
+import { BLOCK_LABELS, normalizeBlockOrder } from "@/lib/serviceBlocks";
 
 const newSection = () => ({
   ...emptySection,
@@ -72,11 +73,63 @@ function SectionsManager({ form, setForm }) {
     );
   };
 
+  // Where this whole block sits among the other page blocks (features,
+  // process, etc.) — mirrors the "Content order" card, editable from here too.
+  const pageOrder = normalizeBlockOrder(form.blockOrder, {
+    includeSections: true,
+  });
+  const blockIndex = pageOrder.indexOf("sections");
+  const prevLabel =
+    blockIndex > 0 ? BLOCK_LABELS[pageOrder[blockIndex - 1]] : null;
+  const moveBlock = (dir) => {
+    const target = blockIndex + dir;
+    if (target < 0 || target >= pageOrder.length) return;
+    const next = [...pageOrder];
+    [next[blockIndex], next[target]] = [next[target], next[blockIndex]];
+    setForm((prev) => ({ ...prev, blockOrder: next }));
+  };
+
   return (
     <Section
       title="Page sections"
-      description="Add sub-pages (segments) inside this service. Each has its own detail page reachable from a “Know More” link, and shows in the order below."
+      description="Add sub-pages (segments) inside this service. Each has its own detail page reachable from a “Know More” link."
     >
+      {/* Where this whole block sits on the page */}
+      <div className="mb-4 flex flex-wrap items-center justify-between gap-3 rounded-xl border border-cyan-200 bg-cyan-50/60 px-4 py-3">
+        <div className="text-sm text-slate-600">
+          <span className="font-semibold text-slate-800">
+            Position on page:
+          </span>{" "}
+          {prevLabel ? (
+            <>
+              appears after “{prevLabel}” (block {blockIndex + 1} of{" "}
+              {pageOrder.length})
+            </>
+          ) : (
+            <>appears first, right under the hero</>
+          )}
+        </div>
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={() => moveBlock(-1)}
+            disabled={blockIndex <= 0}
+            className="inline-flex items-center gap-1 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-sm font-semibold text-slate-600 hover:border-cyan-400 hover:text-cyan-600 disabled:opacity-30 disabled:hover:border-slate-200 disabled:hover:text-slate-600"
+          >
+            <ChevronUp className="h-4 w-4" />
+            Move up
+          </button>
+          <button
+            type="button"
+            onClick={() => moveBlock(1)}
+            disabled={blockIndex === pageOrder.length - 1}
+            className="inline-flex items-center gap-1 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-sm font-semibold text-slate-600 hover:border-cyan-400 hover:text-cyan-600 disabled:opacity-30 disabled:hover:border-slate-200 disabled:hover:text-slate-600"
+          >
+            <ChevronDown className="h-4 w-4" />
+            Move down
+          </button>
+        </div>
+      </div>
       <div className="space-y-3">
         {sections.length === 0 && (
           <p className="text-sm text-slate-400">
