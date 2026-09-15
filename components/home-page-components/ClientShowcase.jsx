@@ -50,14 +50,20 @@ const ClientShowcase = () => {
 
   if (loading) {
     return (
-      <section className="py-6 md:py-10 bg-white">
+      <section className="py-4 md:py-10 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <SectionHeading eyebrow="Trusted By" title="Our Clients" align="left" />
-          <div className="flex items-center gap-6 md:gap-8 overflow-hidden">
+          <SectionHeading
+            eyebrow="Trusted By"
+            title="Our Clients"
+            align="left"
+            bottomSpacing="mb-4 md:mb-10"
+            compact
+          />
+          <div className="flex items-center gap-4 sm:gap-6 md:gap-8 overflow-hidden">
             {[1, 2, 3, 4, 5, 6].map((item) => (
               <div
                 key={item}
-                className="h-20 md:h-24 w-28 md:w-32 shrink-0 rounded-lg bg-gray-200 animate-pulse"
+                className="h-12 sm:h-16 md:h-24 w-20 sm:w-28 md:w-32 shrink-0 rounded-lg bg-gray-200 animate-pulse"
               />
             ))}
           </div>
@@ -69,13 +75,15 @@ const ClientShowcase = () => {
   if (logos.length === 0) return null;
 
   return (
-    <section className="py-6 md:py-10 ">
+    <section className="py-4 md:py-10 ">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <SectionHeading
           eyebrow="Trusted By"
           title="Our Clients"
           subtitle={description || undefined}
           align="left"
+          bottomSpacing="mb-4 md:mb-10"
+          compact
         />
 
         <div className="overflow-hidden pt-20">
@@ -88,14 +96,14 @@ const ClientShowcase = () => {
               .map((logo, idx) => (
                 <div
                   key={`${logo._id}-${idx}`}
-                  className="group relative mx-6 md:mx-8 shrink-0"
+                  className="group relative mx-4 sm:mx-6 md:mx-8 shrink-0"
                 >
                   <Image
                     src={logo.image}
                     alt="Client logo"
                     width={120}
                     height={64}
-                    className="inline-block h-20 md:h-24 w-auto object-contain transition duration-300 group-hover:scale-105"
+                    className="inline-block h-12 sm:h-16 md:h-24 w-auto object-contain transition duration-300 group-hover:scale-105"
                     unoptimized
                   />
                 </div>
