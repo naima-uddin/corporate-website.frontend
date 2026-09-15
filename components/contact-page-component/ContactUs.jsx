@@ -58,12 +58,12 @@ const fadeIn = {
 };
 
 const InfoBlock = ({ icon, title, children }) => (
-  <div className="flex items-start gap-4">
-    <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full border border-[var(--color-border)] bg-white text-[var(--color-primary)] shadow-sm">
-      <span className="text-xl">{icon}</span>
+  <div className="flex items-start gap-3 sm:gap-4">
+    <div className="flex h-10 w-10 sm:h-12 sm:w-12 flex-shrink-0 items-center justify-center rounded-full border border-[var(--color-border)] bg-white text-[var(--color-primary)] shadow-sm">
+      <span className="text-lg sm:text-xl">{icon}</span>
     </div>
     <div>
-      <h3 className="text-lg font-bold text-[var(--color-heading)]">
+      <h3 className="text-base sm:text-lg font-bold text-[var(--color-heading)]">
         {title}
       </h3>
       <div className="mt-1 text-[var(--color-body)]">{children}</div>
@@ -200,8 +200,8 @@ const ContactUs = () => {
     <div className="bg-white">
       {/* Top Info Section */}
       <section className="bg-[var(--color-surface)]">
-        <div className="mx-auto max-w-7xl px-6 py-16 sm:px-10">
-          <div className="grid grid-cols-1 gap-12 lg:grid-cols-2 lg:items-center">
+        <div className="mx-auto max-w-7xl px-4 py-6 sm:px-10 sm:py-16">
+          <div className="grid grid-cols-1 gap-6 lg:grid-cols-2 lg:gap-12 lg:items-center">
             <motion.div
               initial="hidden"
               whileInView="visible"
@@ -210,7 +210,7 @@ const ContactUs = () => {
               transition={{ duration: 0.6 }}
             >
               <span className="eyebrow">{contact.eyebrow}</span>
-              <h1 className="main-title mt-3 text-2xl md:text-3xl lg:text-4xl font-extrabold leading-tight text-[var(--color-heading)]">
+              <h1 className="main-title mt-2 sm:mt-3 text-2xl md:text-3xl lg:text-4xl font-extrabold leading-tight text-[var(--color-heading)]">
                 {contact.heading}{" "}
                 <span className="text-[var(--color-primary)]">
                   {siteName}
@@ -224,7 +224,7 @@ const ContactUs = () => {
               variants={fadeIn}
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: 0.15 }}
-              className="grid grid-cols-1 gap-8 sm:grid-cols-2"
+              className="grid grid-cols-1 gap-6 sm:grid-cols-2 sm:gap-8"
             >
               <InfoBlock icon={<FiMapPin />} title="Address">
                 <p>{contact.address}</p>
@@ -272,15 +272,15 @@ const ContactUs = () => {
 
       {/* Decorative Divider */}
       <div
-        className="h-24 w-full sm:h-32"
+        className="h-10 w-full sm:h-32"
         style={{
           background: `repeating-linear-gradient(135deg, var(--color-ink), var(--color-ink) 2px, var(--color-ink-2) 2px, var(--color-ink-2) 24px)`,
         }}
       />
 
       {/* Form + Map Section */}
-      <section className="mx-auto max-w-7xl px-6 pb-16 sm:px-10 sm:pb-20">
-        <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
+      <section className="mx-auto max-w-7xl px-4 pb-10 sm:px-10 sm:pb-20">
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-2 lg:gap-8">
           {/* Contact Form */}
           <motion.div
             initial="hidden"
@@ -288,9 +288,9 @@ const ContactUs = () => {
             variants={fadeIn}
             viewport={{ once: true }}
             transition={{ duration: 0.7 }}
-            className="relative z-0 rounded-2xl bg-white p-6 shadow-xl sm:p-8 lg:-mt-20 lg:p-10"
+            className="relative z-0 rounded-2xl bg-white p-5 shadow-xl sm:p-8 lg:-mt-20 lg:p-10"
           >
-            <form onSubmit={handleSubmit} className="space-y-6">
+            <form onSubmit={handleSubmit} className="space-y-5 sm:space-y-6">
               <FormField
                 icon={<FiUser />}
                 type="text"
@@ -368,7 +368,7 @@ const ContactUs = () => {
               <button
                 type="submit"
                 disabled={isSubmitting || !agreed}
-                className="flex w-full items-center justify-center gap-2 rounded-lg bg-[var(--color-primary)] px-6 py-4 font-bold text-white shadow-lg transition-all duration-300 hover:bg-[var(--color-primary-dark)] disabled:cursor-not-allowed disabled:opacity-60"
+                className="flex w-full items-center justify-center gap-2 rounded-lg bg-[var(--color-primary)] px-6 py-3.5 font-bold text-white shadow-lg transition-all duration-300 hover:bg-[var(--color-primary-dark)] disabled:cursor-not-allowed disabled:opacity-60"
               >
                 {isSubmitting ? (
                   "Sending..."
