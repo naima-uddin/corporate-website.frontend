@@ -77,7 +77,7 @@ const Banner = () => {
 
   return (
     <div
-      className={`relative w-full h-[70vh] sm:h-[80vh] lg:h-screen overflow-hidden bg-[var(--color-ink)] ${NAVBAR_HEIGHT_CLASS}`}
+      className={`relative w-full h-[60vh] sm:h-[70vh] lg:h-[90vh] overflow-hidden bg-[var(--color-ink)] ${NAVBAR_HEIGHT_CLASS}`}
     >
       <div className="absolute inset-0 z-0">
         {/* Previous slide stays fully visible underneath until the

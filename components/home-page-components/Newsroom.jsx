@@ -134,7 +134,7 @@ const Newsroom = () => {
 
   if (loading) {
     return (
-      <section className="py-10 sm:py-14 md:py-20 bg-white">
+      <section className="py-6 md:py-10 lg:py-14 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="h-8 bg-gray-200 rounded-lg w-56 mb-6 md:mb-10 animate-pulse" />
           <div className="hidden lg:grid grid-cols-1 gap-x-8 gap-y-8 lg:grid-cols-12">
@@ -198,7 +198,7 @@ const Newsroom = () => {
   const rightPosts = rest.slice(4, 8);
 
   return (
-    <section className="py-10 sm:py-14 md:py-20 bg-white">
+    <section className="py-6 md:py-10 lg:py-14 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-end justify-between mb-1 md:mb-2">
           <SectionHeading
