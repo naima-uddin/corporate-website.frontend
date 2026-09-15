@@ -4,6 +4,12 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 
+const normalizeHref = (path) => {
+  const value = String(path || "").trim();
+  if (!value) return "/services";
+  return value.startsWith("/") ? value : `/${value}`;
+};
+
 const ServiceCategoryClient = ({ category, services }) => {
   return (
     <div className="bg-[var(--color-surface)]">
@@ -86,7 +92,7 @@ const ServiceCategoryClient = ({ category, services }) => {
                   {service.description}
                 </p>
                 <Link
-                  href={service.path}
+                  href={normalizeHref(service.path)}
                   className="inline-flex items-center gap-1.5 text-sm font-semibold text-[var(--color-primary)] hover:text-[var(--color-primary-dark)] uppercase tracking-wide"
                 >
                   Know More

@@ -48,12 +48,12 @@ const FALLBACK_FOOTER = {
     {
       title: "Services",
       links: [
-        { label: "Design & Development", url: "/services/category/development" },
-        { label: "E-Commerce", url: "/services/e-commerce" },
-        { label: "Amazon", url: "/services/category/ecommerce" },
-        { label: "Shopify", url: "/services/shopify" },
-        { label: "ERP System Development", url: "/services/erp" },
-        { label: "SEO / SEM / PPC", url: "/services/seo" },
+        { label: "Construction", url: "/services/construction" },
+        { label: "Infrastructure", url: "/services/infrastructure" },
+        { label: "Supply", url: "/services/supply" },
+        { label: "Events", url: "/services/events" },
+        { label: "CSR", url: "/services/csr" },
+        { label: "Ongoing", url: "/services/ongoing" },
       ],
     },
   ],

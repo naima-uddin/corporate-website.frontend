@@ -1,69 +1,70 @@
+import ServicesIndexClient from "@/components/ServicePage/ServicesIndexClient";
 import { getSiteInfo, resolveLogoUrl } from "@/lib/siteInfo";
+
+async function getServices() {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/services`, {
+    next: { revalidate: 60 },
+  });
+  if (!res.ok) return [];
+  const data = await res.json();
+  return Array.isArray(data.services) ? data.services : [];
+}
 
 export async function generateMetadata() {
   const site = await getSiteInfo();
+  const description = `Explore the full range of services from ${site.siteName} — construction and civil works, public infrastructure, government supply and procurement, event management and CSR initiatives across Bangladesh.`;
 
   return {
-    title: `IT Services | ${site.siteName}`,
-    description: `Explore ${site.siteName}'s full range of IT services including Web Development, Mobile App Development, UI/UX Design, SEO, Paid Media, Amazon Marketing, ERP Solutions, Hosting, Shopify, and more.`,
+    title: `Our Services | ${site.siteName}`,
+    description,
     keywords: [
-      "IT Services",
-      "Web Development",
-      "Mobile App Development",
-      "UI/UX Design",
-      "SEO",
-      "SEM",
-      "PPC",
-      "Amazon Marketing",
-      "ERP Solutions",
-      "Cloud Hosting",
-      "Shopify Development",
-      "Server and Hosting Services",
-      "E-commerce Solutions",
+      "Government Contractor",
+      "Construction",
+      "Civil Works",
+      "Infrastructure",
+      "Irrigation",
+      "Government Supply",
+      "Procurement",
+      "Event Management",
+      "CSR",
+      "Bangladesh",
     ],
     alternates: {
       canonical: "https://a2itltd.com/services",
     },
     openGraph: {
-      title: `IT Services | ${site.siteName}`,
-      description: `Discover ${site.siteName}'s complete suite of IT services including web & mobile development, SEO, digital marketing, hosting, Shopify, and ERP solutions.`,
+      title: `Our Services | ${site.siteName}`,
+      description,
       url: "https://a2itltd.com/services",
       siteName: site.siteName,
-      images: [
-        {
-          url: "/og-itservices.jpg", // 👉 add main services OG image in /public
-          width: 1200,
-          height: 630,
-          alt: `IT Services by ${site.siteName}`,
-        },
-      ],
       type: "website",
     },
     twitter: {
       card: "summary_large_image",
-      title: `IT Services | ${site.siteName}`,
-      description: `Explore ${site.siteName}'s full range of IT services including Web Development, Mobile App Development, UI/UX, SEO, Paid Media, Amazon Marketing, ERP Solutions, Hosting, Shopify, and more.`,
-      images: ["/og-itservices.jpg"],
+      title: `Our Services | ${site.siteName}`,
+      description,
     },
   };
 }
 
 export default async function ServicesPage() {
-  const site = await getSiteInfo();
+  const [site, services] = await Promise.all([getSiteInfo(), getServices()]);
 
   return (
     <>
-      <h1 className="text-3xl font-bold mb-6">Our Services</h1>
-      {/* Render your service categories/components here */}
+      <ServicesIndexClient
+        heading="Our Services"
+        subheading={`${site.siteName} — a 1st Class Government Contractor, Supplier, General Merchant & Auctioneer serving departments and institutions across Bangladesh since 2012.`}
+        services={services}
+      />
 
-      {/* 🔹 Schema Markup for Services */}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
           __html: JSON.stringify({
             "@context": "https://schema.org",
             "@type": "Service",
-            serviceType: "IT Services",
+            serviceType: "Government Contracting & Supply",
             provider: {
               "@type": "Organization",
               name: site.siteName,
@@ -72,24 +73,19 @@ export default async function ServicesPage() {
             },
             areaServed: {
               "@type": "Country",
-              name: "Worldwide",
+              name: "Bangladesh",
             },
-            description: `${site.siteName} provides a full range of IT services including Web Development, Mobile Apps, UI/UX, SEO, Paid Media, Amazon Marketing, ERP Solutions, Hosting, Shopify, and more.`,
             hasOfferCatalog: {
               "@type": "OfferCatalog",
-              name: "IT Services",
-              itemListElement: [
-                { "@type": "Offer", itemOffered: { "@type": "Service", name: "Web Development" } },
-                { "@type": "Offer", itemOffered: { "@type": "Service", name: "Mobile App Development" } },
-                { "@type": "Offer", itemOffered: { "@type": "Service", name: "UI/UX Design" } },
-                { "@type": "Offer", itemOffered: { "@type": "Service", name: "SEO & SEM" } },
-                { "@type": "Offer", itemOffered: { "@type": "Service", name: "PPC / Paid Media" } },
-                { "@type": "Offer", itemOffered: { "@type": "Service", name: "Amazon Marketing" } },
-                { "@type": "Offer", itemOffered: { "@type": "Service", name: "ERP Solutions" } },
-                { "@type": "Offer", itemOffered: { "@type": "Service", name: "Hosting & Cloud Services" } },
-                { "@type": "Offer", itemOffered: { "@type": "Service", name: "Shopify Development" } },
-                { "@type": "Offer", itemOffered: { "@type": "Service", name: "E-commerce Solutions" } },
-              ],
+              name: "Our Services",
+              itemListElement: services.map((service) => ({
+                "@type": "Offer",
+                itemOffered: {
+                  "@type": "Service",
+                  name: service.title,
+                  description: service.description,
+                },
+              })),
             },
           }),
         }}

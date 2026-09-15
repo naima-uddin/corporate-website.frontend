@@ -96,7 +96,7 @@ const Navbar = () => {
             const desc = String(category.description || "").trim();
             return [
               category.displayName,
-              category.link || `/services/category/${category.name}`,
+              category.link || `/services/${category.name}`,
               getCategoryIcon(category.icon || category.name),
               desc.length > 90 ? `${desc.slice(0, 90)}...` : desc,
             ];
