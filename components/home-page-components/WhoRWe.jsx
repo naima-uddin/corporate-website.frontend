@@ -162,22 +162,21 @@ const WhoRWe = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6 }}
-              className="relative -mx-4 sm:-mx-6 px-2 mb-6"
+              className="mb-6"
             >
-              <div className="relative w-full aspect-[4/3] overflow-hidden bg-[var(--color-ink)]">
+              <span className="block mb-3 text-xs font-semibold uppercase tracking-wide text-[var(--color-primary)]">
+                Warm Welcome From Our Founder
+              </span>
+              <div className="relative w-full aspect-[3/2] overflow-hidden rounded-xl bg-[var(--color-ink)]">
                 {spotlight.image ? (
                   <img
                     src={spotlight.image}
                     alt={spotlight.name || "Spotlight"}
-                    className="w-full h-full object-cover"
+                    className="w-full h-full object-cover object-top"
                   />
                 ) : (
                   <div className="w-full h-full bg-gradient-to-br from-[var(--color-primary-dark)] to-[var(--color-primary)]" />
                 )}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
-                <span className="absolute inset-x-0 top-0 px-4 text-xs font-semibold uppercase tracking-wide text-white/90">
-                  Warm Welcome From Our Founder
-                </span>
               </div>
             </motion.div>
 
@@ -235,7 +234,7 @@ const WhoRWe = () => {
                   href={spotlight.profileLink}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center mt-6 px-6 py-2.5 rounded-md border border-[var(--color-heading)] text-[var(--color-heading)] text-sm font-semibold hover:bg-[var(--color-heading)] hover:text-white transition-colors"
+                  className="inline-flex items-center mt-4 px-4 py-2 rounded-md border border-[var(--color-heading)] text-[var(--color-heading)] text-xs font-semibold hover:bg-[var(--color-heading)] hover:text-white transition-colors"
                 >
                   View Profile
                 </a>
