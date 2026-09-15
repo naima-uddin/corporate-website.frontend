@@ -175,13 +175,14 @@ const WhatWeOffer = () => {
   const isLoading = loading || categoriesLoading;
 
   return (
-    <section className="py-6 md:py-10 bg-[var(--color-surface)]">
+    <section className="py-4 md:py-6 bg-[var(--color-surface)]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <SectionHeading
           eyebrow="What We Do"
           title="Our Services"
           subtitle="Comprehensive digital solutions tailored to elevate your business to new heights."
           align="left"
+          bottomSpacing="mb-3 md:mb-8"
         />
 
         {isLoading && categoryTiles.length === 0 && (
@@ -211,15 +212,15 @@ const WhatWeOffer = () => {
         )}
 
         {categoryTiles.length > 0 && (
-          <div className="flex flex-col lg:flex-row items-stretch gap-3 lg:gap-4">
-            <div className="grid grid-cols-2 gap-3 lg:w-[34%]">
+          <div className="flex flex-col lg:flex-row items-stretch gap-2 lg:gap-4">
+            <div className="grid grid-cols-2 gap-2 lg:w-[34%]">
               {categoryTiles.map((tile) => {
                 const isActive = tile.id === activeTile?.id;
                 return (
                   <button
                     key={tile.id}
                     onClick={() => setActiveCategory(tile.id)}
-                    className={`group relative h-28 sm:h-32 overflow-hidden rounded-md text-left transition-all duration-300 ${
+                    className={`group relative h-20 sm:h-32 overflow-hidden rounded-md text-left transition-all duration-300 ${
                       isActive ? "shadow-lg" : "hover:-translate-y-0.5 hover:shadow-lg"
                     }`}
                   >

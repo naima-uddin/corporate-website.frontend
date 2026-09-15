@@ -7,11 +7,12 @@ const SectionHeading = ({
   align = "center",
   dark = false,
   className = "",
+  bottomSpacing = "mb-10 md:mb-14",
 }) => {
   const alignClass = align === "left" ? "text-left items-start" : "text-center items-center";
 
   return (
-    <div className={`flex flex-col ${alignClass} mb-10 md:mb-14 ${className}`}>
+    <div className={`flex flex-col ${alignClass} ${bottomSpacing} ${className}`}>
       {eyebrow && <span className="eyebrow mb-3">{eyebrow}</span>}
       <h2
         className={`main-title text-2xl md:text-3xl lg:text-4xl font-extrabold tracking-tight ${
