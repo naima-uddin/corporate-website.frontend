@@ -1,7 +1,78 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Zap } from "lucide-react";
+
+// Fires once when the element first scrolls into view.
+const useInView = (ref, threshold = 0.3) => {
+  const [inView, setInView] = useState(false);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setInView(true);
+          observer.disconnect();
+        }
+      },
+      { threshold },
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [ref, threshold]);
+  return inView;
+};
+
+// Counts the numeric part of a stat up from 0 while keeping any prefix/suffix
+// (e.g. "30%" animates 0 → 30 and still shows the "%"). Non-numeric values are
+// rendered as-is.
+const AnimatedStat = ({ value, className }) => {
+  const ref = useRef(null);
+  const inView = useInView(ref);
+  const [display, setDisplay] = useState(0);
+
+  const match = String(value ?? "").match(/^(\D*)(\d+(?:\.\d+)?)(.*)$/s);
+  const target = match ? parseFloat(match[2]) : 0;
+
+  useEffect(() => {
+    if (!inView || !match) return;
+    const duration = 1400;
+    const start = performance.now();
+    let raf;
+    const tick = (now) => {
+      const t = Math.min(1, (now - start) / duration);
+      const eased = 1 - Math.pow(1 - t, 3); // easeOutCubic
+      setDisplay(target * eased);
+      if (t < 1) raf = requestAnimationFrame(tick);
+      else setDisplay(target);
+    };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+    // `match` is a fresh array each render — depend on the stable primitives only,
+    // otherwise the effect restarts every frame and the number blinks near 0.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [inView, value]);
+
+  if (!match) {
+    return (
+      <span ref={ref} className={className}>
+        {value}
+      </span>
+    );
+  }
+
+  const [, prefix, num, suffix] = match;
+  const decimals = num.includes(".") ? num.split(".")[1].length : 0;
+
+  return (
+    <span ref={ref} className={className}>
+      {prefix}
+      {display.toFixed(decimals)}
+      {suffix}
+    </span>
+  );
+};
 
 // Bar heights (%) for the "dark" style card chart. When a numeric statValue is
 // present (e.g. "30%") the chart is derived from it; otherwise this decorative
@@ -40,9 +111,10 @@ const LightCard = ({ feature }) => (
     {(feature.statValue || feature.statLabel) && (
       <div className="flex items-end gap-3 mt-8">
         {feature.statValue && (
-          <span className="text-4xl md:text-5xl font-extrabold text-[var(--color-heading)] leading-none">
-            {feature.statValue}
-          </span>
+          <AnimatedStat
+            value={feature.statValue}
+            className="text-4xl md:text-5xl font-extrabold text-[var(--color-heading)] leading-none"
+          />
         )}
         {feature.statLabel && (
           <span className="text-sm md:text-base font-semibold text-[var(--color-heading)] leading-tight">
@@ -106,9 +178,10 @@ const DarkCard = ({ feature }) => {
     <div className="flex flex-col justify-between rounded-2xl bg-[#0e2f6b] p-6 md:p-8 min-h-[22rem]">
       <div>
         {feature.statValue && (
-          <span className="block text-5xl md:text-6xl font-extrabold text-white leading-none">
-            {feature.statValue}
-          </span>
+          <AnimatedStat
+            value={feature.statValue}
+            className="block text-5xl md:text-6xl font-extrabold text-white leading-none"
+          />
         )}
         {(feature.description || feature.statLabel) && (
           <p className="mt-4 text-sm md:text-base text-white/80 max-w-xs">
