@@ -73,7 +73,7 @@ const AwardsSection = ({ awards }) => {
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
-                className={`h-full ${featured ? "lg:col-span-2 lg:row-span-2" : ""}`}
+                className={`h-64 sm:h-72 lg:h-full ${featured ? "lg:col-span-2 lg:row-span-2" : ""}`}
               >
                 <AwardCard award={award} featured={featured} />
               </MotionDiv>
