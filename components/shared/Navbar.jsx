@@ -320,7 +320,7 @@ const Navbar = () => {
     <nav
       className={`px-4 sm:px-6 lg:px-8 h-14 flex items-center justify-between z-50 sticky top-0 transition-colors duration-300 ${
         overlay
-          ? "bg-transparent text-white border-b border-transparent shadow-none"
+          ? "bg-white/10 backdrop-blur-md text-white border-b border-white/15 shadow-lg shadow-black/5"
           : `bg-white text-[var(--color-heading)] border-b border-[var(--color-border)] ${
               isScrolled ? "shadow-md" : "shadow-none"
             }`
