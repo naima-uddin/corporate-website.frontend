@@ -36,25 +36,25 @@ const EnlistmentCard = ({ item, onViewCertificates }) => {
   const Icon = getFallbackIcon(item.name);
 
   return (
-    <div className="flex flex-col items-center text-center bg-white rounded-2xl border border-[var(--color-border)] shadow-sm hover:shadow-lg transition-shadow duration-300 p-8">
-      <div className="relative w-20 h-20 rounded-full bg-[#eaf2ff] flex items-center justify-center mb-5 overflow-hidden">
+    <div className="flex flex-col items-center text-center bg-white rounded-2xl border border-[var(--color-border)] shadow-sm hover:shadow-lg transition-shadow duration-300 p-5 sm:p-6">
+      <div className="relative w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-[#eaf2ff] flex items-center justify-center mb-4 overflow-hidden">
         {item.logo ? (
           <Image
             src={item.logo}
             alt={item.name}
             fill
             unoptimized
-            className="object-cover"
+            className="object-contain p-1.5"
           />
         ) : (
           <Icon className="text-3xl text-[#0a2a6b]" />
         )}
       </div>
-      <h3 className="text-lg font-bold text-[#0a1a3c] mb-4 h-[3.5rem] flex items-center justify-center line-clamp-2">
+      <h3 className="text-base sm:text-lg font-bold text-[#0a1a3c] mb-3 min-h-[3rem] line-clamp-2 leading-snug">
         {item.name}
       </h3>
       <span
-        className={`inline-flex items-center gap-1.5 text-white text-xs font-semibold px-4 py-1.5 rounded-full mb-5 ${
+        className={`inline-flex items-center gap-1.5 text-white text-xs font-semibold px-4 py-1.5 rounded-full mb-4 ${
           item.enlisted ? "bg-emerald-600" : "bg-slate-400"
         }`}
       >
@@ -126,10 +126,10 @@ const CertificatesModal = ({ item, onClose }) => {
 };
 
 const EnlistmentCardSkeleton = () => (
-  <div className="flex flex-col items-center text-center bg-white rounded-2xl border border-[var(--color-border)] shadow-sm p-8">
-    <div className="w-20 h-20 rounded-full bg-gray-200 mb-5 animate-pulse" />
-    <div className="h-5 bg-gray-200 rounded-lg w-3/4 mb-4 animate-pulse" />
-    <div className="h-6 bg-gray-200 rounded-full w-24 mb-5 animate-pulse" />
+  <div className="flex flex-col items-center text-center bg-white rounded-2xl border border-[var(--color-border)] shadow-sm p-5 sm:p-6">
+    <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-gray-200 mb-4 animate-pulse" />
+    <div className="h-5 bg-gray-200 rounded-lg w-3/4 mb-3 animate-pulse" />
+    <div className="h-6 bg-gray-200 rounded-full w-24 mb-4 animate-pulse" />
     <div className="h-9 bg-gray-200 rounded-md w-32 animate-pulse" />
   </div>
 );
