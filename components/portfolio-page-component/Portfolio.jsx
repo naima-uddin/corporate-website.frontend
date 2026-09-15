@@ -248,7 +248,61 @@ const Portfolio = () => {
                   No contracts found yet.
                 </div>
               ) : (
-                <div className="overflow-x-auto rounded-xl border border-[var(--color-border)]">
+                <>
+                {/* Mobile: card list */}
+                <div className="md:hidden space-y-3">
+                  {visibleContracts.map((item, idx) => (
+                    <div
+                      key={item._id || idx}
+                      className="rounded-xl border border-[var(--color-border)] bg-white p-4"
+                    >
+                      <div className="flex items-start justify-between gap-3">
+                        <p className="font-semibold text-[var(--color-heading)] leading-snug">
+                          {item.title}
+                        </p>
+                        <span
+                          className={`shrink-0 px-2.5 py-0.5 rounded-full text-[11px] font-semibold ${
+                            statusStyles[item.status] || statusStyles.Completed
+                          }`}
+                        >
+                          {item.status || "Completed"}
+                        </span>
+                      </div>
+
+                      <dl className="mt-3 grid grid-cols-2 gap-x-3 gap-y-2 text-xs">
+                        <div>
+                          <dt className="text-[var(--color-body)]">Contract No.</dt>
+                          <dd className="font-medium text-[var(--color-heading)]">
+                            {item.contractNo || "—"}
+                          </dd>
+                        </div>
+                        <div>
+                          <dt className="text-[var(--color-body)]">Value (BDT)</dt>
+                          <dd className="font-medium text-[var(--color-heading)]">
+                            {item.contractValue || "—"}
+                          </dd>
+                        </div>
+                        <div className="col-span-2">
+                          <dt className="text-[var(--color-body)]">Department / Client</dt>
+                          <dd className="font-medium text-[var(--color-heading)]">
+                            {item.client || "—"}
+                          </dd>
+                        </div>
+                      </dl>
+
+                      <button
+                        onClick={() => openProject(item)}
+                        className="mt-3 inline-flex items-center gap-1.5 text-sm font-semibold text-[var(--color-primary)]"
+                        aria-label={`View ${item.title}`}
+                      >
+                        <Eye className="w-4 h-4" /> View Details
+                      </button>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Desktop: table */}
+                <div className="hidden md:block overflow-x-auto rounded-xl border border-[var(--color-border)]">
                   <table className="w-full text-sm">
                     <thead>
                       <tr className="bg-[var(--color-ink)] text-white text-left">
@@ -312,6 +366,7 @@ const Portfolio = () => {
                     </tbody>
                   </table>
                 </div>
+                </>
               )}
             </section>
 
