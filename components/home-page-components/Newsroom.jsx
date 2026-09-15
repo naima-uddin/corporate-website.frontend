@@ -92,7 +92,7 @@ const NewsListItem = ({ post }) => (
         {formatTimeAgo(post.publishDate || post.createdAt)}
       </span>
     </div>
-    <div className="h-18 w-18 shrink-0 overflow-hidden rounded-sm bg-[var(--color-surface)]">
+    <div className="h-16 w-16 shrink-0 overflow-hidden rounded-sm bg-[var(--color-surface)]">
       {getImageUrl(post.featuredImage) && (
         <img
           src={getImageUrl(post.featuredImage)}
@@ -198,20 +198,22 @@ const Newsroom = () => {
   const rightPosts = rest.slice(4, 8);
 
   return (
-    <section className="py-6 md:py-10 lg:py-14 bg-white">
+    <section className="py-4 md:py-8 lg:py-10 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-end justify-between mb-1 md:mb-2">
+        <div className="flex items-end justify-between gap-3 mb-3 md:mb-4">
           <SectionHeading
             eyebrow="Newsroom"
             title="News & Media"
             align="left"
-            className="mb-0"
+            bottomSpacing="mb-0"
+            compact
           />
           <Link
             href="/news"
-            className="mb-10 inline-flex shrink-0 items-center gap-1.5 rounded-full border border-[var(--color-primary)]/30 bg-[var(--color-primary)]/5 px-3 py-1.5 text-xs sm:text-sm font-semibold text-[var(--color-primary)] transition-all duration-200 hover:gap-2.5 hover:bg-[var(--color-primary)]/10"
+            className="inline-flex shrink-0 items-center gap-1.5 rounded-full border border-[var(--color-primary)]/30 bg-[var(--color-primary)]/5 px-3 py-1.5 text-xs sm:text-sm font-semibold text-[var(--color-primary)] transition-all duration-200 hover:gap-2.5 hover:bg-[var(--color-primary)]/10"
           >
-            View All News
+            <span className="hidden sm:inline">View All News</span>
+            <span className="sm:hidden">All News</span>
             <FiArrowRight />
           </Link>
         </div>
@@ -274,7 +276,7 @@ const Newsroom = () => {
           </div>
 
           {rightPosts.length > 0 && (
-            <div className="lg:col-span-3 divide-y divide-[var(--color-border)] lg:-pl-2">
+            <div className="lg:col-span-3 divide-y divide-[var(--color-border)] lg:pl-4">
               {rightPosts.map((post) => (
                 <NewsListItem key={post._id || post.slug} post={post} />
               ))}
