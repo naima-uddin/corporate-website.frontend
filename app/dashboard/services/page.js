@@ -4,8 +4,15 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { useAuth } from "@/context/AuthContext";
 import { motion } from "framer-motion";
-import { Plus, Trash2, Edit2, Search } from "lucide-react";
-import ImageUploadFactory from "../components/forms/ImageUploadFactory";
+import { Plus, Trash2, Edit2, Search, Tags, ExternalLink } from "lucide-react";
+
+const formatCategoryLabel = (value) =>
+  String(value || "")
+    .trim()
+    .split(/[-_\s]+/)
+    .filter(Boolean)
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(" ");
 
 export default function ServicesPage() {
   const { token, isAdmin, isModerator } = useAuth();
@@ -13,137 +20,10 @@ export default function ServicesPage() {
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
 
-  const [categories, setCategories] = useState([]);
-  const [newCategory, setNewCategory] = useState("");
-  const [categoryEditName, setCategoryEditName] = useState("");
-  const [categoryEditData, setCategoryEditData] = useState({
-    bannerImage: "",
-    description: "",
-  });
-  const [savingCategoryDetails, setSavingCategoryDetails] = useState(false);
-
-  const formatCategoryLabel = (value) =>
-    String(value || "")
-      .trim()
-      .split(/[-_\s]+/)
-      .filter(Boolean)
-      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-      .join(" ");
-
   useEffect(() => {
     fetchServices();
-    fetchCategories();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [token]);
-
-  const handleAddCategory = () => {
-    saveCategory();
-  };
-
-  const fetchCategories = async () => {
-    try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/service-categories`,
-      );
-
-      if (response.ok) {
-        const data = await response.json();
-        setCategories(data.categories || []);
-      }
-    } catch (error) {
-      console.error("Error fetching categories:", error);
-    }
-  };
-
-  const saveCategory = async () => {
-    const val = (newCategory || "").trim();
-    if (!val) return;
-
-    try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/service-categories`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({
-            name: val,
-            displayName: formatCategoryLabel(val),
-          }),
-        },
-      );
-
-      if (response.ok) {
-        await fetchCategories();
-        setNewCategory("");
-      }
-    } catch (error) {
-      console.error("Error saving category:", error);
-    }
-  };
-
-  const handleSelectCategoryToEdit = (categoryName) => {
-    setCategoryEditName(categoryName);
-    const category = categories.find((c) => c.name === categoryName);
-    setCategoryEditData({
-      bannerImage: category?.bannerImage || "",
-      description: category?.description || "",
-    });
-  };
-
-  const handleSaveCategoryDetails = async () => {
-    if (!categoryEditName) return;
-
-    try {
-      setSavingCategoryDetails(true);
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/service-categories/${encodeURIComponent(categoryEditName)}`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify(categoryEditData),
-        },
-      );
-
-      if (response.ok) {
-        await fetchCategories();
-      }
-    } catch (error) {
-      console.error("Error saving category details:", error);
-    } finally {
-      setSavingCategoryDetails(false);
-    }
-  };
-
-  const handleDeleteCategory = async (categoryName) => {
-    if (!window.confirm("Delete this category?")) return;
-
-    try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/service-categories/${encodeURIComponent(categoryName)}`,
-        {
-          method: "DELETE",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        },
-      );
-
-      if (response.ok) {
-        setCategories((prev) => prev.filter((c) => c.name !== categoryName));
-        if (categoryEditName === categoryName) {
-          setCategoryEditName("");
-          setCategoryEditData({ bannerImage: "", description: "" });
-        }
-      }
-    } catch (error) {
-      console.error("Error deleting category:", error);
-    }
-  };
 
   const fetchServices = async () => {
     try {
@@ -158,7 +38,7 @@ export default function ServicesPage() {
 
       if (response.ok) {
         const data = await response.json();
-        setServices(data.services);
+        setServices(data.services || []);
       }
     } catch (error) {
       console.error("Error fetching services:", error);
@@ -175,30 +55,23 @@ export default function ServicesPage() {
         `${process.env.NEXT_PUBLIC_API_URL}/api/services/${id}`,
         {
           method: "DELETE",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+          headers: { Authorization: `Bearer ${token}` },
         },
       );
-
-      if (response.ok) {
-        fetchServices();
-      }
+      if (response.ok) fetchServices();
     } catch (error) {
       console.error("Error deleting service:", error);
     }
   };
 
   const filteredServices = services.filter((s) =>
-    s.title.toLowerCase().includes(searchQuery.toLowerCase()),
+    (s.title || "").toLowerCase().includes(searchQuery.toLowerCase()),
   );
 
   if (!isAdmin && !isModerator) {
     return (
-      <div className="text-center py-12">
-        <p className="text-slate-600">
-          Access Denied. Admin or Moderator only.
-        </p>
+      <div className="py-12 text-center">
+        <p className="text-slate-600">Access Denied. Admin or Moderator only.</p>
       </div>
     );
   }
@@ -208,159 +81,84 @@ export default function ServicesPage() {
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="flex justify-between items-center"
+        className="flex flex-wrap items-center justify-between gap-4"
       >
         <div>
-          <h1 className="text-4xl font-bold text-slate-900 mb-2">
+          <h1 className="mb-1 text-4xl font-bold text-slate-900">
             Manage Services
           </h1>
           <p className="text-slate-600">
-            Create and manage your service offerings{" "}
+            Add a service, then open it to design its page.
           </p>
         </div>
-        <Link
-          href="/dashboard/services/new"
-          className="bg-gradient-to-r from-[#00f0ff] to-[#0066ff] text-[#0a0a12] font-semibold px-6 py-3 rounded-lg flex items-center gap-2"
-        >
-          <Plus className="w-5 h-5" />
-          New Service
-        </Link>
-      </motion.div>
-
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm grid grid-cols-1 md:grid-cols-2 gap-4"
-      >
-        <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
-          <label className="mb-2 block text-sm font-semibold text-slate-700">
-            Add / Remove Categories
-          </label>
-          <div className="flex gap-2">
-            <input
-              type="text"
-              placeholder="Type a new category"
-              value={newCategory}
-              onChange={(e) => setNewCategory(e.target.value)}
-              className="flex-1 px-4 py-3 border border-slate-200 rounded-xl shadow-sm focus:border-cyan-400 focus:ring-2 focus:ring-cyan-100 outline-none transition"
-            />
-            <button
-              type="button"
-              onClick={handleAddCategory}
-              className="px-4 py-3 rounded-xl bg-gradient-to-r from-[#00f0ff] to-[#0066ff] text-[#0a0a12] font-semibold shadow-sm"
-            >
-              Save
-            </button>
-          </div>
-
-          <div className="mt-4 flex flex-wrap gap-2">
-            {categories.map((category) => (
-              <span
-                key={category.name}
-                className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-700"
-              >
-                <span>{category.displayName}</span>
-                {isAdmin && (
-                  <button
-                    type="button"
-                    onClick={() => handleDeleteCategory(category.name)}
-                    className="inline-flex h-5 w-5 items-center justify-center rounded-full bg-red-50 text-red-500 hover:bg-red-100"
-                    aria-label={`Delete ${category.displayName}`}
-                  >
-                    ×
-                  </button>
-                )}
-              </span>
-            ))}
-          </div>
-        </div>
-
-        <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
-          <label className="mb-2 block text-sm font-semibold text-slate-700">
-            Category Page Banner & Description
-          </label>
-          <select
-            value={categoryEditName}
-            onChange={(e) => handleSelectCategoryToEdit(e.target.value)}
-            className="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-slate-900 shadow-sm focus:border-cyan-400 focus:ring-2 focus:ring-cyan-100 outline-none transition mb-4"
+        <div className="flex items-center gap-3">
+          <Link
+            href="/dashboard/services/categories"
+            className="inline-flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-5 py-3 font-semibold text-slate-700 shadow-sm hover:border-slate-300"
           >
-            <option value="">Select a category to edit...</option>
-            {categories.map((c) => (
-              <option value={c.name} key={c.name}>
-                {c.displayName}
-              </option>
-            ))}
-          </select>
-
-          {categoryEditName && (
-            <div className="space-y-4">
-              <ImageUploadFactory
-                type="services"
-                label="Banner Image"
-                currentImage={categoryEditData.bannerImage}
-                onImageUploaded={(url) =>
-                  setCategoryEditData({
-                    ...categoryEditData,
-                    bannerImage: url || "",
-                  })
-                }
-              />
-              <textarea
-                placeholder="Category description shown on its banner"
-                value={categoryEditData.description}
-                onChange={(e) =>
-                  setCategoryEditData({
-                    ...categoryEditData,
-                    description: e.target.value,
-                  })
-                }
-                rows="3"
-                className="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-slate-900 shadow-sm focus:border-cyan-400 focus:ring-2 focus:ring-cyan-100 outline-none transition"
-              />
-              <button
-                type="button"
-                onClick={handleSaveCategoryDetails}
-                disabled={savingCategoryDetails}
-                className="px-4 py-3 rounded-xl bg-gradient-to-r from-[#00f0ff] to-[#0066ff] text-[#0a0a12] font-semibold shadow-sm disabled:opacity-60"
-              >
-                {savingCategoryDetails ? "Saving..." : "Save Category Details"}
-              </button>
-            </div>
-          )}
+            <Tags className="h-5 w-5" />
+            Categories
+          </Link>
+          <Link
+            href="/dashboard/services/new"
+            className="inline-flex items-center gap-2 rounded-lg bg-gradient-to-r from-[#00f0ff] to-[#0066ff] px-6 py-3 font-semibold text-[#0a0a12]"
+          >
+            <Plus className="h-5 w-5" />
+            New Service
+          </Link>
         </div>
       </motion.div>
 
-      <div className="relative mb-6">
-        <Search className="absolute left-3 top-3 w-5 h-5 text-slate-500" />
+      <div className="relative">
+        <Search className="absolute left-3 top-3.5 h-5 w-5 text-slate-400" />
         <input
           type="text"
           placeholder="Search services..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          className="w-full pl-10 pr-4 py-3 bg-white border border-slate-300 rounded-lg text-slate-900"
+          className="w-full rounded-lg border border-slate-300 bg-white py-3 pl-10 pr-4 text-slate-900 shadow-sm focus:border-cyan-400 focus:ring-2 focus:ring-cyan-100 outline-none transition"
         />
       </div>
 
-      {!loading && (
+      {loading ? (
+        <div className="py-12 text-center text-slate-500">Loading...</div>
+      ) : filteredServices.length === 0 ? (
+        <div className="rounded-xl border border-dashed border-slate-300 bg-white py-16 text-center">
+          <p className="text-slate-500">
+            {searchQuery
+              ? "No services match your search."
+              : "No services yet. Create your first one."}
+          </p>
+          {!searchQuery && (
+            <Link
+              href="/dashboard/services/new"
+              className="mt-4 inline-flex items-center gap-2 rounded-lg bg-gradient-to-r from-[#00f0ff] to-[#0066ff] px-5 py-2.5 font-semibold text-[#0a0a12]"
+            >
+              <Plus className="h-4 w-4" />
+              New Service
+            </Link>
+          )}
+        </div>
+      ) : (
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          className="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm"
+          className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm"
         >
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead className="bg-slate-100">
                 <tr>
-                  <th className="px-6 py-3 text-left text-slate-600 text-sm font-semibold">
-                    Title
+                  <th className="px-6 py-3 text-left text-sm font-semibold text-slate-600">
+                    Service
                   </th>
-                  <th className="px-6 py-3 text-left text-slate-600 text-sm font-semibold">
+                  <th className="px-6 py-3 text-left text-sm font-semibold text-slate-600">
                     Category
                   </th>
-                  <th className="px-6 py-3 text-left text-slate-600 text-sm font-semibold">
+                  <th className="px-6 py-3 text-left text-sm font-semibold text-slate-600">
                     Features
                   </th>
-                  <th className="px-6 py-3 text-left text-slate-600 text-sm font-semibold">
+                  <th className="px-6 py-3 text-right text-sm font-semibold text-slate-600">
                     Actions
                   </th>
                 </tr>
@@ -368,33 +166,67 @@ export default function ServicesPage() {
               <tbody className="divide-y divide-slate-200">
                 {filteredServices.map((service) => (
                   <tr key={service._id} className="hover:bg-slate-50">
-                    <td className="px-6 py-4 text-slate-900 font-medium">
-                      {service.title}
+                    <td className="px-6 py-4">
+                      <div className="flex items-center gap-3">
+                        {service.image ? (
+                          <img
+                            src={service.image}
+                            alt=""
+                            className="h-10 w-10 shrink-0 rounded-lg object-cover"
+                          />
+                        ) : (
+                          <div className="h-10 w-10 shrink-0 rounded-lg bg-slate-100" />
+                        )}
+                        <div>
+                          <div className="font-medium text-slate-900">
+                            {service.title}
+                          </div>
+                          {service.path && (
+                            <div className="text-xs text-slate-400">
+                              {service.path}
+                            </div>
+                          )}
+                        </div>
+                      </div>
                     </td>
-                    <td className="px-6 py-4 text-slate-600 capitalize">
-                      <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-slate-100 text-slate-800">
+                    <td className="px-6 py-4">
+                      <span className="inline-flex items-center rounded-full bg-slate-100 px-3 py-1 text-xs font-medium text-slate-800">
                         {formatCategoryLabel(service.category)}
                       </span>
                     </td>
-                    <td className="px-6 py-4 text-slate-600 text-sm">
-                      {service.features.length} items
+                    <td className="px-6 py-4 text-sm text-slate-600">
+                      {service.features?.length || 0} items
                     </td>
-                    <td className="px-6 py-4 flex gap-2">
-                      <Link
-                        href={`/dashboard/services/edit?id=${service._id}`}
-                        title="Edit"
-                        className="p-2 bg-[#00f0ff]/10 hover:bg-[#00f0ff]/20 text-[#00f0ff] rounded"
-                      >
-                        <Edit2 className="w-4 h-4" />
-                      </Link>
-                      {isAdmin && (
-                        <button
-                          onClick={() => handleDelete(service._id)}
-                          className="p-2 bg-red-500/10 hover:bg-red-500/20 text-red-400 rounded"
+                    <td className="px-6 py-4">
+                      <div className="flex items-center justify-end gap-2">
+                        {service.path && (
+                          <a
+                            href={service.path}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            title="View live page"
+                            className="rounded p-2 text-slate-500 hover:bg-slate-100"
+                          >
+                            <ExternalLink className="h-4 w-4" />
+                          </a>
+                        )}
+                        <Link
+                          href={`/dashboard/services/edit?id=${service._id}`}
+                          title="Design page"
+                          className="rounded bg-[#00f0ff]/10 p-2 text-[#0066ff] hover:bg-[#00f0ff]/20"
                         >
-                          <Trash2 className="w-4 h-4" />
-                        </button>
-                      )}
+                          <Edit2 className="h-4 w-4" />
+                        </Link>
+                        {isAdmin && (
+                          <button
+                            onClick={() => handleDelete(service._id)}
+                            title="Delete"
+                            className="rounded bg-red-500/10 p-2 text-red-500 hover:bg-red-500/20"
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </button>
+                        )}
+                      </div>
                     </td>
                   </tr>
                 ))}

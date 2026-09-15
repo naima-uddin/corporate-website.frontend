@@ -4,27 +4,13 @@ import React, { Suspense, useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
 import ServiceForm from "../ServiceForm";
-
-const emptyFormData = {
-  title: "",
-  description: "",
-  icon: "Code",
-  features: "",
-  category: "erp",
-  path: "",
-  color: "bg-[#0066ff]",
-  image: "",
-  images: [],
-  details: "",
-  process: "",
-  stats: "",
-};
+import { emptyForm, toApiPayload, toFormState } from "../serviceFormUtils";
 
 function EditServiceContent() {
   const id = useSearchParams().get("id");
   const { token, isAdmin, isModerator } = useAuth();
   const router = useRouter();
-  const [form, setForm] = useState(emptyFormData);
+  const [form, setForm] = useState(emptyForm);
   const [categories, setCategories] = useState([]);
   const [categoriesLoading, setCategoriesLoading] = useState(true);
   const [loading, setLoading] = useState(true);
@@ -39,7 +25,6 @@ function EditServiceContent() {
         const response = await fetch(
           `${process.env.NEXT_PUBLIC_API_URL}/api/service-categories`,
         );
-
         if (response.ok) {
           const data = await response.json();
           setCategories(data.categories || []);
@@ -72,20 +57,7 @@ function EditServiceContent() {
             setNotFound(true);
             return;
           }
-          setForm({
-            title: service.title || "",
-            description: service.description || "",
-            icon: service.icon || "Code",
-            features: (service.features || []).join("\n"),
-            category: service.category || "",
-            path: service.path || "",
-            color: service.color || "bg-[#0066ff]",
-            image: service.image || "",
-            images: service.images || [],
-            details: service.details || "",
-            process: (service.process || []).join("\n"),
-            stats: (service.stats || []).join("\n"),
-          });
+          setForm(toFormState(service));
         } else {
           setNotFound(true);
         }
@@ -102,22 +74,19 @@ function EditServiceContent() {
 
   if (!isAdmin && !isModerator) {
     return (
-      <div className="text-center py-12">
-        <p className="text-slate-600">
-          Access Denied. Admin or Moderator only.
-        </p>
+      <div className="py-12 text-center">
+        <p className="text-slate-600">Access Denied. Admin or Moderator only.</p>
       </div>
     );
   }
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     setSaving(true);
     setError("");
 
-    const features = form.features.split("\n").filter((f) => f.trim());
-    if (features.length === 0) {
+    const payload = toApiPayload(form);
+    if (payload.features.length === 0) {
       setError("Please provide at least one feature.");
       setSaving(false);
       return;
@@ -132,12 +101,7 @@ function EditServiceContent() {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
-          body: JSON.stringify({
-            ...form,
-            features,
-            process: form.process.split("\n").filter((p) => p.trim()),
-            stats: form.stats.split("\n").filter((s) => s.trim()),
-          }),
+          body: JSON.stringify(payload),
         },
       );
 
@@ -161,9 +125,7 @@ function EditServiceContent() {
 
   if (notFound) {
     return (
-      <div className="py-12 text-center text-slate-500">
-        Service not found.
-      </div>
+      <div className="py-12 text-center text-slate-500">Service not found.</div>
     );
   }
 
@@ -174,8 +136,8 @@ function EditServiceContent() {
       onSubmit={handleSubmit}
       saving={saving}
       error={error}
-      heading="Edit Service"
-      submitLabel="Update Service"
+      heading="Edit service"
+      submitLabel="Update service"
       categories={categories}
       categoriesLoading={categoriesLoading}
     />
@@ -185,7 +147,9 @@ function EditServiceContent() {
 export default function EditServicePage() {
   return (
     <Suspense
-      fallback={<div className="py-12 text-center text-slate-500">Loading...</div>}
+      fallback={
+        <div className="py-12 text-center text-slate-500">Loading...</div>
+      }
     >
       <EditServiceContent />
     </Suspense>
