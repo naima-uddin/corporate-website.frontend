@@ -115,13 +115,13 @@ const Banner = () => {
               animate={{ y: 0, opacity: 1 }}
               exit={{ y: -12, opacity: 0 }}
               transition={{ duration: 0.6, ease: "easeOut" }}
-              className="max-w-xl ml-4 mb-6 lg:mb-26"
+              className="max-w-xl ml-0 sm:ml-4 mb-3 sm:mb-6 lg:mb-26"
             >
-              <h1 className="main-title text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight text-white leading-tight mb-4 text-balance ">
+              <h1 className="main-title text-lg sm:text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight text-white leading-tight mb-2 sm:mb-4 text-balance ">
                 {slide.title}
               </h1>
               {slide.subtitle && (
-                <p className="text-base md:text-lg text-white/80 max-w-xl mb-8">
+                <p className="text-xs sm:text-base md:text-lg text-white/80 max-w-xl mb-4 sm:mb-8">
                   {slide.subtitle}
                 </p>
               )}
@@ -131,7 +131,7 @@ const Banner = () => {
                   href={slide.buttonLink}
                   variant="outline"
                   showArrow
-                  className="text-foreground"
+                  className="text-white sm:text-foreground text-xs sm:text-sm h-auto sm:h-8 px-0 sm:px-5 py-0 sm:py-2.5 bg-transparent border-transparent sm:bg-background sm:border-border underline underline-offset-4 sm:no-underline"
                 >
                   {slide.buttonText}
                 </Button>
@@ -141,13 +141,13 @@ const Banner = () => {
 
           {slides.length > 1 && (
             <div className="w-full lg:w-[39rem] shrink-0">
-              <div className="no-scrollbar flex gap-2 sm:gap-3 justify-end mb-4 overflow-x-auto">
+              <div className="no-scrollbar flex gap-1.5 sm:gap-3 justify-end mb-2 sm:mb-4 overflow-x-auto">
                 {slides.map((s, index) => (
                   <button
                     key={s._id}
                     onClick={() => goToSlide(index)}
                     aria-label={`Show slide: ${s.title}`}
-                    className={`relative shrink-0 w-12 h-20 sm:w-16 sm:h-24 lg:w-20 lg:h-32 rounded-sm overflow-hidden border-2 transition-all duration-300 ${
+                    className={`relative shrink-0 w-7 h-9 sm:w-16 sm:h-24 lg:w-20 lg:h-32 rounded-sm overflow-hidden border-2 transition-all duration-300 ${
                       currentSlide === index
                         ? "border-white opacity-100 scale-105"
                         : "border-white/30 opacity-55 hover:opacity-85"
@@ -179,14 +179,14 @@ const Banner = () => {
                 <button
                   onClick={prevSlide}
                   aria-label="Previous slide"
-                  className="flex items-center justify-center w-9 h-9 shrink-0 rounded-full border border-white/50 text-white hover:bg-white/10 transition-colors"
+                  className="flex items-center justify-center w-7 h-7 sm:w-9 sm:h-9 shrink-0 rounded-full border border-white/50 text-white hover:bg-white/10 transition-colors"
                 >
                   <FiChevronLeft />
                 </button>
                 <button
                   onClick={nextSlide}
                   aria-label="Next slide"
-                  className="flex items-center justify-center w-9 h-9 shrink-0 rounded-full border border-white/50 text-white hover:bg-white/10 transition-colors"
+                  className="flex items-center justify-center w-7 h-7 sm:w-9 sm:h-9 shrink-0 rounded-full border border-white/50 text-white hover:bg-white/10 transition-colors"
                 >
                   <FiChevronRight />
                 </button>
