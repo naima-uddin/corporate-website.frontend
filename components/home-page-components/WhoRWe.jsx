@@ -152,7 +152,7 @@ const WhoRWe = () => {
   const visibleQuoteHtml = getVisibleHtml(spotlight.quote, visibleChars);
 
   return (
-    <section className="relative py-6 md:py-10 bg-white overflow-hidden">
+    <section className="relative py-4 md:py-10 bg-white overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div ref={quoteBubbleRef}>
           {/* Mobile layout: full-width image with title overlay, then a truncated quote */}
@@ -162,9 +162,9 @@ const WhoRWe = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6 }}
-              className="mb-6"
+              className="mb-3"
             >
-              <span className="block mb-3 text-xs font-semibold uppercase tracking-wide text-[var(--color-primary)]">
+              <span className="block mb-2 text-xs font-semibold uppercase tracking-wide text-[var(--color-primary)]">
                 Warm Welcome From Our Founder
               </span>
               <div className="relative w-full aspect-[3/2] overflow-hidden rounded-xl bg-[var(--color-ink)]">
@@ -216,7 +216,7 @@ const WhoRWe = () => {
                 )}
               </div>
 
-              <div className="mt-4">
+              <div className="mt-3">
                 {spotlight.name && (
                   <p className="text-lg font-bold text-[var(--color-heading)]">
                     {spotlight.name}
