@@ -29,7 +29,7 @@ const JoinUs = () => {
 
   if (loading) {
     return (
-      <section className="py-16 md:py-20 bg-[var(--color-surface,#f0f0f0)]">
+      <section className="py-6 md:py-10 bg-[var(--color-surface,#f0f0f0)]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-4 md:mb-6">
             <div className="max-w-2xl w-full">
@@ -61,7 +61,7 @@ const JoinUs = () => {
   if (cards.length === 0) return null;
 
   return (
-    <section className="py-16 md:py-20 bg-[var(--color-surface,#f0f0f0)]">
+    <section className="py-6 md:py-10 bg-[var(--color-surface,#f0f0f0)]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}

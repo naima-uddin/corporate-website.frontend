@@ -50,7 +50,7 @@ const ClientShowcase = () => {
 
   if (loading) {
     return (
-      <section className="py-16 md:py-20 bg-white">
+      <section className="py-6 md:py-10 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <SectionHeading eyebrow="Trusted By" title="Our Clients" align="left" />
           <div className="flex items-center gap-6 md:gap-8 overflow-hidden">
@@ -69,7 +69,7 @@ const ClientShowcase = () => {
   if (logos.length === 0) return null;
 
   return (
-    <section className="py-16 md:py-20 ">
+    <section className="py-6 md:py-10 ">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <SectionHeading
           eyebrow="Trusted By"

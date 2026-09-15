@@ -123,7 +123,7 @@ const WhoRWe = () => {
 
   if (loading) {
     return (
-      <section className="relative py-16 md:py-20 bg-white overflow-hidden">
+      <section className="relative py-6 md:py-10 bg-white overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid lg:grid-cols-5 gap-6 lg:gap-12 items-center">
             <div className="relative rounded-2xl overflow-hidden bg-gray-200 aspect-[5/4] sm:aspect-[4/5] max-w-[260px] sm:max-w-sm lg:max-w-md mx-auto lg:mx-0 shadow-xl lg:col-span-2 animate-pulse" />
@@ -152,7 +152,7 @@ const WhoRWe = () => {
   const visibleQuoteHtml = getVisibleHtml(spotlight.quote, visibleChars);
 
   return (
-    <section className="relative py-16 md:py-20 bg-white overflow-hidden">
+    <section className="relative py-6 md:py-10 bg-white overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div ref={quoteBubbleRef}>
           {/* Mobile layout: full-width image with title overlay, then a truncated quote */}

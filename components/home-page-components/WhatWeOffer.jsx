@@ -175,7 +175,7 @@ const WhatWeOffer = () => {
   const isLoading = loading || categoriesLoading;
 
   return (
-    <section className="py-16 md:py-20 bg-[var(--color-surface)]">
+    <section className="py-6 md:py-10 bg-[var(--color-surface)]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <SectionHeading
           eyebrow="What We Do"
