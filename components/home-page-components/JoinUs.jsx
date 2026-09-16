@@ -1,8 +1,33 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
+import Link from "next/link";
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
+
+// Treats "/foo" and same-origin absolute URLs (e.g. saved from the CMS as
+// "https://a2itltd.com/foo") as internal, so both get SPA navigation instead
+// of a hard reload through a plain <a> tag.
+const getInternalPath = (href) => {
+  if (!href) return null;
+  if (href.startsWith("/")) return href;
+
+  try {
+    const url = new URL(
+      href,
+      typeof window !== "undefined" ? window.location.origin : undefined,
+    );
+    if (typeof window !== "undefined" && url.origin === window.location.origin) {
+      return `${url.pathname}${url.search}${url.hash}`;
+    }
+  } catch {
+    return null;
+  }
+
+  return null;
+};
+
+const MotionLink = motion(Link);
 
 const JoinUs = () => {
   const [joinUs, setJoinUs] = useState(null);
@@ -82,15 +107,30 @@ const JoinUs = () => {
             )}
           </div>
 
-          {joinUs.buttonText && joinUs.buttonLink && (
-            <a
-              href={joinUs.buttonLink}
-              className="group shrink-0 inline-flex items-center gap-1.5 md:gap-2 px-4 py-2 md:px-7 md:py-3 rounded-full border-2 border-[var(--color-heading,#111)] text-[var(--color-heading,#111)] text-xs md:text-sm font-semibold transition-colors hover:bg-[var(--color-heading,#111)] hover:text-white"
-            >
-              {joinUs.buttonText}
-              <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
-            </a>
-          )}
+          {joinUs.buttonText &&
+            joinUs.buttonLink &&
+            (() => {
+              const internalPath = getInternalPath(joinUs.buttonLink);
+              return internalPath ? (
+                <Link
+                  href={internalPath}
+                  className="group shrink-0 inline-flex items-center gap-1.5 md:gap-2 px-4 py-2 md:px-7 md:py-3 rounded-full border-2 border-[var(--color-heading,#111)] text-[var(--color-heading,#111)] text-xs md:text-sm font-semibold transition-colors hover:bg-[var(--color-heading,#111)] hover:text-white"
+                >
+                  {joinUs.buttonText}
+                  <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+                </Link>
+              ) : (
+                <a
+                  href={joinUs.buttonLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group shrink-0 inline-flex items-center gap-1.5 md:gap-2 px-4 py-2 md:px-7 md:py-3 rounded-full border-2 border-[var(--color-heading,#111)] text-[var(--color-heading,#111)] text-xs md:text-sm font-semibold transition-colors hover:bg-[var(--color-heading,#111)] hover:text-white"
+                >
+                  {joinUs.buttonText}
+                  <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+                </a>
+              );
+            })()}
         </motion.div>
 
         <div className="flex flex-col md:flex-row gap-3 sm:gap-5 md:h-[500px]">
@@ -99,12 +139,22 @@ const JoinUs = () => {
             const isJobOpportunities = /job opportunities/i.test(
               card.label || "",
             );
-            const href =
+            const rawHref =
               card.link || (isJobOpportunities ? "/careers" : undefined);
+            const internalPath = getInternalPath(rawHref);
+            const href = internalPath || rawHref;
+            const CardLink = href ? (internalPath ? MotionLink : motion.a) : motion.div;
             return (
-              <motion.a
+              <CardLink
                 key={index}
-                href={href}
+                {...(href
+                  ? {
+                      href,
+                      ...(internalPath
+                        ? {}
+                        : { target: "_blank", rel: "noopener noreferrer" }),
+                    }
+                  : {})}
                 initial={{ opacity: 0, y: 24 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
@@ -147,7 +197,7 @@ const JoinUs = () => {
                     </span>
                   </div>
                 )}
-              </motion.a>
+              </CardLink>
             );
           })}
         </div>
