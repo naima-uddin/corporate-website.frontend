@@ -3,7 +3,6 @@
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { FiArrowRight } from "react-icons/fi";
-import SectionHeading from "@/components/ui/SectionHeading";
 
 const API = process.env.NEXT_PUBLIC_API_URL;
 
@@ -82,9 +81,7 @@ const MobileNewsCard = ({ post, big = false }) => (
 const NewsListItem = ({ post, compact = false }) => (
   <Link
     href={`/news/${post.slug}`}
-    className={`group flex items-start gap-3 rounded-xl bg-white p-2.5 ring-1 ring-black/5 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-black/5 hover:ring-[var(--color-primary)]/20 ${
-      compact ? "" : ""
-    }`}
+    className="group relative flex items-start gap-3 rounded-xl bg-white p-2.5 ring-1 ring-black/[0.06] transition-all duration-300 hover:-translate-y-0.5 hover:bg-[var(--color-primary)]/[0.03] hover:shadow-[0_8px_24px_-8px_rgba(0,0,0,0.15)] hover:ring-[var(--color-primary)]/25"
   >
     <div
       className={`relative shrink-0 overflow-hidden rounded-lg bg-[var(--color-surface)] ${
@@ -103,11 +100,12 @@ const NewsListItem = ({ post, compact = false }) => (
     </div>
     <div className="min-w-0 flex-1">
       {getPrimaryCategory(post) && (
-        <span className="text-[10px] font-bold uppercase tracking-wide text-[var(--color-primary)]">
+        <span className="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-wide text-[var(--color-primary)]">
+          <span className="h-1 w-1 rounded-full bg-[var(--color-primary)]" />
           {getPrimaryCategory(post)}
         </span>
       )}
-      <h3 className="text-sm font-semibold leading-snug text-[var(--color-heading)] line-clamp-2 transition-colors group-hover:text-[var(--color-primary)]">
+      <h3 className="mt-0.5 text-sm font-semibold leading-snug text-[var(--color-heading)] line-clamp-2 transition-colors group-hover:text-[var(--color-primary)]">
         {post.title}
       </h3>
       <span className="mt-1.5 block text-xs text-[var(--color-body)]">
@@ -217,20 +215,25 @@ const Newsroom = () => {
       />
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-end justify-between gap-3 mb-5 md:mb-8">
-          <SectionHeading
-            eyebrow="Newsroom"
-            title="News & Media"
-            align="left"
-            bottomSpacing="mb-0"
-            compact
-          />
+          <div>
+            <span className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-widest text-[var(--color-primary)]">
+              <span className="relative flex h-2 w-2">
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[var(--color-primary)] opacity-75" />
+                <span className="relative inline-flex h-2 w-2 rounded-full bg-[var(--color-primary)]" />
+              </span>
+              Newsroom
+            </span>
+            <h2 className="main-title mt-1.5 text-2xl md:text-3xl lg:text-4xl font-extrabold tracking-tight text-[var(--color-heading)]">
+              News & Media
+            </h2>
+          </div>
           <Link
             href="/news"
-            className="inline-flex shrink-0 items-center gap-1.5 rounded-full border border-[var(--color-primary)]/30 bg-white px-3 py-1.5 text-xs sm:text-sm font-semibold text-[var(--color-primary)] shadow-sm transition-all duration-200 hover:gap-2.5 hover:bg-[var(--color-primary)] hover:text-white"
+            className="group inline-flex shrink-0 items-center gap-1.5 rounded-full border border-[var(--color-primary)]/30 bg-white px-4 py-2 text-xs sm:text-sm font-semibold text-[var(--color-primary)] shadow-sm transition-all duration-200 hover:border-[var(--color-primary)] hover:bg-[var(--color-primary)] hover:text-white hover:shadow-md"
           >
             <span className="hidden sm:inline">View All News</span>
             <span className="sm:hidden">All News</span>
-            <FiArrowRight />
+            <FiArrowRight className="transition-transform duration-200 group-hover:translate-x-1" />
           </Link>
         </div>
 
@@ -258,7 +261,7 @@ const Newsroom = () => {
           <div className="lg:col-span-6">
             <Link
               href={`/news/${featured.slug}`}
-              className="group relative block h-[420px] w-full overflow-hidden rounded-2xl bg-[var(--color-surface)] shadow-xl shadow-black/10"
+              className="group relative block h-[420px] w-full overflow-hidden rounded-2xl bg-[var(--color-surface)] shadow-[0_20px_50px_-15px_rgba(0,0,0,0.25)] ring-1 ring-black/5 transition-shadow duration-300 hover:shadow-[0_25px_60px_-12px_rgba(0,0,0,0.35)]"
             >
               {getImageUrl(featured.featuredImage) ? (
                 <img
@@ -269,24 +272,34 @@ const Newsroom = () => {
               ) : (
                 <div className="absolute inset-0 bg-gradient-to-br from-[var(--color-primary)]/20 to-[var(--color-primary)]/5" />
               )}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/45 to-black/5" />
+              <div className="absolute inset-0 opacity-0 ring-2 ring-inset ring-[var(--color-primary)] transition-opacity duration-300 group-hover:opacity-60" />
               <div className="absolute inset-x-0 bottom-0 p-6 sm:p-8">
-                {getPrimaryCategory(featured) && (
-                  <span className="mb-3 inline-block rounded-full bg-[var(--color-primary)] px-3 py-1 text-xs font-bold uppercase tracking-wide text-white shadow">
-                    {getPrimaryCategory(featured)}
+                <div className="mb-3 flex items-center gap-2">
+                  <span className="inline-flex items-center gap-1.5 rounded-full bg-[var(--color-primary)] px-3 py-1 text-xs font-bold uppercase tracking-wide text-white shadow">
+                    ★ Featured
                   </span>
-                )}
-                <h3 className="text-2xl sm:text-3xl font-extrabold leading-tight text-white line-clamp-2 transition-colors group-hover:text-white/90">
+                  {getPrimaryCategory(featured) && (
+                    <span className="inline-block rounded-full bg-white/15 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-white backdrop-blur-sm">
+                      {getPrimaryCategory(featured)}
+                    </span>
+                  )}
+                </div>
+                <h3 className="text-2xl sm:text-[1.75rem] font-extrabold leading-tight text-white line-clamp-2 transition-colors group-hover:text-white/90">
                   {featured.title}
                 </h3>
                 {featured.excerpt && (
-                  <p className="mt-3 text-sm sm:text-base text-white/75 line-clamp-2">
+                  <p className="mt-3 text-sm sm:text-base text-white/70 line-clamp-2">
                     {featured.excerpt}
                   </p>
                 )}
-                <span className="mt-4 block text-xs font-medium text-white/60">
-                  {formatTimeAgo(featured.publishDate || featured.createdAt)}
-                </span>
+                <div className="mt-4 flex items-center gap-2 text-xs font-medium text-white/60">
+                  <span>{formatTimeAgo(featured.publishDate || featured.createdAt)}</span>
+                  <span className="h-1 w-1 rounded-full bg-white/40" />
+                  <span className="inline-flex items-center gap-1 text-white/80 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                    Read story <FiArrowRight className="transition-transform duration-300 group-hover:translate-x-1" />
+                  </span>
+                </div>
               </div>
             </Link>
           </div>
