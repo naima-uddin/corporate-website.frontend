@@ -82,30 +82,37 @@ const MobileNewsCard = ({ post, big = false }) => (
 const NewsListItem = ({ post, compact = false }) => (
   <Link
     href={`/news/${post.slug}`}
-    className={`group flex items-start justify-between gap-1 first:pt-0 ${
-      compact ? "py-1.5" : "py-3"
+    className={`group flex items-start gap-3 rounded-xl bg-white p-2.5 ring-1 ring-black/5 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-black/5 hover:ring-[var(--color-primary)]/20 ${
+      compact ? "" : ""
     }`}
   >
-    <div className="min-w-0 flex-1">
-      <h3 className="text-sm font-semibold leading-snug text-[var(--color-heading)] line-clamp-2 group-hover:text-[var(--color-primary)] transition-colors">
-        {post.title}
-      </h3>
-      <span className="mt-2 block text-xs text-[var(--color-body)]">
-        {formatTimeAgo(post.publishDate || post.createdAt)}
-      </span>
-    </div>
     <div
-      className={`shrink-0 overflow-hidden rounded-sm bg-[var(--color-surface)] ${
-        compact ? "h-12 w-12" : "h-16 w-16"
+      className={`relative shrink-0 overflow-hidden rounded-lg bg-[var(--color-surface)] ${
+        compact ? "h-14 w-14" : "h-16 w-16"
       }`}
     >
-      {getImageUrl(post.featuredImage) && (
+      {getImageUrl(post.featuredImage) ? (
         <img
           src={getImageUrl(post.featuredImage)}
           alt={post.title}
-          className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+          className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
         />
+      ) : (
+        <div className="h-full w-full bg-gradient-to-br from-[var(--color-primary)]/15 to-[var(--color-primary)]/5" />
       )}
+    </div>
+    <div className="min-w-0 flex-1">
+      {getPrimaryCategory(post) && (
+        <span className="text-[10px] font-bold uppercase tracking-wide text-[var(--color-primary)]">
+          {getPrimaryCategory(post)}
+        </span>
+      )}
+      <h3 className="text-sm font-semibold leading-snug text-[var(--color-heading)] line-clamp-2 transition-colors group-hover:text-[var(--color-primary)]">
+        {post.title}
+      </h3>
+      <span className="mt-1.5 block text-xs text-[var(--color-body)]">
+        {formatTimeAgo(post.publishDate || post.createdAt)}
+      </span>
     </div>
   </Link>
 );
@@ -140,7 +147,7 @@ const Newsroom = () => {
 
   if (loading) {
     return (
-      <section className="py-6 md:py-10 lg:py-14 bg-white">
+      <section className="py-8 md:py-12 lg:py-16 bg-[var(--color-surface)]/40">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="h-8 bg-gray-200 rounded-lg w-56 mb-6 md:mb-10 animate-pulse" />
           <div className="hidden lg:grid grid-cols-1 gap-x-8 gap-y-8 lg:grid-cols-12">
@@ -199,9 +206,17 @@ const Newsroom = () => {
   const rightPosts = rest.slice(4, 8);
 
   return (
-    <section className="py-3 md:py-6 lg:py-8 bg-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-end justify-between gap-3 mb-2 md:mb-3">
+    <section className="relative overflow-hidden bg-[var(--color-surface)]/40 py-8 md:py-12 lg:py-16">
+      <div
+        className="pointer-events-none absolute inset-x-0 top-0 h-64 opacity-60"
+        style={{
+          background:
+            "radial-gradient(60% 100% at 50% 0%, var(--color-primary) 0%, transparent 100%)",
+          opacity: 0.06,
+        }}
+      />
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex items-end justify-between gap-3 mb-5 md:mb-8">
           <SectionHeading
             eyebrow="Newsroom"
             title="News & Media"
@@ -211,7 +226,7 @@ const Newsroom = () => {
           />
           <Link
             href="/news"
-            className="inline-flex shrink-0 items-center gap-1.5 rounded-full border border-[var(--color-primary)]/30 bg-[var(--color-primary)]/5 px-3 py-1.5 text-xs sm:text-sm font-semibold text-[var(--color-primary)] transition-all duration-200 hover:gap-2.5 hover:bg-[var(--color-primary)]/10"
+            className="inline-flex shrink-0 items-center gap-1.5 rounded-full border border-[var(--color-primary)]/30 bg-white px-3 py-1.5 text-xs sm:text-sm font-semibold text-[var(--color-primary)] shadow-sm transition-all duration-200 hover:gap-2.5 hover:bg-[var(--color-primary)] hover:text-white"
           >
             <span className="hidden sm:inline">View All News</span>
             <span className="sm:hidden">All News</span>
@@ -223,7 +238,7 @@ const Newsroom = () => {
         <div className="lg:hidden">
           <MobileNewsCard post={featured} big />
 
-          <div className="mt-3 divide-y divide-[var(--color-border)]">
+          <div className="mt-4 space-y-2.5">
             {rest.slice(0, 2).map((post) => (
               <NewsListItem key={post._id || post.slug} post={post} compact />
             ))}
@@ -231,47 +246,53 @@ const Newsroom = () => {
         </div>
 
         {/* Desktop: full three-column layout */}
-        <div className="hidden lg:grid grid-cols-1 gap-x-8 gap-y-8 lg:grid-cols-12 lg:divide-x lg:divide-[var(--color-border)]">
+        <div className="hidden lg:grid grid-cols-1 gap-x-6 gap-y-8 lg:grid-cols-12">
           {leftPosts.length > 0 && (
-            <div className="lg:col-span-3 divide-y divide-[var(--color-border)] lg:pr-4">
+            <div className="lg:col-span-3 space-y-2.5">
               {leftPosts.map((post) => (
                 <NewsListItem key={post._id || post.slug} post={post} />
               ))}
             </div>
           )}
 
-          <div className="lg:col-span-6 lg:pr-8 ">
-            <Link href={`/news/${featured.slug}`} className="group block">
-              <div className="relative h-64 sm:h-80 w-full overflow-hidden rounded-lg bg-[var(--color-surface)]">
-                {getImageUrl(featured.featuredImage) && (
-                  <img
-                    src={getImageUrl(featured.featuredImage)}
-                    alt={featured.title}
-                    className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-                  />
-                )}
+          <div className="lg:col-span-6">
+            <Link
+              href={`/news/${featured.slug}`}
+              className="group relative block h-[420px] w-full overflow-hidden rounded-2xl bg-[var(--color-surface)] shadow-xl shadow-black/10"
+            >
+              {getImageUrl(featured.featuredImage) ? (
+                <img
+                  src={getImageUrl(featured.featuredImage)}
+                  alt={featured.title}
+                  className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-110"
+                />
+              ) : (
+                <div className="absolute inset-0 bg-gradient-to-br from-[var(--color-primary)]/20 to-[var(--color-primary)]/5" />
+              )}
+              <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
+              <div className="absolute inset-x-0 bottom-0 p-6 sm:p-8">
                 {getPrimaryCategory(featured) && (
-                  <span className="absolute left-4 top-4 rounded bg-[var(--color-primary)] px-3 py-1 text-xs font-semibold uppercase tracking-wide text-white">
+                  <span className="mb-3 inline-block rounded-full bg-[var(--color-primary)] px-3 py-1 text-xs font-bold uppercase tracking-wide text-white shadow">
                     {getPrimaryCategory(featured)}
                   </span>
                 )}
+                <h3 className="text-2xl sm:text-3xl font-extrabold leading-tight text-white line-clamp-2 transition-colors group-hover:text-white/90">
+                  {featured.title}
+                </h3>
+                {featured.excerpt && (
+                  <p className="mt-3 text-sm sm:text-base text-white/75 line-clamp-2">
+                    {featured.excerpt}
+                  </p>
+                )}
+                <span className="mt-4 block text-xs font-medium text-white/60">
+                  {formatTimeAgo(featured.publishDate || featured.createdAt)}
+                </span>
               </div>
-              <h3 className="mt-5 text-xl sm:text-2xl font-bold leading-snug text-[var(--color-heading)] group-hover:text-[var(--color-primary)] transition-colors">
-                {featured.title}
-              </h3>
-              {featured.excerpt && (
-                <p className="mt-3 text-sm sm:text-base text-[var(--color-body)] line-clamp-2">
-                  {featured.excerpt}
-                </p>
-              )}
-              <span className="mt-3 block text-xs text-[var(--color-body)]">
-                {formatTimeAgo(featured.publishDate || featured.createdAt)}
-              </span>
             </Link>
           </div>
 
           {rightPosts.length > 0 && (
-            <div className="lg:col-span-3 divide-y divide-[var(--color-border)] lg:pl-4">
+            <div className="lg:col-span-3 space-y-2.5">
               {rightPosts.map((post) => (
                 <NewsListItem key={post._id || post.slug} post={post} />
               ))}
