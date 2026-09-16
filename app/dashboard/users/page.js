@@ -1,10 +1,14 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import Link from "next/link";
 import { useAuth } from "@/context/AuthContext";
 import { motion } from "framer-motion";
-import { Plus, Trash2, Edit2, Search } from "lucide-react";
+import { Plus, Trash2, Edit2 } from "lucide-react";
+import PageHeader from "../components/ui/PageHeader";
+import SearchInput from "../components/ui/SearchInput";
+import EmptyState from "../components/ui/EmptyState";
+import Badge from "../components/ui/Badge";
+import { ActionButton, IconButton } from "../components/ui/Buttons";
 
 export default function UsersPage() {
   const { token, isAdmin } = useAuth();
@@ -77,88 +81,93 @@ export default function UsersPage() {
 
   return (
     <div className="space-y-6">
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="flex justify-between items-center"
-      >
-        <div>
-          <h1 className="text-4xl font-bold text-slate-900 mb-2">
-            Manage Users
-          </h1>
-          <p className="text-slate-600">
-            Create and manage admin and moderator accounts
-          </p>
-        </div>
-        <Link
-          href="/dashboard/users/new"
-          className="bg-gradient-to-r from-[#00f0ff] to-[#0066ff] text-[#0a0a12] font-semibold px-6 py-3 rounded-lg flex items-center gap-2"
-        >
-          <Plus className="w-5 h-5" />
-          Add User
-        </Link>
-      </motion.div>
+      <PageHeader
+        title="Manage Users"
+        description="Create and manage admin and moderator accounts."
+        actions={
+          <ActionButton href="/dashboard/users/new">
+            <Plus className="h-4 w-4" />
+            Add User
+          </ActionButton>
+        }
+      />
 
-      <div className="relative mb-6">
-        <Search className="absolute left-3 top-3 w-5 h-5 text-slate-500" />
-        <input
-          type="text"
-          placeholder="Search users..."
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          className="w-full pl-10 pr-4 py-3 bg-white border border-slate-300 rounded-lg text-slate-900"
+      <SearchInput
+        value={searchQuery}
+        onChange={(e) => setSearchQuery(e.target.value)}
+        placeholder="Search users..."
+      />
+
+      {loading ? (
+        <div className="py-12 text-center text-slate-500">Loading...</div>
+      ) : filteredUsers.length === 0 ? (
+        <EmptyState
+          title={
+            searchQuery ? "No users match your search." : "No users yet."
+          }
+          description={!searchQuery ? "Add your first team member." : undefined}
+          action={
+            !searchQuery && (
+              <ActionButton href="/dashboard/users/new" size="sm">
+                <Plus className="h-4 w-4" />
+                Add User
+              </ActionButton>
+            )
+          }
         />
-      </div>
-
-      {!loading && (
+      ) : (
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          className="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm"
+          className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm"
         >
           <div className="overflow-x-auto">
             <table className="w-full">
-              <thead className="bg-slate-100">
+              <thead className="bg-slate-50">
                 <tr>
-                  <th className="px-6 py-3 text-left text-slate-600 text-sm font-semibold">
+                  <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">
                     Name
                   </th>
-                  <th className="px-6 py-3 text-left text-slate-600 text-sm font-semibold">
+                  <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">
                     Email
                   </th>
-                  <th className="px-6 py-3 text-left text-slate-600 text-sm font-semibold">
+                  <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">
                     Role
                   </th>
-                  <th className="px-6 py-3 text-left text-slate-600 text-sm font-semibold">
+                  <th className="px-6 py-3 text-right text-xs font-semibold uppercase tracking-wide text-slate-500">
                     Actions
                   </th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-200">
+              <tbody className="divide-y divide-slate-100">
                 {filteredUsers.map((user) => (
-                  <tr key={user._id} className="hover:bg-slate-50">
-                    <td className="px-6 py-4 text-slate-900">{user.name}</td>
+                  <tr key={user._id} className="transition hover:bg-slate-50">
+                    <td className="px-6 py-4 font-medium text-slate-900">
+                      {user.name}
+                    </td>
                     <td className="px-6 py-4 text-slate-600">{user.email}</td>
                     <td className="px-6 py-4">
-                      <span
-                        className={`px-2 py-1 rounded text-xs font-semibold ${user.role === "admin" ? "bg-red-500/20 text-red-400" : "bg-blue-500/20 text-blue-400"}`}
-                      >
+                      <Badge tone={user.role === "admin" ? "red" : "blue"}>
                         {user.role}
-                      </span>
+                      </Badge>
                     </td>
-                    <td className="px-6 py-4 flex gap-2">
-                      <Link
-                        href={`/dashboard/users/edit?id=${user._id}`}
-                        className="p-2 bg-[#00f0ff]/10 hover:bg-[#00f0ff]/20 text-[#00f0ff] rounded"
-                      >
-                        <Edit2 className="w-4 h-4" />
-                      </Link>
-                      <button
-                        onClick={() => handleDelete(user._id)}
-                        className="p-2 bg-red-500/10 hover:bg-red-500/20 text-red-400 rounded"
-                      >
-                        <Trash2 className="w-4 h-4" />
-                      </button>
+                    <td className="px-6 py-4">
+                      <div className="flex items-center justify-end gap-2">
+                        <IconButton
+                          href={`/dashboard/users/edit?id=${user._id}`}
+                          tone="blue"
+                          title="Edit"
+                        >
+                          <Edit2 className="h-4 w-4" />
+                        </IconButton>
+                        <IconButton
+                          onClick={() => handleDelete(user._id)}
+                          tone="red"
+                          title="Delete"
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </IconButton>
+                      </div>
                     </td>
                   </tr>
                 ))}

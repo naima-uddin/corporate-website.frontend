@@ -1,10 +1,14 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import Link from "next/link";
 import { useAuth } from "@/context/AuthContext";
 import { motion } from "framer-motion";
-import { Plus, Trash2, Edit2, Search } from "lucide-react";
+import { Plus, Trash2, Edit2, Settings2 } from "lucide-react";
+import PageHeader from "../components/ui/PageHeader";
+import SearchInput from "../components/ui/SearchInput";
+import EmptyState from "../components/ui/EmptyState";
+import Badge from "../components/ui/Badge";
+import { ActionButton, IconButton } from "../components/ui/Buttons";
 
 export default function PortfolioPage() {
   const { token, isAdmin, isModerator } = useAuth();
@@ -154,64 +158,52 @@ export default function PortfolioPage() {
 
   return (
     <div className="space-y-6">
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="flex justify-between items-center"
-      >
-        <div>
-          <h1 className="text-4xl font-bold text-slate-900 mb-2">
-            Manage Contracts / Projects
-          </h1>
-          <p className="text-slate-600">
-            Government contracts and projects shown on the public Projects
-            page (table + featured cards)
-          </p>
-        </div>
-        <div className="flex gap-2">
-          <button
-            onClick={() => setShowCategoryManager(!showCategoryManager)}
-            className="bg-slate-600 hover:bg-slate-700 text-white font-semibold px-6 py-3 rounded-lg flex items-center gap-2"
-          >
-            Manage Categories
-          </button>
-          <Link
-            href="/dashboard/portfolio/new"
-            className="bg-gradient-to-r from-[#00f0ff] to-[#0066ff] text-[#0a0a12] font-semibold px-6 py-3 rounded-lg flex items-center gap-2"
-          >
-            <Plus className="w-5 h-5" />
-            Add Project
-          </Link>
-        </div>
-      </motion.div>
+      <PageHeader
+        title="Manage Contracts / Projects"
+        description="Government contracts and projects shown on the public Projects page (table + featured cards)."
+        actions={
+          <>
+            <ActionButton
+              variant="secondary"
+              onClick={() => setShowCategoryManager((prev) => !prev)}
+            >
+              <Settings2 className="h-4 w-4" />
+              Manage Categories
+            </ActionButton>
+            <ActionButton href="/dashboard/portfolio/new">
+              <Plus className="h-4 w-4" />
+              Add Project
+            </ActionButton>
+          </>
+        }
+      />
 
       {showCategoryManager && (
         <motion.div
-          initial={{ opacity: 0, y: -20 }}
+          initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
-          className="bg-gradient-to-br from-white to-slate-50 border border-slate-200 rounded-xl p-8 shadow-lg"
+          className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm"
         >
           <div className="mb-6">
-            <h2 className="text-3xl font-bold text-slate-900 mb-2">
+            <h2 className="text-xl font-bold text-slate-900">
               Portfolio Categories
             </h2>
-            <p className="text-slate-600 text-sm">
+            <p className="mt-1 text-sm text-slate-500">
               Manage your portfolio project categories. Add new ones or remove
               existing ones.
             </p>
           </div>
 
-          {/* Add New Category Section */}
-          <div className="bg-white border border-slate-200 rounded-lg p-6 mb-8 shadow-sm">
-            <h3 className="text-xl font-semibold text-slate-900 mb-5 flex items-center gap-2">
-              <div className="w-8 h-8 bg-gradient-to-r from-[#00f0ff] to-[#0066ff] rounded-full flex items-center justify-center text-white text-sm font-bold">
+          <div className="mb-8 rounded-lg border border-slate-200 bg-slate-50/60 p-5">
+            <h3 className="mb-4 flex items-center gap-2 text-sm font-semibold text-slate-800">
+              <span className="flex h-6 w-6 items-center justify-center rounded-full bg-[#0b4f9e] text-xs font-bold text-white">
                 +
-              </div>
+              </span>
               Add New Category
             </h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
               <div>
-                <label className="block text-sm font-semibold text-slate-700 mb-2">
+                <label className="mb-1.5 block text-xs font-semibold text-slate-600">
                   Category Name *
                 </label>
                 <input
@@ -219,14 +211,14 @@ export default function PortfolioPage() {
                   placeholder="e.g., react-projects"
                   value={newCategoryName}
                   onChange={(e) => setNewCategoryName(e.target.value)}
-                  className="w-full px-4 py-3 bg-white border border-slate-300 rounded-lg text-slate-900 focus:outline-none focus:ring-2 focus:ring-cyan-500 transition"
+                  className="w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm text-slate-900 outline-none transition focus:border-[#0b4f9e]/40 focus:ring-2 focus:ring-[#0b4f9e]/10"
                 />
-                <p className="text-xs text-slate-500 mt-1">
+                <p className="mt-1 text-xs text-slate-400">
                   Lowercase, no spaces (e.g., saas-projects)
                 </p>
               </div>
               <div>
-                <label className="block text-sm font-semibold text-slate-700 mb-2">
+                <label className="mb-1.5 block text-xs font-semibold text-slate-600">
                   Display Name *
                 </label>
                 <input
@@ -234,152 +226,143 @@ export default function PortfolioPage() {
                   placeholder="e.g., React Projects"
                   value={newCategoryDisplay}
                   onChange={(e) => setNewCategoryDisplay(e.target.value)}
-                  className="w-full px-4 py-3 bg-white border border-slate-300 rounded-lg text-slate-900 focus:outline-none focus:ring-2 focus:ring-cyan-500 transition"
+                  className="w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm text-slate-900 outline-none transition focus:border-[#0b4f9e]/40 focus:ring-2 focus:ring-[#0b4f9e]/10"
                 />
-                <p className="text-xs text-slate-500 mt-1">
+                <p className="mt-1 text-xs text-slate-400">
                   How it appears to users
                 </p>
               </div>
               <div className="flex items-end">
-                <motion.button
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  type="button"
-                  onClick={handleAddCategory}
-                  className="w-full px-6 py-3 bg-gradient-to-r from-[#00f0ff] to-[#0066ff] text-[#0a0a12] font-semibold rounded-lg hover:shadow-lg transition"
-                >
+                <ActionButton onClick={handleAddCategory} className="w-full justify-center">
                   Create Category
-                </motion.button>
+                </ActionButton>
               </div>
             </div>
           </div>
 
-          {/* Categories List Section */}
           <div>
-            <h3 className="text-xl font-semibold text-slate-900 mb-5 flex items-center gap-2">
-              <div className="w-8 h-8 bg-slate-200 rounded-full flex items-center justify-center text-slate-700 text-sm font-bold">
+            <h3 className="mb-4 flex items-center gap-2 text-sm font-semibold text-slate-800">
+              <span className="flex h-6 w-6 items-center justify-center rounded-full bg-slate-200 text-xs font-bold text-slate-700">
                 {categories.length}
-              </div>
+              </span>
               Existing Categories
             </h3>
             {!loadingCategories && categories.length > 0 ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {categories.map((cat, index) => (
-                  <motion.div
+              <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+                {categories.map((cat) => (
+                  <div
                     key={cat._id}
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -10 }}
-                    transition={{ delay: index * 0.05 }}
-                    className="bg-white border border-slate-200 rounded-lg p-5 hover:shadow-md hover:border-slate-300 transition group"
+                    className="group rounded-lg border border-slate-200 bg-white p-4 shadow-sm transition hover:border-[#0b4f9e]/30 hover:shadow-md"
                   >
-                    <div className="flex justify-between items-start mb-3">
-                      <div className="flex-1">
-                        <p className="text-xs font-mono text-slate-500 mb-1">
+                    <div className="flex items-start justify-between">
+                      <div className="min-w-0">
+                        <p className="truncate font-mono text-xs text-slate-400">
                           {cat.name}
                         </p>
-                        <h4 className="text-lg font-bold text-slate-900">
+                        <h4 className="text-base font-bold text-slate-900">
                           {cat.displayName}
                         </h4>
                       </div>
-                      {isAdmin ? (
-                        <motion.button
-                          whileHover={{ scale: 1.15 }}
-                          whileTap={{ scale: 0.85 }}
+                      {isAdmin && (
+                        <button
                           onClick={() => handleDeleteCategory(cat.name)}
-                          className="ml-2 p-2 bg-red-500/10 hover:bg-red-500/20 text-red-500 rounded-lg opacity-0 group-hover:opacity-100 transition"
+                          className="ml-2 shrink-0 rounded-lg bg-red-50 p-1.5 text-red-500 opacity-0 transition hover:bg-red-100 group-hover:opacity-100"
                           title="Delete category"
                         >
-                          <Trash2 className="w-4 h-4" />
-                        </motion.button>
-                      ) : (
-                        <div
-                          className="ml-2 p-2 rounded-lg opacity-0 group-hover:opacity-100 transition"
-                          title="Delete disabled"
-                        >
-                          <span className="text-xs text-slate-400">🔒</span>
-                        </div>
+                          <Trash2 className="h-3.5 w-3.5" />
+                        </button>
                       )}
                     </div>
-                    <div className="pt-3 border-t border-slate-100 flex gap-2">
-                      <span className="inline-block px-3 py-1 bg-gradient-to-r from-[#00f0ff]/20 to-[#0066ff]/20 text-slate-700 text-xs font-semibold rounded-full">
-                        Active
-                      </span>
+                    <div className="mt-3 border-t border-slate-100 pt-3">
+                      <Badge tone="blue">Active</Badge>
                     </div>
-                  </motion.div>
+                  </div>
                 ))}
               </div>
             ) : !loadingCategories ? (
-              <div className="text-center py-12 bg-slate-50 rounded-lg border border-dashed border-slate-300">
-                <p className="text-slate-500 mb-2">No categories found</p>
-                <p className="text-slate-400 text-sm">
-                  Create your first category above
-                </p>
-              </div>
+              <EmptyState
+                title="No categories found"
+                description="Create your first category above."
+              />
             ) : (
-              <div className="text-center py-12">
-                <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-cyan-500"></div>
-                <p className="text-slate-500 mt-4">Loading categories...</p>
+              <div className="py-10 text-center text-sm text-slate-500">
+                Loading categories...
               </div>
             )}
           </div>
         </motion.div>
       )}
 
-      <div className="relative mb-6">
-        <Search className="absolute left-3 top-3 w-5 h-5 text-slate-500" />
-        <input
-          type="text"
-          placeholder="Search projects..."
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          className="w-full pl-10 pr-4 py-3 bg-white border border-slate-300 rounded-lg text-slate-900"
-        />
-      </div>
+      <SearchInput
+        value={searchQuery}
+        onChange={(e) => setSearchQuery(e.target.value)}
+        placeholder="Search projects..."
+      />
 
-      {!loading && (
+      {!loading && filteredPortfolios.length === 0 ? (
+        <EmptyState
+          title={
+            searchQuery
+              ? "No projects match your search."
+              : "No projects yet."
+          }
+          description={!searchQuery ? "Add your first project to get started." : undefined}
+          action={
+            !searchQuery && (
+              <ActionButton href="/dashboard/portfolio/new" size="sm">
+                <Plus className="h-4 w-4" />
+                Add Project
+              </ActionButton>
+            )
+          }
+        />
+      ) : !loading ? (
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          className="grid grid-cols-3 md:grid-cols-5 gap-6"
+          className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
         >
           {filteredPortfolios.map((item) => (
             <div
               key={item._id}
-              className="bg-white border border-slate-200 rounded-xl overflow-hidden hover:border-cyan-300 transition shadow-sm"
+              className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm transition hover:border-[#0b4f9e]/30 hover:shadow-md"
             >
               <img
                 src={item.image}
                 alt={item.title}
-                className="w-full h-48 object-cover"
+                className="h-40 w-full object-cover"
               />
               <div className="p-4">
-                <h3 className="text-lg font-bold text-slate-900 mb-2">
+                <h3 className="mb-1.5 font-bold text-slate-900">
                   {item.title}
                 </h3>
-                <p className="text-slate-600 text-sm mb-3 line-clamp-2">
+                <p className="mb-3 line-clamp-2 text-sm text-slate-500">
                   {item.description}
                 </p>
-                <div className="flex gap-2 justify-end">
-                  <Link
+                <div className="flex justify-end gap-2">
+                  <IconButton
                     href={`/dashboard/portfolio/edit?id=${item._id}`}
-                    className="p-2 bg-[#00f0ff]/10 hover:bg-[#00f0ff]/20 text-[#00f0ff] rounded"
+                    tone="blue"
+                    title="Edit"
                   >
-                    <Edit2 className="w-4 h-4" />
-                  </Link>
+                    <Edit2 className="h-4 w-4" />
+                  </IconButton>
                   {isAdmin && (
-                    <button
+                    <IconButton
                       onClick={() => handleDelete(item._id)}
-                      className="p-2 bg-red-500/10 hover:bg-red-500/20 text-red-400 rounded"
+                      tone="red"
+                      title="Delete"
                     >
-                      <Trash2 className="w-4 h-4" />
-                    </button>
+                      <Trash2 className="h-4 w-4" />
+                    </IconButton>
                   )}
                 </div>
               </div>
             </div>
           ))}
         </motion.div>
+      ) : (
+        <div className="py-12 text-center text-slate-500">Loading...</div>
       )}
     </div>
   );

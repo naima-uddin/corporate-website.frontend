@@ -46,7 +46,7 @@ export default function DashboardBreadcrumb() {
         <li className="flex items-center">
           <Link
             href="/dashboard"
-            className="flex items-center gap-1 text-slate-400 transition-colors hover:text-cyan-600"
+            className="flex items-center gap-1 text-slate-400 transition-colors hover:text-[#0b4f9e]"
           >
             <Home className="h-3.5 w-3.5" />
             <span className="sr-only">Dashboard</span>
@@ -64,7 +64,7 @@ export default function DashboardBreadcrumb() {
               ) : (
                 <Link
                   href={crumb.href}
-                  className="text-slate-400 transition-colors hover:text-cyan-600"
+                  className="text-slate-400 transition-colors hover:text-[#0b4f9e]"
                 >
                   {crumb.label}
                 </Link>

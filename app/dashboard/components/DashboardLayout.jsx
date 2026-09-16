@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
 import {
@@ -9,6 +9,8 @@ import {
   X,
   ChevronsLeft,
   ChevronsRight,
+  ChevronDown,
+  Search,
 } from "lucide-react";
 import Link from "next/link";
 import {
@@ -36,7 +38,7 @@ const DashboardNavLink = ({ item, pathname, onClick, collapsed }) => {
         collapsed ? "justify-center" : ""
       } ${
         isActive
-          ? "bg-gradient-to-r from-cyan-500 to-blue-600 text-white shadow-sm shadow-cyan-500/20"
+          ? "bg-[#0b4f9e] text-white shadow-sm shadow-[#0b4f9e]/20"
           : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
       }`}
     >
@@ -54,15 +56,59 @@ const DashboardNavLink = ({ item, pathname, onClick, collapsed }) => {
 
 const DashboardNav = ({ collapsed, onToggleCollapse }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [navSearch, setNavSearch] = useState("");
+  const [expandedSections, setExpandedSections] = useState(() => new Set());
   const pathname = usePathname();
   const router = useRouter();
   const { logout, user } = useAuth();
 
-  const sections = [
-    ...NAV_SECTIONS,
-    ...(user?.role === "admin" ? [ADMIN_NAV_SECTION] : []),
-    ACCOUNT_NAV_SECTION,
-  ];
+  const sections = useMemo(
+    () => [
+      ...NAV_SECTIONS,
+      ...(user?.role === "admin" ? [ADMIN_NAV_SECTION] : []),
+      ACCOUNT_NAV_SECTION,
+    ],
+    [user?.role],
+  );
+
+  // Expand the section that contains the active route by default.
+  useEffect(() => {
+    const activeSection = sections.find((section) =>
+      section.items.some(
+        (item) =>
+          pathname === item.href ||
+          (item.href !== "/dashboard" && pathname?.startsWith(`${item.href}/`)),
+      ),
+    );
+    if (activeSection) {
+      setExpandedSections((prev) => new Set(prev).add(activeSection.id));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pathname]);
+
+  const query = navSearch.trim().toLowerCase();
+  const isSearching = query.length > 0;
+
+  const visibleSections = useMemo(() => {
+    if (!isSearching) return sections;
+    return sections
+      .map((section) => ({
+        ...section,
+        items: section.items.filter((item) =>
+          item.label.toLowerCase().includes(query),
+        ),
+      }))
+      .filter((section) => section.items.length > 0);
+  }, [sections, isSearching, query]);
+
+  const toggleSection = (id) => {
+    setExpandedSections((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  };
 
   const handleLogout = () => {
     logout();
@@ -109,7 +155,7 @@ const DashboardNav = ({ collapsed, onToggleCollapse }) => {
             href="/dashboard"
             className={`flex items-center gap-2 overflow-hidden ${collapsed ? "justify-center" : ""}`}
           >
-            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-gradient-to-br from-cyan-400 to-blue-600 text-sm font-extrabold text-white">
+            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[#0b4f9e] text-sm font-extrabold text-white">
               A2
             </span>
             {!collapsed && (
@@ -142,29 +188,70 @@ const DashboardNav = ({ collapsed, onToggleCollapse }) => {
           </button>
         )}
 
-        {/* Nav */}
-        <nav className="flex-1 space-y-6 overflow-y-auto px-3 py-5">
-          {sections.map((section) => (
-            <div key={section.id} className="space-y-1.5">
-              {section.label && !collapsed && (
-                <p className="px-3 text-[11px] font-semibold uppercase tracking-wider text-slate-400">
-                  {section.label}
-                </p>
-              )}
-              {section.label && collapsed && (
-                <div className="mx-3 border-t border-slate-100" />
-              )}
-              {section.items.map((item) => (
-                <DashboardNavLink
-                  key={item.id}
-                  item={item}
-                  pathname={pathname}
-                  collapsed={collapsed}
-                  onClick={() => setMobileMenuOpen(false)}
-                />
-              ))}
+        {/* Nav search */}
+        {!collapsed && (
+          <div className="border-b border-slate-100 px-3 py-3">
+            <div className="relative">
+              <Search className="pointer-events-none absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-slate-400" />
+              <input
+                type="text"
+                value={navSearch}
+                onChange={(e) => setNavSearch(e.target.value)}
+                placeholder="Search menu..."
+                className="w-full rounded-lg border border-slate-200 bg-slate-50 py-2 pl-8 pr-3 text-sm text-slate-700 outline-none transition focus:border-[#0b4f9e]/40 focus:bg-white focus:ring-2 focus:ring-[#0b4f9e]/10"
+              />
             </div>
-          ))}
+          </div>
+        )}
+
+        {/* Nav */}
+        <nav className="flex-1 space-y-1 overflow-y-auto px-3 py-4">
+          {visibleSections.map((section) => {
+            const isExpanded =
+              collapsed ||
+              isSearching ||
+              !section.label ||
+              expandedSections.has(section.id);
+            return (
+              <div key={section.id} className="space-y-1">
+                {section.label && !collapsed && (
+                  <button
+                    type="button"
+                    onClick={() => toggleSection(section.id)}
+                    className="flex w-full items-center justify-between rounded-md px-3 py-2 text-[11px] font-semibold uppercase tracking-wider text-slate-400 transition hover:bg-slate-50 hover:text-slate-600"
+                  >
+                    <span>{section.label}</span>
+                    <ChevronDown
+                      className={`h-3.5 w-3.5 transition-transform ${
+                        isExpanded ? "rotate-180" : ""
+                      }`}
+                    />
+                  </button>
+                )}
+                {section.label && collapsed && (
+                  <div className="mx-3 border-t border-slate-100" />
+                )}
+                {isExpanded && (
+                  <div className="space-y-1">
+                    {section.items.map((item) => (
+                      <DashboardNavLink
+                        key={item.id}
+                        item={item}
+                        pathname={pathname}
+                        collapsed={collapsed}
+                        onClick={() => setMobileMenuOpen(false)}
+                      />
+                    ))}
+                  </div>
+                )}
+              </div>
+            );
+          })}
+          {isSearching && visibleSections.length === 0 && (
+            <p className="px-3 py-6 text-center text-sm text-slate-400">
+              No menu items match &ldquo;{navSearch}&rdquo;
+            </p>
+          )}
         </nav>
 
         {/* User Info & Logout */}
@@ -183,7 +270,7 @@ const DashboardNav = ({ collapsed, onToggleCollapse }) => {
                 <p className="truncate text-sm font-semibold text-slate-900">
                   {user?.name}
                 </p>
-                <p className="truncate text-xs capitalize text-cyan-600">
+                <p className="truncate text-xs capitalize text-[#0b4f9e]">
                   {user?.role}
                 </p>
               </div>

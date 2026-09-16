@@ -1,188 +1,308 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useAuth } from "@/context/AuthContext";
 import { motion } from "framer-motion";
-import { Users, FileText, ShoppingCart, Image, Calendar } from "lucide-react";
+import {
+  Users,
+  FileText,
+  ShoppingCart,
+  Image as ImageIcon,
+  PlusCircle,
+  Briefcase,
+  Newspaper,
+  Camera,
+  ArrowRight,
+  CheckCircle2,
+} from "lucide-react";
 import Link from "next/link";
 
+const container = {
+  hidden: { opacity: 0 },
+  show: {
+    opacity: 1,
+    transition: { staggerChildren: 0.06 },
+  },
+};
+
+const item = {
+  hidden: { opacity: 0, y: 12 },
+  show: { opacity: 1, y: 0 },
+};
+
 export default function Dashboard() {
-  const { user } = useAuth();
+  const { user, token } = useAuth();
+  const API = process.env.NEXT_PUBLIC_API_URL;
+
+  const [counts, setCounts] = useState({
+    blogs: null,
+    services: null,
+    portfolio: null,
+    users: null,
+  });
+
+  useEffect(() => {
+    if (!token) return;
+    let cancelled = false;
+    const authHeader = { Authorization: `Bearer ${token}` };
+
+    const fetchJson = async (url) => {
+      try {
+        const res = await fetch(url, { headers: authHeader });
+        return await res.json();
+      } catch {
+        return null;
+      }
+    };
+
+    (async () => {
+      const [blogData, servicesData, portfolioData, usersData] =
+        await Promise.all([
+          fetchJson(`${API}/api/blog/admin/blogs?page=1&limit=1`),
+          fetchJson(`${API}/api/services/admin/all`),
+          fetchJson(`${API}/api/portfolio/admin/all`),
+          user?.role === "admin" ? fetchJson(`${API}/api/users`) : null,
+        ]);
+
+      const blogs = blogData?.pagination?.total ?? null;
+      const services = servicesData?.services?.length ?? null;
+      const portfolio = portfolioData?.portfolios?.length ?? null;
+      const users = usersData?.users?.length ?? null;
+
+      if (!cancelled) {
+        setCounts({ blogs, services, portfolio, users });
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [token, API, user?.role]);
+
+  const formatCount = (value) => (value === null ? "—" : String(value));
 
   const stats = [
     {
       label: "Total Blogs",
-      value: "0",
+      value: formatCount(counts.blogs),
       icon: FileText,
-      color: "from-[#00f0ff]",
-      href: "/dashboard/blogs",
+      href: "/dashboard/blog",
     },
     {
       label: "Total Services",
-      value: "11",
+      value: formatCount(counts.services),
       icon: ShoppingCart,
-      color: "from-[#0066ff]",
       href: "/dashboard/services",
     },
     {
       label: "Portfolio Items",
-      value: "0",
-      icon: Image,
-      color: "from-[#00a0ff]",
+      value: formatCount(counts.portfolio),
+      icon: Briefcase,
       href: "/dashboard/portfolio",
     },
     ...(user?.role === "admin"
       ? [
           {
             label: "Total Users",
-            value: "0",
+            value: formatCount(counts.users),
             icon: Users,
-            color: "from-[#f5b342]",
             href: "/dashboard/users",
           },
         ]
       : []),
   ];
 
-  return (
-      <div className="space-y-8">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="mb-8"
-        >
-          <h1 className="text-4xl font-bold text-slate-900 mb-2">
-            Welcome back,{" "}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#00f0ff] to-[#0066ff]">
-              {user?.name}
-            </span>
-          </h1>
-          <p className="text-slate-600">
-            Manage your site content from here
-          </p>
-        </motion.div>
+  const quickActions = [
+    {
+      label: "Create Blog",
+      description: "Publish a new blog post",
+      icon: FileText,
+      href: "/dashboard/blog?action=create",
+    },
+    {
+      label: "Create Service",
+      description: "Add a new service offering",
+      icon: ShoppingCart,
+      href: "/dashboard/services?action=create",
+    },
+    {
+      label: "Create Project",
+      description: "Add a portfolio project",
+      icon: ImageIcon,
+      href: "/dashboard/portfolio?action=create",
+    },
+    {
+      label: "Add News",
+      description: "Publish a news update",
+      icon: Newspaper,
+      href: "/dashboard/news?action=create",
+    },
+    {
+      label: "Upload Media",
+      description: "Manage gallery & media",
+      icon: Camera,
+      href: "/dashboard/gallery?action=create",
+    },
+    ...(user?.role === "admin"
+      ? [
+          {
+            label: "Add User",
+            description: "Invite a new team member",
+            icon: Users,
+            href: "/dashboard/users?action=create",
+          },
+        ]
+      : []),
+  ];
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {stats.map((stat, index) => {
-            const Icon = stat.icon;
-            return (
-              <motion.div
-                key={stat.label}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.1 }}
-                whileHover={{ y: -5 }}
+  const gettingStarted = [
+    {
+      title: "Manage your content",
+      description:
+        "Use the sidebar to navigate to Blogs, Services, Portfolio and more.",
+    },
+    {
+      title: "Create and edit content",
+      description:
+        "Use Quick Actions above or the dedicated sections to manage entries.",
+    },
+    {
+      title: "Admin access",
+      description: "User management is available only for admin accounts.",
+    },
+    {
+      title: "Account settings",
+      description: "Update your profile and change your password in Settings.",
+    },
+  ];
+
+  const timeGreeting = () => {
+    const hour = new Date().getHours();
+    if (hour < 12) return "Good morning";
+    if (hour < 18) return "Good afternoon";
+    return "Good evening";
+  };
+
+  return (
+    <motion.div
+      variants={container}
+      initial="hidden"
+      animate="show"
+      className="space-y-6"
+    >
+      {/* Header */}
+      <motion.div
+        variants={item}
+        className="flex flex-col gap-4 rounded-xl border border-slate-200 bg-white p-6 shadow-sm sm:flex-row sm:items-center sm:justify-between"
+      >
+        <div>
+          <p className="text-sm font-medium text-[#0b4f9e]">
+            {timeGreeting()}
+          </p>
+          <h1 className="mt-1 text-2xl font-bold text-slate-900 sm:text-3xl">
+            Welcome back, {user?.name}
+          </h1>
+          <p className="mt-1 text-sm text-slate-500">
+            Here&apos;s an overview of your site content.
+          </p>
+        </div>
+        <span className="inline-flex w-fit items-center gap-1.5 rounded-full bg-[#eef4fc] px-3 py-1.5 text-xs font-semibold capitalize text-[#0b4f9e]">
+          <span className="h-1.5 w-1.5 rounded-full bg-[#0b4f9e]" />
+          {user?.role} account
+        </span>
+      </motion.div>
+
+      {/* Stats */}
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        {stats.map((stat) => {
+          const Icon = stat.icon;
+          return (
+            <motion.div key={stat.label} variants={item}>
+              <Link
+                href={stat.href}
+                className="group flex items-center gap-4 rounded-xl border border-slate-200 bg-white p-5 shadow-sm transition hover:border-[#0b4f9e]/30 hover:shadow-md"
               >
-                <Link href={stat.href}>
-                  <div className="bg-white border border-slate-200 rounded-xl p-6 hover:border-cyan-300 transition cursor-pointer group shadow-sm">
-                    <div
-                      className={`w-12 h-12 rounded-lg bg-gradient-to-br ${stat.color} to-[#0066ff] flex items-center justify-center mb-4 group-hover:scale-110 transition`}
-                    >
-                      <Icon className="w-6 h-6 text-white" />
-                    </div>
-                    <p className="text-slate-500 text-sm mb-1">{stat.label}</p>
-                    <p className="text-3xl font-bold text-slate-900">
-                      {stat.value}
+                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-[#eef4fc] text-[#0b4f9e] transition group-hover:bg-[#0b4f9e] group-hover:text-white">
+                  <Icon className="h-5 w-5" />
+                </div>
+                <div className="min-w-0">
+                  <p className="truncate text-sm text-slate-500">
+                    {stat.label}
+                  </p>
+                  <p className="text-2xl font-bold text-slate-900">
+                    {stat.value}
+                  </p>
+                </div>
+              </Link>
+            </motion.div>
+          );
+        })}
+      </div>
+
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
+        {/* Quick Actions */}
+        <motion.div
+          variants={item}
+          className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm lg:col-span-2"
+        >
+          <div className="mb-5 flex items-center justify-between">
+            <h2 className="text-lg font-bold text-slate-900">
+              Quick Actions
+            </h2>
+            <PlusCircle className="h-5 w-5 text-slate-300" />
+          </div>
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+            {quickActions.map((action) => {
+              const Icon = action.icon;
+              return (
+                <Link
+                  key={action.label}
+                  href={action.href}
+                  className="group flex items-center gap-3 rounded-lg border border-slate-200 p-3.5 transition hover:border-[#0b4f9e]/40 hover:bg-[#eef4fc]/50"
+                >
+                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-slate-100 text-slate-500 transition group-hover:bg-[#0b4f9e] group-hover:text-white">
+                    <Icon className="h-4 w-4" />
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <p className="text-sm font-semibold text-slate-800">
+                      {action.label}
+                    </p>
+                    <p className="truncate text-xs text-slate-500">
+                      {action.description}
                     </p>
                   </div>
+                  <ArrowRight className="h-4 w-4 shrink-0 text-slate-300 opacity-0 transition group-hover:translate-x-0.5 group-hover:opacity-100" />
                 </Link>
-              </motion.div>
-            );
-          })}
-        </div>
-
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.55 }}
-          className="bg-white border border-slate-200 rounded-xl p-8 shadow-sm"
-        >
-          <h2 className="text-2xl font-bold text-slate-900 mb-6">
-            Quick Actions
-          </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-5 gap-4">
-            <Link href="/dashboard/blogs?action=create">
-              <button className="w-full bg-gradient-to-br from-[#00f0ff] to-[#0066ff] hover:shadow-lg hover:shadow-[#00f0ff]/20 text-[#0a0a12] font-semibold py-3 rounded-lg transition">
-                📝 Create Blog
-              </button>
-            </Link>
-            <Link href="/dashboard/services?action=create">
-              <button className="w-full bg-gradient-to-br from-[#0066ff] to-[#00a0ff] hover:shadow-lg hover:shadow-[#0066ff]/20 text-[#0a0a12] font-semibold py-3 rounded-lg transition">
-                🛍️ Create Service
-              </button>
-            </Link>
-            <Link href="/dashboard/portfolio?action=create">
-              <button className="w-full bg-gradient-to-br from-[#00a0ff] to-[#00f0ff] hover:shadow-lg hover:shadow-[#00a0ff]/20 text-[#0a0a12] font-semibold py-3 rounded-lg transition">
-                🖼️ Create Project
-              </button>
-            </Link>
-            {user?.role === "admin" && (
-              <Link href="/dashboard/users?action=create">
-                <button className="w-full bg-gradient-to-br from-[#f5b342] to-[#ffb84d] hover:shadow-lg hover:shadow-[#f5b342]/20 text-[#0a0a12] font-semibold py-3 rounded-lg transition">
-                  👤 Add User
-                </button>
-              </Link>
-            )}
+              );
+            })}
           </div>
         </motion.div>
 
+        {/* Getting Started */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.65 }}
-          className="bg-white border border-slate-200 rounded-xl p-8 shadow-sm"
+          variants={item}
+          className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm"
         >
-          <div className="flex items-center gap-2 mb-6">
-            <Calendar className="w-5 h-5 text-[#00f0ff]" />
-            <h2 className="text-2xl font-bold text-slate-900">
-              Getting Started
-            </h2>
-          </div>
-          <div className="space-y-4">
-            <div className="flex items-start gap-3 pb-4 border-b border-slate-200">
-              <div className="w-3 h-3 bg-[#00f0ff] rounded-full mt-2 flex-shrink-0" />
-              <div>
-                <p className="text-slate-900 font-medium">
-                  Manage Your Content
-                </p>
-                <p className="text-slate-600 text-sm">
-                  Use the sidebar to navigate to Blogs, Services, and
-                  Portfolio.
-                </p>
+          <h2 className="mb-5 text-lg font-bold text-slate-900">
+            Getting Started
+          </h2>
+          <div className="space-y-5">
+            {gettingStarted.map((step) => (
+              <div key={step.title} className="flex items-start gap-3">
+                <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-[#0b4f9e]" />
+                <div>
+                  <p className="text-sm font-semibold text-slate-800">
+                    {step.title}
+                  </p>
+                  <p className="text-xs leading-relaxed text-slate-500">
+                    {step.description}
+                  </p>
+                </div>
               </div>
-            </div>
-            <div className="flex items-start gap-3 pb-4 border-b border-slate-200">
-              <div className="w-3 h-3 bg-[#00f0ff] rounded-full mt-2 flex-shrink-0" />
-              <div>
-                <p className="text-slate-900 font-medium">
-                  Create and Edit Content
-                </p>
-                <p className="text-slate-600 text-sm">
-                  Use the Quick Actions above or go to the dedicated sections to
-                  manage entries.
-                </p>
-              </div>
-            </div>
-            <div className="flex items-start gap-3 pb-4 border-b border-slate-200">
-              <div className="w-3 h-3 bg-[#00f0ff] rounded-full mt-2 flex-shrink-0" />
-              <div>
-                <p className="text-slate-900 font-medium">Admin Access</p>
-                <p className="text-slate-600 text-sm">
-                  User management is available only for admin accounts.
-                </p>
-              </div>
-            </div>
-            <div className="flex items-start gap-3">
-              <div className="w-3 h-3 bg-[#00f0ff] rounded-full mt-2 flex-shrink-0" />
-              <div>
-                <p className="text-slate-900 font-medium">Account Settings</p>
-                <p className="text-slate-600 text-sm">
-                  Update your profile and change your password in Settings.
-                </p>
-              </div>
-            </div>
+            ))}
           </div>
         </motion.div>
       </div>
+    </motion.div>
   );
 }
