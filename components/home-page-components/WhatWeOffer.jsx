@@ -307,13 +307,8 @@ const WhatWeOffer = () => {
                   <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/35 to-black/5" />
 
                   <div className="absolute inset-x-0 bottom-0 p-3 sm:p-6 lg:p-8">
-                    <div className="mb-2 sm:mb-4 inline-flex items-center gap-2 rounded-full bg-white/15 px-2.5 py-1 sm:px-3.5 sm:py-1.5 text-[11px] sm:text-sm font-bold uppercase tracking-wide text-white backdrop-blur-md ring-1 ring-white/25">
-                      {renderIcon(activeTile?.iconName, "w-3.5 h-3.5 sm:w-4 sm:h-4 text-white")}
-                      {activeTile?.label}
-                    </div>
-
                     {activeTile?.services?.length > 0 && (
-                      <div className="mb-3 sm:mb-6 flex flex-wrap gap-1.5 sm:gap-2">
+                      <div className="mb-2.5 sm:mb-6 flex flex-wrap gap-1.5 sm:gap-2">
                         {activeTile.services.slice(0, 8).map((service) => (
                           <button
                             key={service._id || service.title}
@@ -328,10 +323,10 @@ const WhatWeOffer = () => {
 
                     <Link
                       href={`/services/category/${activeTile?.id}`}
-                      className="group/link inline-flex items-center gap-1.5 sm:gap-2 rounded-full bg-white px-3.5 py-1.5 sm:px-5 sm:py-2.5 text-xs sm:text-sm font-bold text-[var(--color-heading)] shadow-lg transition-all duration-300 hover:gap-3 hover:bg-[var(--color-primary)] hover:text-white"
+                      className="group/link inline-flex items-center gap-1 sm:gap-2 rounded-full bg-white px-3 py-1 sm:px-5 sm:py-2.5 text-[11px] sm:text-sm font-bold text-[var(--color-heading)] shadow-lg transition-all duration-300 hover:gap-3 hover:bg-[var(--color-primary)] hover:text-white"
                     >
                       Explore More
-                      <ArrowRight className="h-3.5 w-3.5 sm:h-4 sm:w-4 transition-transform duration-300 group-hover/link:translate-x-1" />
+                      <ArrowRight className="h-3 w-3 sm:h-4 sm:w-4 transition-transform duration-300 group-hover/link:translate-x-1" />
                     </Link>
                   </div>
                 </motion.div>
