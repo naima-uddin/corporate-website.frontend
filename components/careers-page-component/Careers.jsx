@@ -10,6 +10,7 @@ import {
   Mail,
   X,
 } from "lucide-react";
+import { BlogSkeleton } from "@/components/shared/PageSkeletons";
 
 const formatDeadline = (deadline) => {
   if (!deadline) return "";
@@ -25,17 +26,20 @@ const normalizeUrl = (url) => {
   return /^https?:\/\//i.test(url) ? url : `https://${url}`;
 };
 
-const JobCardSkeleton = () => (
-  <div className="bg-white rounded-2xl border border-[var(--color-border)] shadow-sm p-6 md:p-8">
-    <div className="h-6 bg-gray-200 rounded-lg w-2/3 mb-4 animate-pulse" />
-    <div className="h-4 bg-gray-200 rounded-lg w-1/3 mb-6 animate-pulse" />
-    <div className="h-4 bg-gray-200 rounded-lg w-full mb-2 animate-pulse" />
-    <div className="h-4 bg-gray-200 rounded-lg w-5/6 animate-pulse" />
-  </div>
-);
+const isJobExpired = (deadline) => {
+  if (!deadline) return false;
+  const startOfToday = new Date();
+  startOfToday.setHours(0, 0, 0, 0);
+  return new Date(deadline) < startOfToday;
+};
 
-const ApplyButton = ({ job }) =>
-  (job.applyLink || job.applyEmail) && (
+const ApplyButton = ({ job, expired }) =>
+  (job.applyLink || job.applyEmail) &&
+  (expired ? (
+    <span className="shrink-0 inline-flex w-full md:w-auto items-center justify-center gap-1.5 px-5 py-2.5 rounded-full bg-gray-100 text-gray-400 text-sm font-semibold cursor-not-allowed">
+      Applications Closed
+    </span>
+  ) : (
     <a
       href={
         job.applyLink
@@ -58,62 +62,77 @@ const ApplyButton = ({ job }) =>
         </>
       )}
     </a>
-  );
+  ));
 
-const JobCard = ({ job, index, onViewDetails }) => (
-  <motion.div
-    initial={{ opacity: 0, y: 20 }}
-    whileInView={{ opacity: 1, y: 0 }}
-    viewport={{ once: true }}
-    transition={{ duration: 0.4, delay: index * 0.06 }}
-    className="bg-white rounded-2xl border border-[var(--color-border)] shadow-sm hover:shadow-lg transition-shadow duration-300 px-4 py-5 md:p-8"
-  >
-    <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
-      <div className="min-w-0">
-        <h3 className="text-xl md:text-2xl font-bold text-[#0a1a3c] mb-2">
-          {job.title}
-        </h3>
-        <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-sm text-[var(--color-body,#555)]">
-          {job.location && (
+const JobCard = ({ job, index, onViewDetails }) => {
+  const expired = isJobExpired(job.deadline);
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.4, delay: index * 0.06 }}
+      className={`bg-white rounded-2xl border shadow-sm hover:shadow-lg transition-shadow duration-300 px-4 py-5 md:p-8 ${
+        expired ? "border-[var(--color-border)] opacity-70" : "border-[var(--color-border)]"
+      }`}
+    >
+      <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
+        <div className="min-w-0">
+          <div className="flex flex-wrap items-center gap-2 mb-2">
+            <h3 className="text-xl md:text-2xl font-bold text-[#0a1a3c]">
+              {job.title}
+            </h3>
+            {expired && (
+              <span className="inline-flex items-center rounded-full bg-red-50 px-2.5 py-0.5 text-xs font-semibold text-red-500">
+                Expired
+              </span>
+            )}
+          </div>
+          <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-sm text-[var(--color-body,#555)]">
+            {job.location && (
+              <span className="inline-flex items-center gap-1.5">
+                <MapPin className="w-4 h-4 text-[var(--color-primary)]" />
+                {job.location}
+              </span>
+            )}
             <span className="inline-flex items-center gap-1.5">
-              <MapPin className="w-4 h-4 text-[var(--color-primary)]" />
-              {job.location}
+              <Briefcase className="w-4 h-4 text-[var(--color-primary)]" />
+              {job.jobType}
             </span>
-          )}
-          <span className="inline-flex items-center gap-1.5">
-            <Briefcase className="w-4 h-4 text-[var(--color-primary)]" />
-            {job.jobType}
-          </span>
-          {job.deadline && (
-            <span className="inline-flex items-center gap-1.5">
-              <Clock className="w-4 h-4 text-[var(--color-primary)]" />
-              Apply before {formatDeadline(job.deadline)}
-            </span>
-          )}
+            {job.deadline && (
+              <span className="inline-flex items-center gap-1.5">
+                <Clock className="w-4 h-4 text-[var(--color-primary)]" />
+                {expired
+                  ? `Closed on ${formatDeadline(job.deadline)}`
+                  : `Apply before ${formatDeadline(job.deadline)}`}
+              </span>
+            )}
+          </div>
         </div>
+
+        <ApplyButton job={job} expired={expired} />
       </div>
 
-      <ApplyButton job={job} />
-    </div>
+      {job.description && (
+        <p className="mt-5 text-sm md:text-base leading-relaxed text-[var(--color-body,#555)] whitespace-pre-line line-clamp-3">
+          {job.description}
+        </p>
+      )}
 
-    {job.description && (
-      <p className="mt-5 text-sm md:text-base leading-relaxed text-[var(--color-body,#555)] whitespace-pre-line line-clamp-3">
-        {job.description}
-      </p>
-    )}
-
-    {job.description && (
-      <button
-        type="button"
-        onClick={() => onViewDetails(job)}
-        className="mt-3 inline-flex items-center gap-1.5 text-sm font-semibold text-[var(--color-primary)] hover:underline"
-      >
-        See Details
-        <ArrowRight className="w-3.5 h-3.5" />
-      </button>
-    )}
-  </motion.div>
-);
+      {job.description && (
+        <button
+          type="button"
+          onClick={() => onViewDetails(job)}
+          className="mt-3 inline-flex items-center gap-1.5 text-sm font-semibold text-[var(--color-primary)] hover:underline"
+        >
+          See Details
+          <ArrowRight className="w-3.5 h-3.5" />
+        </button>
+      )}
+    </motion.div>
+  );
+};
 
 const JobDetailsModal = ({ job, onClose }) => {
   if (!job) return null;
@@ -198,6 +217,10 @@ const Careers = () => {
     fetchJobs();
   }, []);
 
+  if (loading) {
+    return <BlogSkeleton />;
+  }
+
   return (
     <div className="bg-gradient-to-b from-[#eef4ff] to-white text-black min-h-[60vh]">
       <section className="container mx-auto px-3 sm:px-6 py-5 md:py-16 text-center">
@@ -220,12 +243,7 @@ const Careers = () => {
       </section>
 
       <section className="container mx-auto px-2 sm:px-4 pb-12 md:pb-20 max-w-4xl">
-        {loading ? (
-          <div className="space-y-4 sm:space-y-6">
-            <JobCardSkeleton />
-            <JobCardSkeleton />
-          </div>
-        ) : jobs.length > 0 ? (
+        {jobs.length > 0 ? (
           <div className="space-y-4 sm:space-y-6">
             {jobs.map((job, index) => (
               <JobCard
