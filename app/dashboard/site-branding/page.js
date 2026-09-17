@@ -10,6 +10,8 @@ const emptySettings = {
   siteName: "",
   logoImage: "",
   logoPublicId: "",
+  faviconImage: "",
+  faviconPublicId: "",
 };
 
 const SectionCard = ({ title, children }) => (
@@ -155,6 +157,21 @@ export default function SiteBrandingPage() {
             Shown next to the logo in the navbar.
           </p>
         </div>
+      </SectionCard>
+
+      <SectionCard title="Favicon">
+        <ImageUploadFactory
+          type="favicon"
+          label="Favicon"
+          onImageUploaded={(url) =>
+            setSettings((prev) => ({ ...prev, faviconImage: url || "" }))
+          }
+          currentImage={settings.faviconImage}
+        />
+        <p className="text-xs text-slate-500">
+          Shown as the browser tab icon across the whole site. Square PNG,
+          JPG, or ICO recommended (e.g. 32x32 or 512x512).
+        </p>
       </SectionCard>
 
       <div className="flex justify-end">

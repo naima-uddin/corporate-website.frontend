@@ -29,7 +29,7 @@ export async function generateMetadata() {
     title,
     description: `${site.siteName} provides IT services including web development, mobile apps, UI/UX design, eCommerce, Shopify, Amazon, eBay, SEO, and digital marketing solutions worldwide.`,
     icons: {
-      icon: site.logoImage || "/A2ITLogo.png",
+      icon: site.faviconImage || site.logoImage || "/A2ITLogo.png",
     },
     openGraph: {
       title,

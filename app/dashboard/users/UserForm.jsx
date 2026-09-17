@@ -19,7 +19,7 @@ export default function UserForm({
   const router = useRouter();
 
   return (
-    <div className="space-y-6 max-w-xl">
+    <div className="space-y-6 max-w-xl mx-auto">
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
         <button
           type="button"
