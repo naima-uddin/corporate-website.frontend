@@ -11,7 +11,7 @@ const emptyForm = { image: "", title: "", category: "", order: 0 };
 
 function EditGalleryImageContent() {
   const id = useSearchParams().get("id");
-  const { token, isAdmin, isModerator } = useAuth();
+  const { token, canAccess } = useAuth();
   const router = useRouter();
   const [form, setForm] = useState(emptyForm);
   const [groupKey, setGroupKey] = useState(id);
@@ -61,7 +61,7 @@ function EditGalleryImageContent() {
     fetchItem();
   }, [token, id]);
 
-  if (!isAdmin && !isModerator) {
+  if (!canAccess("gallery")) {
     return (
       <div className="text-center py-12">
         <p className="text-slate-600">

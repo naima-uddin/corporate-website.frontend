@@ -44,7 +44,7 @@ const TextField = ({ label, value, onChange, placeholder, hint, type = "text" })
 );
 
 export default function ContactPageSettingsPage() {
-  const { token, isAdmin, isModerator } = useAuth();
+  const { token, canAccess } = useAuth();
   const [settings, setSettings] = useState(emptySettings);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -55,7 +55,7 @@ export default function ContactPageSettingsPage() {
     fetchSettings();
   }, [token]);
 
-  if (!isAdmin && !isModerator) {
+  if (!canAccess("contact-page")) {
     return (
       <div className="text-center py-12">
         <p className="text-slate-600">

@@ -11,7 +11,7 @@ import Badge from "../components/ui/Badge";
 import { ActionButton, IconButton } from "../components/ui/Buttons";
 
 export default function PortfolioPage() {
-  const { token, isAdmin, isModerator } = useAuth();
+  const { token, isAdmin, canAccess } = useAuth();
   const [portfolios, setPortfolios] = useState([]);
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -146,7 +146,7 @@ export default function PortfolioPage() {
     p.title.toLowerCase().includes(searchQuery.toLowerCase()),
   );
 
-  if (!isAdmin && !isModerator) {
+  if (!canAccess("portfolio")) {
     return (
       <div className="text-center py-12">
         <p className="text-slate-600">

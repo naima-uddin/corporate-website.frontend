@@ -5,7 +5,13 @@ import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
 import UserForm from "../UserForm";
 
-const emptyForm = { name: "", email: "", password: "", role: "moderator" };
+const emptyForm = {
+  name: "",
+  email: "",
+  password: "",
+  role: "moderator",
+  permissions: [],
+};
 
 export default function NewUserPage() {
   const { token, isAdmin } = useAuth();

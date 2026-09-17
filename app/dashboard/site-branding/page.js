@@ -24,7 +24,7 @@ const SectionCard = ({ title, children }) => (
 );
 
 export default function SiteBrandingPage() {
-  const { token, isAdmin, isModerator } = useAuth();
+  const { token, canAccess } = useAuth();
   const [settings, setSettings] = useState(emptySettings);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -35,7 +35,7 @@ export default function SiteBrandingPage() {
     fetchSettings();
   }, [token]);
 
-  if (!isAdmin && !isModerator) {
+  if (!canAccess("site-branding")) {
     return (
       <div className="text-center py-12">
         <p className="text-slate-600">

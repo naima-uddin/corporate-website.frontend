@@ -16,7 +16,7 @@ const formatCategoryLabel = (value) =>
     .join(" ");
 
 export default function ServiceCategoriesPage() {
-  const { token, isAdmin, isModerator } = useAuth();
+  const { token, isAdmin, canAccess } = useAuth();
   const router = useRouter();
 
   const [categories, setCategories] = useState([]);
@@ -134,7 +134,7 @@ export default function ServiceCategoriesPage() {
     }
   };
 
-  if (!isAdmin && !isModerator) {
+  if (!canAccess("services")) {
     return (
       <div className="py-12 text-center">
         <p className="text-slate-600">Access Denied. Admin or Moderator only.</p>

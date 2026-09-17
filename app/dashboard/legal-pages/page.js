@@ -28,7 +28,7 @@ const SectionCard = ({ title, description, children }) => (
 );
 
 export default function LegalPagesSettingsPage() {
-  const { token, isAdmin, isModerator } = useAuth();
+  const { token, canAccess } = useAuth();
   const [legalPage, setLegalPage] = useState(emptyLegalPage);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -39,7 +39,7 @@ export default function LegalPagesSettingsPage() {
     fetchLegalPage();
   }, [token]);
 
-  if (!isAdmin && !isModerator) {
+  if (!canAccess("legal-pages")) {
     return (
       <div className="text-center py-12">
         <p className="text-slate-600">

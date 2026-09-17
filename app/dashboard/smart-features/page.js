@@ -13,7 +13,7 @@ const STYLE_BADGE = {
 };
 
 export default function SmartFeaturesPage() {
-  const { token, isAdmin, isModerator } = useAuth();
+  const { token, isAdmin, canAccess } = useAuth();
   const [features, setFeatures] = useState([]);
   const [loading, setLoading] = useState(true);
   const [settings, setSettings] = useState({
@@ -133,7 +133,7 @@ export default function SmartFeaturesPage() {
     }
   };
 
-  if (!isAdmin && !isModerator) {
+  if (!canAccess("smart-features")) {
     return (
       <div className="text-center py-12">
         <p className="text-slate-600">

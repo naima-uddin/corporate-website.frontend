@@ -12,7 +12,7 @@ import { ActionButton, IconButton } from "@/app/dashboard/components/ui/Buttons"
 
 export default function BlogList() {
   const API = process.env.NEXT_PUBLIC_API_URL;
-  const { user } = useAuth();
+  const { user, canAccess } = useAuth();
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(1);
@@ -64,6 +64,14 @@ export default function BlogList() {
   const filteredItems = items.filter((p) =>
     (p.title || "").toLowerCase().includes(searchQuery.toLowerCase()),
   );
+
+  if (!canAccess("blog")) {
+    return (
+      <div className="text-center py-12">
+        <p className="text-slate-600">Access Denied.</p>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">

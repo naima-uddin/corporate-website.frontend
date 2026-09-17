@@ -31,13 +31,13 @@ const emptyForm = {
 };
 
 export default function NewPortfolioPage() {
-  const { token, isAdmin, isModerator } = useAuth();
+  const { token, canAccess } = useAuth();
   const router = useRouter();
   const [form, setForm] = useState(emptyForm);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
 
-  if (!isAdmin && !isModerator) {
+  if (!canAccess("portfolio")) {
     return (
       <div className="text-center py-12">
         <p className="text-slate-600">

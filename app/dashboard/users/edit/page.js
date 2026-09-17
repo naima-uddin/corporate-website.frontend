@@ -5,7 +5,13 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
 import UserForm from "../UserForm";
 
-const emptyForm = { name: "", email: "", password: "", role: "moderator" };
+const emptyForm = {
+  name: "",
+  email: "",
+  password: "",
+  role: "moderator",
+  permissions: [],
+};
 
 function EditUserContent() {
   const id = useSearchParams().get("id");
@@ -40,6 +46,7 @@ function EditUserContent() {
             email: user.email || "",
             password: "",
             role: user.role || "moderator",
+            permissions: user.permissions || [],
           });
         } else {
           setNotFound(true);
@@ -81,6 +88,7 @@ function EditUserContent() {
             name: form.name,
             email: form.email,
             role: form.role,
+            permissions: form.permissions,
           }),
         },
       );

@@ -8,7 +8,7 @@ import { emptyForm, toApiPayload, toFormState } from "../serviceFormUtils";
 
 function EditServiceContent() {
   const id = useSearchParams().get("id");
-  const { token, isAdmin, isModerator } = useAuth();
+  const { token, canAccess } = useAuth();
   const router = useRouter();
   const [form, setForm] = useState(emptyForm);
   const [categories, setCategories] = useState([]);
@@ -72,7 +72,7 @@ function EditServiceContent() {
     fetchItem();
   }, [token, id]);
 
-  if (!isAdmin && !isModerator) {
+  if (!canAccess("services")) {
     return (
       <div className="py-12 text-center">
         <p className="text-slate-600">Access Denied. Admin or Moderator only.</p>

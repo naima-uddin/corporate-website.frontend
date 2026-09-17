@@ -7,7 +7,7 @@ import { motion } from "framer-motion";
 import { Plus, Trash2, Power, Pencil } from "lucide-react";
 
 export default function BannerPage() {
-  const { token, isAdmin, isModerator } = useAuth();
+  const { token, isAdmin, canAccess } = useAuth();
   const [banners, setBanners] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -74,7 +74,7 @@ export default function BannerPage() {
     }
   };
 
-  if (!isAdmin && !isModerator) {
+  if (!canAccess("banner")) {
     return (
       <div className="text-center py-12">
         <p className="text-slate-600">

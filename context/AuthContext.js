@@ -122,6 +122,10 @@ export const AuthProvider = ({ children }) => {
         changePassword,
         isAdmin: user?.role === "admin",
         isModerator: user?.role === "moderator",
+        permissions: user?.permissions || [],
+        canAccess: (moduleKey) =>
+          user?.role === "admin" ||
+          Boolean(user?.permissions?.includes(moduleKey)),
       }}
     >
       {children}

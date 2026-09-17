@@ -35,7 +35,7 @@ const getStatus = (job) => {
 };
 
 export default function JobOpportunitiesPage() {
-  const { token, isAdmin, isModerator } = useAuth();
+  const { token, isAdmin, canAccess } = useAuth();
   const [jobs, setJobs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -68,7 +68,7 @@ export default function JobOpportunitiesPage() {
     }
   };
 
-  if (!isAdmin && !isModerator) {
+  if (!canAccess("job-opportunities")) {
     return (
       <div className="text-center py-12">
         <p className="text-slate-600">

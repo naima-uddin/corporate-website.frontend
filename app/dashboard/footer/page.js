@@ -52,7 +52,7 @@ const TextField = ({ label, value, onChange, placeholder }) => (
 );
 
 export default function FooterPage() {
-  const { token, isAdmin, isModerator } = useAuth();
+  const { token, canAccess } = useAuth();
   const [footer, setFooter] = useState(emptyFooter);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -63,7 +63,7 @@ export default function FooterPage() {
     fetchFooter();
   }, [token]);
 
-  if (!isAdmin && !isModerator) {
+  if (!canAccess("footer")) {
     return (
       <div className="text-center py-12">
         <p className="text-slate-600">

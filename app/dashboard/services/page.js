@@ -19,7 +19,7 @@ const formatCategoryLabel = (value) =>
     .join(" ");
 
 export default function ServicesPage() {
-  const { token, isAdmin, isModerator } = useAuth();
+  const { token, isAdmin, canAccess } = useAuth();
   const [services, setServices] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
@@ -72,7 +72,7 @@ export default function ServicesPage() {
     (s.title || "").toLowerCase().includes(searchQuery.toLowerCase()),
   );
 
-  if (!isAdmin && !isModerator) {
+  if (!canAccess("services")) {
     return (
       <div className="py-12 text-center">
         <p className="text-slate-600">Access Denied. Admin or Moderator only.</p>

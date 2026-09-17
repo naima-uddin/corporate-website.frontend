@@ -8,7 +8,7 @@ import { Plus, Trash2, Copy, RefreshCw, Search, Upload, X } from "lucide-react";
 const API_BASE = process.env.NEXT_PUBLIC_API_URL;
 
 export default function MediaPage() {
-  const { token, isAdmin, isModerator } = useAuth();
+  const { token, canAccess: hasModuleAccess } = useAuth();
   const [resources, setResources] = useState([]);
   const [loading, setLoading] = useState(true);
   const [uploading, setUploading] = useState(false);
@@ -17,7 +17,7 @@ export default function MediaPage() {
   const [previewUrl, setPreviewUrl] = useState("");
   const [selectedFolder, setSelectedFolder] = useState("all");
 
-  const canAccess = isAdmin || isModerator;
+  const canAccess = hasModuleAccess("media");
 
   const filteredResources = useMemo(() => {
     const query = searchQuery.toLowerCase();

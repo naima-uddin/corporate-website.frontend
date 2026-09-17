@@ -80,7 +80,7 @@ const inputClass =
   "w-full px-4 py-3 bg-white border border-slate-300 rounded-lg text-slate-900";
 
 export default function ProjectsPageAdmin() {
-  const { token, isAdmin, isModerator } = useAuth();
+  const { token, canAccess } = useAuth();
   const [data, setData] = useState(emptyData);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -196,7 +196,7 @@ export default function ProjectsPageAdmin() {
     }
   };
 
-  if (!isAdmin && !isModerator) {
+  if (!canAccess("projects-page")) {
     return (
       <div className="text-center py-12">
         <p className="text-slate-600">

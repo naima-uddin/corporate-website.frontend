@@ -38,7 +38,7 @@ const SectionCard = ({ title, children }) => (
 );
 
 export default function JoinUsPage() {
-  const { token, isAdmin, isModerator } = useAuth();
+  const { token, canAccess } = useAuth();
   const [joinUs, setJoinUs] = useState(emptyJoinUs);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -49,7 +49,7 @@ export default function JoinUsPage() {
     fetchJoinUs();
   }, [token]);
 
-  if (!isAdmin && !isModerator) {
+  if (!canAccess("join-us")) {
     return (
       <div className="text-center py-12">
         <p className="text-slate-600">

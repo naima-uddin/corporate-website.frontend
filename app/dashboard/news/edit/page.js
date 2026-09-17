@@ -24,7 +24,7 @@ const toDateInputValue = (value) => {
 
 function EditNewsContent() {
   const id = useSearchParams().get("id");
-  const { token, isAdmin, isModerator } = useAuth();
+  const { token, canAccess } = useAuth();
   const router = useRouter();
   const [form, setForm] = useState(emptyForm);
   const [loading, setLoading] = useState(true);
@@ -73,7 +73,7 @@ function EditNewsContent() {
     fetchItem();
   }, [token, id]);
 
-  if (!isAdmin && !isModerator) {
+  if (!canAccess("news")) {
     return (
       <div className="text-center py-12">
         <p className="text-slate-600">

@@ -28,7 +28,7 @@ const SectionCard = ({ title, children }) => (
 );
 
 export default function SpotlightPage() {
-  const { token, isAdmin, isModerator } = useAuth();
+  const { token, canAccess } = useAuth();
   const [spotlight, setSpotlight] = useState(emptySpotlight);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -39,7 +39,7 @@ export default function SpotlightPage() {
     fetchSpotlight();
   }, [token]);
 
-  if (!isAdmin && !isModerator) {
+  if (!canAccess("spotlight")) {
     return (
       <div className="text-center py-12">
         <p className="text-slate-600">

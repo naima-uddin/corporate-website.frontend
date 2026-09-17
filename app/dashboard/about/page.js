@@ -54,7 +54,7 @@ const SectionCard = ({ title, description, children }) => (
 );
 
 export default function AboutPageAdmin() {
-  const { token, isAdmin, isModerator } = useAuth();
+  const { token, canAccess } = useAuth();
   const [about, setAbout] = useState(emptyAbout);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -215,7 +215,7 @@ export default function AboutPageAdmin() {
     fetchAbout();
   }, [token]);
 
-  if (!isAdmin && !isModerator) {
+  if (!canAccess("about")) {
     return (
       <div className="text-center py-12">
         <p className="text-slate-600">

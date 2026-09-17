@@ -13,7 +13,7 @@ const groupKeyOf = (item) =>
 
 function GalleryGroupContent() {
   const batchId = useSearchParams().get("batchId");
-  const { token, isAdmin, isModerator } = useAuth();
+  const { token, isAdmin, canAccess } = useAuth();
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -82,7 +82,7 @@ function GalleryGroupContent() {
     }
   };
 
-  if (!isAdmin && !isModerator) {
+  if (!canAccess("gallery")) {
     return (
       <div className="text-center py-12">
         <p className="text-slate-600">

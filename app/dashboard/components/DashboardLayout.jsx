@@ -62,14 +62,25 @@ const DashboardNav = ({ collapsed, onToggleCollapse }) => {
   const router = useRouter();
   const { logout, user } = useAuth();
 
-  const sections = useMemo(
-    () => [
-      ...NAV_SECTIONS,
-      ...(user?.role === "admin" ? [ADMIN_NAV_SECTION] : []),
+  const sections = useMemo(() => {
+    const isAdmin = user?.role === "admin";
+    const permissions = user?.permissions || [];
+
+    const visibleNavSections = isAdmin
+      ? NAV_SECTIONS
+      : NAV_SECTIONS.map((section) => ({
+          ...section,
+          items: section.items.filter(
+            (item) => item.id === "dashboard" || permissions.includes(item.id),
+          ),
+        })).filter((section) => section.items.length > 0);
+
+    return [
+      ...visibleNavSections,
+      ...(isAdmin ? [ADMIN_NAV_SECTION] : []),
       ACCOUNT_NAV_SECTION,
-    ],
-    [user?.role],
-  );
+    ];
+  }, [user?.role, user?.permissions]);
 
   // Expand the section that contains the active route by default.
   useEffect(() => {

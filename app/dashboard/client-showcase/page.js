@@ -7,7 +7,7 @@ import { motion } from "framer-motion";
 import { Plus, Trash2, GripVertical, Power, Pencil, Save } from "lucide-react";
 
 export default function ClientShowcasePage() {
-  const { token, isAdmin, isModerator } = useAuth();
+  const { token, isAdmin, canAccess } = useAuth();
   const [logos, setLogos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [description, setDescription] = useState("");
@@ -121,7 +121,7 @@ export default function ClientShowcasePage() {
     }
   };
 
-  if (!isAdmin && !isModerator) {
+  if (!canAccess("client-showcase")) {
     return (
       <div className="text-center py-12">
         <p className="text-slate-600">

@@ -8,10 +8,10 @@ import { useAuth } from "@/context/AuthContext";
 import BulkImageUploader from "../BulkImageUploader";
 
 export default function NewGalleryImagePage() {
-  const { isAdmin, isModerator } = useAuth();
+  const { canAccess } = useAuth();
   const router = useRouter();
 
-  if (!isAdmin && !isModerator) {
+  if (!canAccess("gallery")) {
     return (
       <div className="text-center py-12">
         <p className="text-slate-600">

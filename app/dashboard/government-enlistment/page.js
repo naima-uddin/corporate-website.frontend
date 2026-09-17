@@ -39,7 +39,7 @@ const SectionCard = ({ title, description, children }) => (
 );
 
 export default function GovernmentEnlistmentAdmin() {
-  const { token, isAdmin, isModerator } = useAuth();
+  const { token, canAccess } = useAuth();
   const [data, setData] = useState(emptyData);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -142,7 +142,7 @@ export default function GovernmentEnlistmentAdmin() {
     fetchData();
   }, [token]);
 
-  if (!isAdmin && !isModerator) {
+  if (!canAccess("government-enlistment")) {
     return (
       <div className="text-center py-12">
         <p className="text-slate-600">

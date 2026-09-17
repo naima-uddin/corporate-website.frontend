@@ -27,7 +27,7 @@ const slugify = (value) =>
     .replace(/(^-|-$)/g, "");
 
 export default function NavbarMenuPage() {
-  const { token, isAdmin, isModerator } = useAuth();
+  const { token, isAdmin, canAccess } = useAuth();
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
   const [editingName, setEditingName] = useState(null);
@@ -168,7 +168,7 @@ export default function NavbarMenuPage() {
     }
   };
 
-  if (!isAdmin && !isModerator) {
+  if (!canAccess("navbar-menu")) {
     return (
       <div className="text-center py-12">
         <p className="text-slate-600">

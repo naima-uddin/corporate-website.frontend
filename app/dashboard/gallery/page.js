@@ -19,7 +19,7 @@ const groupKeyOf = (item) =>
   item.batchId && item.batchId.trim() ? item.batchId : item._id;
 
 export default function GalleryPage() {
-  const { token, isAdmin, isModerator } = useAuth();
+  const { token, isAdmin, canAccess } = useAuth();
   const [images, setImages] = useState([]);
   const [loading, setLoading] = useState(true);
   const [categories, setCategories] = useState([]);
@@ -232,7 +232,7 @@ export default function GalleryPage() {
     }
   };
 
-  if (!isAdmin && !isModerator) {
+  if (!canAccess("gallery")) {
     return (
       <div className="text-center py-12">
         <p className="text-slate-600">

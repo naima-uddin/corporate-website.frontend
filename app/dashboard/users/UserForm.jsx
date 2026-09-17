@@ -4,6 +4,7 @@ import React from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { ArrowLeft, Save } from "lucide-react";
+import { NAV_SECTIONS } from "../components/navConfig";
 
 export default function UserForm({
   form,
@@ -76,6 +77,45 @@ export default function UserForm({
           <option value="moderator">Moderator</option>
           <option value="admin">Admin</option>
         </select>
+
+        {form.role === "moderator" && (
+          <div className="border border-slate-200 rounded-lg p-4 space-y-4">
+            <p className="text-sm font-semibold text-slate-700">
+              Route Access (which dashboard sections this moderator can use)
+            </p>
+            {NAV_SECTIONS.filter((section) => section.label).map((section) => (
+              <div key={section.id} className="space-y-2">
+                <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">
+                  {section.label}
+                </p>
+                <div className="grid grid-cols-2 gap-2">
+                  {section.items.map((item) => {
+                    const checked = (form.permissions || []).includes(item.id);
+                    return (
+                      <label
+                        key={item.id}
+                        className="flex items-center gap-2 text-sm text-slate-700"
+                      >
+                        <input
+                          type="checkbox"
+                          checked={checked}
+                          onChange={(e) => {
+                            const current = form.permissions || [];
+                            const next = e.target.checked
+                              ? [...current, item.id]
+                              : current.filter((key) => key !== item.id);
+                            setForm({ ...form, permissions: next });
+                          }}
+                        />
+                        {item.label}
+                      </label>
+                    );
+                  })}
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
 
         <div className="flex gap-3 justify-end">
           <button

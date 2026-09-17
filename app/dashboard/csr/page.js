@@ -50,7 +50,7 @@ const SectionCard = ({ title, description, children, actions }) => (
 );
 
 export default function CSRAdmin() {
-  const { token, isAdmin, isModerator } = useAuth();
+  const { token, isAdmin, canAccess } = useAuth();
 
   // --- Page settings + chairman message ---
   const [data, setData] = useState(emptyData);
@@ -255,7 +255,7 @@ export default function CSRAdmin() {
     }
   };
 
-  if (!isAdmin && !isModerator) {
+  if (!canAccess("csr")) {
     return (
       <div className="text-center py-12">
         <p className="text-slate-600">
