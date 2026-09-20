@@ -6,7 +6,7 @@ export async function generateMetadata() {
   const site = await getSiteInfo();
 
   return {
-    metadataBase: new URL("https://a2itltd.com"),
+    metadataBase: new URL("https://horizoninternational.com"),
     title: `Contact Us | ${site.siteName} | Get in Touch`,
     description: `Get in touch with ${site.siteName} for inquiries about IT services, web development, eCommerce solutions, digital marketing, and more.`,
     keywords: [
@@ -19,12 +19,12 @@ export async function generateMetadata() {
       "Amazon Services Inquiry",
     ],
     alternates: {
-      canonical: "https://a2itltd.com/contact",
+      canonical: "https://horizoninternational.com/contact",
     },
     openGraph: {
       title: `Contact Us | ${site.siteName} | Get in Touch`,
       description: `Reach out to ${site.siteName} for any queries regarding web development, mobile apps, eCommerce, Shopify, Amazon, or digital marketing services.`,
-      url: "https://a2itltd.com/contact",
+      url: "https://horizoninternational.com/contact",
       siteName: site.siteName,
       images: [
         {
@@ -60,12 +60,12 @@ export default async function Page() {
             "@context": "https://schema.org",
             "@type": "ContactPage",
             name: "Contact Us",
-            url: "https://a2itltd.com/contact",
+            url: "https://horizoninternational.com/contact",
             description: `Get in touch with ${site.siteName} for inquiries about IT services, web development, eCommerce solutions, digital marketing, and more.`,
             publisher: {
               "@type": "Organization",
               name: site.siteName,
-              url: "https://a2itltd.com",
+              url: "https://horizoninternational.com",
               logo: resolveLogoUrl(site.logoImage),
             },
             contactOption: [

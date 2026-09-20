@@ -1,6 +1,6 @@
 export const dynamic = "force-static";
 
-const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://a2itltd.com";
+const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://horizoninternational.com";
 
 export default function robots() {
   return {

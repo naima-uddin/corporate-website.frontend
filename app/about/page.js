@@ -19,12 +19,12 @@ export async function generateMetadata() {
       "Digital Marketing",
     ],
     alternates: {
-      canonical: "https://a2itltd.com/about",
+      canonical: "https://horizoninternational.com/about",
     },
     openGraph: {
       title: `About Us | ${site.siteName}`,
       description: `Discover ${site.siteName}, our mission, vision, and dedicated team providing IT services, eCommerce solutions, and digital innovation worldwide.`,
-      url: "https://a2itltd.com/about",
+      url: "https://horizoninternational.com/about",
       siteName: site.siteName,
       images: [
         {
@@ -60,12 +60,12 @@ export default async function Page() {
             "@context": "https://schema.org",
             "@type": "AboutPage",
             name: "About Us",
-            url: "https://a2itltd.com/about",
+            url: "https://horizoninternational.com/about",
             description: `Learn more about ${site.siteName}, our mission, vision, and the team driving innovation in IT services, eCommerce, and digital solutions.`,
             publisher: {
               "@type": "Organization",
               name: site.siteName,
-              url: "https://a2itltd.com",
+              url: "https://horizoninternational.com",
               logo: resolveLogoUrl(site.logoImage),
             },
           }),

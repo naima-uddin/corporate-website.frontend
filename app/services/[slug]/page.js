@@ -49,12 +49,12 @@ export async function generateMetadata({ params }) {
     title: `${service.title} | ${site.siteName}`,
     description: service.description,
     alternates: {
-      canonical: `https://a2itltd.com${service.path}`,
+      canonical: `https://horizoninternational.com${service.path}`,
     },
     openGraph: {
       title: service.title,
       description: service.description,
-      url: `https://a2itltd.com${service.path}`,
+      url: `https://horizoninternational.com${service.path}`,
       siteName: site.siteName,
       images: service.image ? [{ url: service.image }] : undefined,
       type: "website",
@@ -93,7 +93,7 @@ export default async function ServiceDetailPage({ params }) {
             provider: {
               "@type": "Organization",
               name: site.siteName,
-              url: "https://a2itltd.com",
+              url: "https://horizoninternational.com",
               logo: resolveLogoUrl(site.logoImage),
             },
             areaServed: {

@@ -15,12 +15,12 @@ export async function generateMetadata() {
       "IT Company Gallery",
     ],
     alternates: {
-      canonical: "https://a2itltd.com/gallery",
+      canonical: "https://horizoninternational.com/gallery",
     },
     openGraph: {
       title: `Gallery | ${site.siteName} | Our Office & Team`,
       description: `Take a look inside ${site.siteName} — our office, our team, and the collaborative environment behind our IT solutions.`,
-      url: "https://a2itltd.com/gallery",
+      url: "https://horizoninternational.com/gallery",
       siteName: site.siteName,
       type: "website",
     },

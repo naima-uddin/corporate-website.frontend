@@ -34,7 +34,7 @@ export async function generateMetadata() {
     openGraph: {
       title,
       description: `Professional IT services, web & mobile development, eCommerce, digital marketing, and marketplace solutions from ${site.siteName}.`,
-      url: "https://a2itltd.com",
+      url: "https://horizoninternational.com",
       siteName: site.siteName,
       images: [
         {
@@ -76,7 +76,7 @@ export default async function RootLayout({ children }) {
               "@context": "https://schema.org",
               "@type": "Organization",
               name: site.siteName,
-              url: "https://a2itltd.com",
+              url: "https://horizoninternational.com",
               logo: resolveLogoUrl(site.logoImage),
               sameAs: [
                 "https://www.facebook.com/",

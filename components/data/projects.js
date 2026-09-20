@@ -1,7 +1,7 @@
 export const projects = [
   {
     id: 1,
-    title: "A2IT Ltd",
+    title: "Horizon International",
     description:
       "A full-featured e-commerce platform with advanced analytics and inventory management.",
     category: ["Web Development", "eCommerce Development"],
@@ -42,9 +42,9 @@ export const projects = [
   },
   {
     id: 2,
-    title: "A2IT Ltd Website",
+    title: "Horizon International Website",
     description:
-      "A complete corporate website for A2IT Ltd featuring service showcases, dynamic content, contact automation, and an interactive map.",
+      "A complete corporate website for Horizon International featuring service showcases, dynamic content, contact automation, and an interactive map.",
     category: ["Digital Marketing", "Web Development"], // now supports multiple categories
     image: "/assets/design_development/a2it.jpeg",
     technologies: ["Next.js", "React.js", "Node.js", "Leaflet", "Nodemailer"],
@@ -77,7 +77,7 @@ export const projects = [
       { value: "99.9%", label: "Uptime" },
     ],
 
-    liveUrl: "https://a2itltd.com",
+    liveUrl: "https://horizoninternational.com",
   },
   {
     id: 3,

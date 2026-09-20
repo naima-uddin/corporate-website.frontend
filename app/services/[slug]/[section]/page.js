@@ -52,12 +52,12 @@ export async function generateMetadata({ params }) {
     title: `${sec.title} | ${service.title} | ${site.siteName}`,
     description: sec.description,
     alternates: {
-      canonical: `https://a2itltd.com/services/${slug}/${section}`,
+      canonical: `https://horizoninternational.com/services/${slug}/${section}`,
     },
     openGraph: {
       title: sec.title,
       description: sec.description,
-      url: `https://a2itltd.com/services/${slug}/${section}`,
+      url: `https://horizoninternational.com/services/${slug}/${section}`,
       siteName: site.siteName,
       images: sec.image ? [{ url: sec.image }] : undefined,
       type: "website",
@@ -98,7 +98,7 @@ export default async function SectionDetailPage({ params }) {
             provider: {
               "@type": "Organization",
               name: site.siteName,
-              url: "https://a2itltd.com",
+              url: "https://horizoninternational.com",
               logo: resolveLogoUrl(site.logoImage),
             },
             areaServed: {

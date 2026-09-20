@@ -50,7 +50,7 @@ export async function generateMetadata({ params }) {
       category.description ||
       `Explore ${site.siteName}'s ${category.displayName} services and solutions.`,
     alternates: {
-      canonical: `https://a2itltd.com/services/category/${categoryName}`,
+      canonical: `https://horizoninternational.com/services/category/${categoryName}`,
     },
   };
 }

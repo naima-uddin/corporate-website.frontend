@@ -15,12 +15,12 @@ export async function generateMetadata() {
       site.siteName,
     ],
     alternates: {
-      canonical: "https://a2itltd.com/government-enlistment",
+      canonical: "https://horizoninternational.com/government-enlistment",
     },
     openGraph: {
       title: `Government Enlistment | ${site.siteName}`,
       description: `${site.siteName}'s government enlistment credentials — a trusted IT service provider for public sector organizations.`,
-      url: "https://a2itltd.com/government-enlistment",
+      url: "https://horizoninternational.com/government-enlistment",
       siteName: site.siteName,
       type: "website",
     },

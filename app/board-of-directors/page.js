@@ -9,7 +9,7 @@ export async function generateMetadata() {
     title: `Board of Directors | ${site.siteName}`,
     description: "Meet the full board of directors behind M/S. MD. RAKIB HASAN.",
     alternates: {
-      canonical: "https://a2itltd.com/board-of-directors",
+      canonical: "https://horizoninternational.com/board-of-directors",
     },
   };
 }

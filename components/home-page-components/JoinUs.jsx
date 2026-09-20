@@ -6,7 +6,7 @@ import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 
 // Treats "/foo" and same-origin absolute URLs (e.g. saved from the CMS as
-// "https://a2itltd.com/foo") as internal, so both get SPA navigation instead
+// "https://horizoninternational.com/foo") as internal, so both get SPA navigation instead
 // of a hard reload through a plain <a> tag.
 const getInternalPath = (href) => {
   if (!href) return null;

@@ -15,12 +15,12 @@ export async function generateMetadata() {
       site.siteName,
     ],
     alternates: {
-      canonical: "https://a2itltd.com/careers",
+      canonical: "https://horizoninternational.com/careers",
     },
     openGraph: {
       title: `Careers | ${site.siteName}`,
       description: `Explore current job opportunities at ${site.siteName}.`,
-      url: "https://a2itltd.com/careers",
+      url: "https://horizoninternational.com/careers",
       siteName: site.siteName,
       type: "website",
     },

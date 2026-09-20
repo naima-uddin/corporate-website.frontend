@@ -15,12 +15,12 @@ export async function generateMetadata() {
       site.siteName,
     ],
     alternates: {
-      canonical: "https://a2itltd.com/csr",
+      canonical: "https://horizoninternational.com/csr",
     },
     openGraph: {
       title: `Corporate Social Responsibility | ${site.siteName}`,
       description: `${site.siteName}'s corporate social responsibility initiatives and community impact.`,
-      url: "https://a2itltd.com/csr",
+      url: "https://horizoninternational.com/csr",
       siteName: site.siteName,
       type: "website",
     },

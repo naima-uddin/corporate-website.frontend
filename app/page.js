@@ -33,7 +33,7 @@ export async function generateMetadata() {
       "Hosting",
     ],
     alternates: {
-      canonical: "https://a2itltd.com",
+      canonical: "https://horizoninternational.com",
     },
     openGraph: {
       title: ogTitle,
@@ -80,7 +80,7 @@ export default async function Home() {
             "@context": "https://schema.org",
             "@type": "Organization",
             name: site.siteName,
-            url: "https://a2itltd.com",
+            url: "https://horizoninternational.com",
             logo: resolveLogoUrl(site.logoImage),
             sameAs: [
               "https://www.facebook.com/",

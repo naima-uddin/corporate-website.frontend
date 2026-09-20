@@ -30,12 +30,12 @@ export async function generateMetadata() {
       "Bangladesh",
     ],
     alternates: {
-      canonical: "https://a2itltd.com/services",
+      canonical: "https://horizoninternational.com/services",
     },
     openGraph: {
       title: `Our Services | ${site.siteName}`,
       description,
-      url: "https://a2itltd.com/services",
+      url: "https://horizoninternational.com/services",
       siteName: site.siteName,
       type: "website",
     },
@@ -68,7 +68,7 @@ export default async function ServicesPage() {
             provider: {
               "@type": "Organization",
               name: site.siteName,
-              url: "https://a2itltd.com",
+              url: "https://horizoninternational.com",
               logo: resolveLogoUrl(site.logoImage),
             },
             areaServed: {
