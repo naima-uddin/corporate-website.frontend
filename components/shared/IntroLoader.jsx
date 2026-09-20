@@ -223,7 +223,7 @@ export default function IntroLoader() {
         transition={{ duration: 0.6, delay: 0.15 }}
         className="mt-2 text-center text-xl font-semibold text-[var(--color-heading)] sm:text-2xl"
       >
-        M/s Md. Rakib Hasan
+        Horizon International
       </motion.h1>
 
       <motion.p
